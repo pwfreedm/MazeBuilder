@@ -8,9 +8,9 @@
 
 
 int 
-main()
+main(int argc, char* argv[])
 {
-    Maze m(6);
+    Maze m(std::stoi(argv[1]));
     Wilsons wilson(m);
     wilson.run();
     wilson.print();
