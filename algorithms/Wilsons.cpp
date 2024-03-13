@@ -1,8 +1,10 @@
 #include <set>
 #include <random>
 #include <iostream>
+#include <list>
 
-#include "Maze.hpp"
+
+#include "../Maze.hpp"
 
 
 class Wilsons
@@ -54,7 +56,7 @@ class Wilsons
     */
     void genUnvisited()
     {
-        for(int i = 1; i < mz.size(); ++i)
+        for(unsigned i = 1; i < mz.size(); ++i)
         {
             unvisited.insert(i);
         }
@@ -125,7 +127,7 @@ class Wilsons
         std::set<int> triedDirs;
         unsigned next = mz.size();
 
-        int nextIDX  = 0;
+        unsigned nextIDX  = 0;
         while (next >= mz.size() && triedDirs.size() < 4)
         {
             unsigned dir = rand() % 4;
@@ -210,11 +212,11 @@ class Wilsons
     void 
     updateMaze(std::list<unsigned> walk)
     {
+        if(walk.size() < 2) { return; }
+
         unsigned cur = walk.back();
         unsigned prev;
         do {
-            if (walk.size() < 2) { break; }
-
             prev = *(std::prev(walk.end(), 2));
             mz.connect(cur, prev);
             mz[cur].unSeen();

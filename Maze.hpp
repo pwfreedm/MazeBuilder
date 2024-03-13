@@ -10,10 +10,7 @@
 #include <ostream>
 #include <type_traits> //is_integral
 #include <vector>      //cell storage in maze
-#include <chrono>      //time
-#include <random>      //randomization where needed
-#include <queue>       //wilson's uses a queue for building paths
-#include <list>
+
 
 /**A cell in the maze consists of 5 bytes, [up, down, left, right, seen]
     By default, all five values are initialized to false. Seen is used
@@ -182,7 +179,7 @@ class Maze
 
     Maze() = delete;
 
-    /** Value cto - Reserves a vector of length x width size
+    /** Value ctor - Reserves a vector of length x width size
 
         Inserts a cell with the left and right sides open to serve as the 
         beginning of the maze 
@@ -271,14 +268,14 @@ class Maze
     }
 
     /** Acessor for the size of the maze. Multiplies len and wid fields. */
-    int
+    unsigned
     size()
     {
         return len * wid;
     }
 
     /** const accessor for the size of the maze. Multiplies len and wid fields */
-    int
+    unsigned
     size() const
     {
         return len * wid;

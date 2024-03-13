@@ -1,5 +1,5 @@
 
-#include "Maze.hpp"
+#include "../Maze.hpp"
 
 
 class HK

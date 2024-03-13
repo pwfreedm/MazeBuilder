@@ -4,7 +4,7 @@
 */
 
 #include "Maze.hpp"
-#include "Wilsons.cpp"
+#include "algorithms/Wilsons.cpp"
 
 
 int 
