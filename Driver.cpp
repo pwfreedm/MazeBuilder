@@ -13,6 +13,6 @@ main(int argc, char* argv[])
     Maze m(std::stoi(argv[1]));
     Wilsons wilson(m);
     wilson.run();
-    wilson.print();
+    std::cout << wilson;
 }
 

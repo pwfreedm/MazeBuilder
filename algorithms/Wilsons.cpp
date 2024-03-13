@@ -40,11 +40,7 @@ class Wilsons
             mz[mz.size() - 1].setRight();
         }
 
-        void
-        print()
-        {
-            std::cout << mz << std::endl;
-        }
+        friend std::ostream& operator<<(std::ostream& os, const Wilsons &w);
 
    private:
 
@@ -229,3 +225,10 @@ class Wilsons
     }
 
 };
+
+inline std::ostream& 
+operator<<(std::ostream& os, const Wilsons &w)
+{
+    os << w.mz;
+    return os;
+}
