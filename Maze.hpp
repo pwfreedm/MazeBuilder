@@ -39,10 +39,6 @@ struct Cell
     Cell(bool up, bool down, bool left, bool right)
     : up(up), down(down), left(left), right(right){}
 
-    //Copy ctor
-    Cell(const Cell &n)
-    :up(n.up), down(n.down), left(n.left), right(n.right), seen(n.seen){}
-
     /** Integral constructor for a node. Takes the lowest 4 bits of the Integral type 
         and treats them as bools. 
         
@@ -213,17 +209,6 @@ class Maze
         maze[0].set(3);
     }
 
-    /** Copy ctor - makes this identical to o by copying over each field
-        
-        @param o - the maze to make this one a copy of
-    */
-    Maze(const Maze &o)
-    :maze(o.len * o.wid), len(o.len), wid(o.wid)
-    {
-        maze.reserve(o.len * o.wid);
-        maze = o.maze;
-    }
-
     /** Equality op - Compares fields from smallest to largest*/
     bool
     operator== (Maze& o)
@@ -234,26 +219,11 @@ class Maze
                maze.data() != o.maze.data() ? false : true;
     }
 
+    /** Inequality op - negates equality op */
     bool
     operator!= (Maze &o)
     {
         return !(*this == o);
-    }
-
-    /** Assignment op - assigns field by field, from smallest to largest*/
-    Maze&
-    operator= (Maze& o)
-    {
-        if(this == &o)
-        {
-            return *this;
-        }
-
-        len = o.len;
-        wid = o.wid;
-        maze = o.maze;
-
-        return *this;
     }
 
     /** Accessor for length - returns the number of rows of cells in this maze*/
