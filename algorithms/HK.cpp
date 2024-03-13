@@ -1,9 +1,12 @@
+#include <random>
+#include <set>
 
 #include "../Maze.hpp"
 
 
 class HK
 {
+    const static int RNG_SEED = 0;
     Maze mz;
     unsigned lastIdx;
 
@@ -13,19 +16,60 @@ class HK
         HK (Maze &mz)
         :mz(mz), lastIdx(0) {}
 
+        //Runs the algorithm on the provided maze
         void
         run()
         {
-
+            while(lastIdx != mz.size() - 1)
+            {
+                randomWalk(lastIdx);
+                hunt();
+            }
         }
         
         friend std::ostream& operator<<(std::ostream& os, const HK &hk);
 
+    private:
+         enum
+         DIRECTIONS { UP, DOWN, LEFT, RIGHT };
+
+    /** Performs a random walk on maze mz. 
+
+    NOTE: this method assumes that at least one cell in the maze has 
+    been modified, making that the end of the random walk
+
+    @p mz - the maze to be walked
+    @p eraseLoops - a bool deciding whether or not loops are erased
+
+    @return a list of indices representing the walk path
+    */
+    void
+    randomWalk (unsigned startIdx)
+    {
+        std::set<int> invalidDirs;
+        std::minstd_rand rand(RNG_SEED);
+
+        unsigned candidate_dir = rand() % 4;
+
+        
+
+
+    }
+
+    /** Hunts for the next cell not currently in the maze. Updates lastIdx as it goes */
+    void
+    hunt()
+    {
+        while (mz[lastIdx].val() != 0)
+        {
+            ++lastIdx;
+        }
+    }
 };
 
 inline std::ostream& 
-    operator<<(std::ostream& os, const HK &hk)
-    {
-        os << hk.mz;
-        return os;
-    }
+operator<<(std::ostream& os, const HK &hk)
+{
+    os << hk.mz;
+    return os;
+}

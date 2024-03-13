@@ -9,8 +9,7 @@
 
 class Wilsons
 {
-   friend class Maze; 
-
+   int RNG_SEED = 0;
    Maze mz; 
    std::set<unsigned> unvisited; 
 
@@ -27,7 +26,7 @@ class Wilsons
         void
         run()
         {
-            std::minstd_rand rand(0);
+            std::minstd_rand rand(RNG_SEED);
             unsigned setIdx; 
             unsigned startIdx;
             while (unvisited.size() > 0)
@@ -118,7 +117,7 @@ class Wilsons
             return mz.size();
         }
 
-        static std::minstd_rand rand(0);
+        static std::minstd_rand rand(RNG_SEED);
 
         std::set<int> triedDirs;
         unsigned next = mz.size();
