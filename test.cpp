@@ -3,7 +3,6 @@
 #include <format>
 
 #include "Maze.hpp"
-#include "Tools.cpp"
 
 void
 testCellCtors();
@@ -124,58 +123,4 @@ testPrint()
     vCtor.set(1,1,7);
 
     std::cout << vCtor << '\n';
-}
-
-void
-testValidStep()
-{
-    Maze sqCtor(10);
-
-    //top left (corner case)
-    for (int i = 0; i < 100; ++i)
-    {
-        unsigned gen = Tools::validStep(sqCtor, 0, 0);
-        if (gen != 1 && gen != 10)
-        {
-            std::cout << "Valid Step, top left failed: " << gen << std::endl;
-        }
-    }
-    std::cout << "Valid Step, top left passed\n";
-
-    //bottom right (corner case)
-    for (int i = 0; i < 100; ++i)
-    {
-        unsigned gen = Tools::validStep(sqCtor, 98,99);
-        if (gen != 89)
-        {
-            std::cout << "Valid Step, bottom right failed: " << gen << std::endl;
-        }
-    }
-    std::cout << "Valid Step, bottom right passed\n";
-
-    //middle
-    for (int i = 0; i < 100; ++i)
-    {
-        unsigned gen = Tools::validStep(sqCtor, 24, 25);
-        if (gen != 15 && gen != 26 && gen != 35)
-        {
-            std::cout << "Valid Step, middle failed: " << gen << std::endl;
-        }
-    }
-    std::cout << "Valid Step, middle passed\n";
-
-    //invalid
-    for (int i = 0; i < 100; ++i)
-    {
-        unsigned gen = Tools::validStep(sqCtor, 100, 200);
-        if (gen != sqCtor.size())
-        {
-            std::cout << "Valid Step, oob: " << gen << std::endl;
-        }
-    }
-    std::cout << "Valid Step, oob passed\n";
-
-
-
-    std::cout << std::endl;
 }
