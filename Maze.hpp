@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <ostream>
+#include <iostream>
 #include <type_traits> //is_integral
 #include <vector>      //cell storage in maze
 
@@ -122,8 +122,8 @@ struct Cell
 class Maze
 {
     std::vector<Cell> maze; 
-    unsigned len;
-    unsigned wid;
+    int len;
+    int wid;
     
     public:
 
@@ -137,7 +137,7 @@ class Maze
         @param length - the number of rows of cells in the maze
         @param width - the number of columns of cells in the maze 
     */
-    Maze(unsigned length, unsigned width)
+    Maze(int length, int width)
     :maze(length * width), len(length), wid(width)
     {}
 
@@ -145,7 +145,7 @@ class Maze
      * 
      * @param edgeLen - the length both edges of the maze should be.
     */
-    Maze(unsigned edgeLen)
+    Maze(int edgeLen)
     :maze(edgeLen * edgeLen), len(edgeLen), wid(edgeLen)
     {}
 
@@ -167,34 +167,34 @@ class Maze
     }
 
     /** Accessor for length - returns the number of rows of cells in this maze*/
-    unsigned
+    int
     length()
     { return len; }
    
     /** const Accessor for length - returns the number of rows of cells in this maze*/
-    unsigned
+    int
     length() const
     { return len; }
 
     /** Accessor for width - returns the number of cols of cells in this maze*/
-    unsigned
+    int
     width()
     { return wid; }
 
     /** const Accessor for width - returns the number of cols of cells in this maze*/
-    unsigned
+    int
     width() const
     { return wid; }
 
     /** Acessor for the size of the maze. Multiplies len and wid fields. */
-    unsigned
+    int
     size()
     {
         return len * wid;
     }
 
     /** const accessor for the size of the maze. Multiplies len and wid fields */
-    unsigned
+    int
     size() const
     {
         return len * wid;
@@ -210,7 +210,7 @@ class Maze
         @param col - the column number of the element
     */
     Cell&
-    get(unsigned row, unsigned col)
+    get(int row, int col)
     {
         return maze[row * wid + col];
     }
@@ -224,7 +224,7 @@ class Maze
         @param col - the column number of the element
     */
     const Cell&
-    get(unsigned row, unsigned col) const 
+    get(int row, int col) const 
     {
         return maze[row * wid + col];
     }
@@ -236,7 +236,7 @@ class Maze
         @param cell - the cell to be inserted into the maze
     */
     void
-    set(unsigned row, unsigned col, const Cell& cell)
+    set(int row, int col, const Cell& cell)
     {
         maze[row * wid + col] = cell;
     }
@@ -250,7 +250,7 @@ class Maze
 
     /** Connects cells at idx1 and idx2 */
     void
-    connect(unsigned idx1, unsigned idx2)
+    connect(int idx1, int idx2)
     {
         int diff = idx1 - idx2; 
 
@@ -278,7 +278,7 @@ class Maze
 
     /** Returns true if going in dir from startIdx would remain in maze bounds */
     bool
-    validMove (unsigned startIdx, DIRECTION dir)
+    validMove (int startIdx, DIRECTION dir)
     {
         switch(dir)
         {
@@ -286,17 +286,17 @@ class Maze
                 return startIdx - wid > 0;
             case DOWN:
                 return startIdx + wid < size();
-            case LEFT:
-                return startIdx % wid - 1 >= 0;
+            case LEFT: 
+                return ((startIdx % wid > 0) && hasIndex(startIdx));
             case RIGHT:
-                return startIdx + 1 < wid;
+                return (startIdx % wid + 1) < wid;
         }
         return false;
     }
     
     /** Returns the index that results from moving in dir from startIdx. Does not check bounds. */
-    unsigned
-    getIdx (unsigned startIdx, DIRECTION dir)
+    int
+    getIdx (int startIdx, DIRECTION dir)
     {
         switch(dir)
         {
@@ -312,16 +312,17 @@ class Maze
         return size();
     }
 
-    /** Returns true if the cell at location idx has at least one open face. */
+    /** Returns true if the cell at location idx has at least one open face. Bounds checked. */
     bool
-    hasCell (unsigned idx)
+    hasCell (int idx)
     {
-        return maze[idx].val() != 0; 
+
+        return hasIndex(idx) ? maze[idx].val() != 0 : false;
     }
 
     /** Returns true if idx is a valid index into this maze. */
     bool 
-    hasIndex (unsigned idx)
+    hasIndex (int idx)
     {
         return idx < size();
     }
@@ -350,9 +351,9 @@ inline std::ostream&
     operator<<(std::ostream& os, const Maze &mz)
     {
 
-        for(unsigned row = 0; row < mz.len; ++row)
+        for(int row = 0; row < mz.len; ++row)
         {   
-            for(unsigned col = 0; col < mz.wid; ++col)
+            for(int col = 0; col < mz.wid; ++col)
             {
                 Cell cur = mz.get(row, col);
                 os << "[" << cur.up << "," << cur.down << "," << cur.left << "," << cur.right << "] ";

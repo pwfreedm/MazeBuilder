@@ -11,7 +11,7 @@ class Wilsons
 
    Maze mz; 
    std::minstd_rand0 r;
-   std::set<unsigned> unvisited;
+   std::set<int> unvisited;
    std::vector<bool> visited;
    
 
@@ -26,7 +26,7 @@ class Wilsons
         {}
 
         //dimension ctor
-        Wilsons (unsigned rowCount, unsigned colCount)
+        Wilsons (int rowCount, int colCount)
         :mz(Maze(rowCount, colCount)), r(0), unvisited(genUnvisited()), visited(std::vector<bool>(mz.size()))
         {}
 
@@ -36,14 +36,13 @@ class Wilsons
         {
             mz.openStart();
 
-            unsigned startIdx;
+            int startIdx;
             while (unvisited.size() > 0)
             {
                 startIdx = pickStartIdx();
-                std::list<unsigned> walkPath = randomWalk(startIdx);
+                std::list<int> walkPath = randomWalk(startIdx);
                 updateMaze(walkPath);
             }
-
             mz.openEnd();
         }
 
@@ -54,11 +53,11 @@ class Wilsons
     /** Fills unvisited with all valid indices. Skips 0 because it is set 
         during maze generation.
     */
-    std::set<unsigned> 
+    std::set<int> 
     genUnvisited()
     {
-        std::set<unsigned> unvis;
-        for(unsigned i = 1; i < mz.size(); ++i)
+        std::set<int> unvis;
+        for(int i = 1; i < mz.size(); ++i)
         {
             unvis.insert(i);
         }
@@ -66,10 +65,10 @@ class Wilsons
     }
 
     /** Picks a random starting index from the set of unvisited indices */
-    unsigned
+    int
     pickStartIdx()
     {
-        unsigned setIdx = r() % unvisited.size();
+        int setIdx = r() % unvisited.size();
         return *(std::next(unvisited.begin(), setIdx));
     }
 
@@ -83,85 +82,92 @@ class Wilsons
 
     @return a list of indices representing the walk path
     */
-    std::list<unsigned>
-    randomWalk (unsigned startIdx)
+    std::list<int>
+    randomWalk (int startIdx)
     {
-        std::list<unsigned> indices;
+        std::list<int> indices;
 
-        unsigned cur = startIdx; 
-        unsigned prev = startIdx;
+        int cur = startIdx; 
+        int prev;
+        int prevCpy;
         
-        while(true)
+        while(!mz.hasCell(cur))
         {
             indices.push_back(cur);
             visited[cur] = true;
+            prevCpy = prev;
             prev = cur; 
-            cur = validStep(cur);
-
-            if (mz.hasCell(cur))
-            {
-                indices.push_back(cur);
-                break;
-            }
-            
-            if (visited[cur])
+            cur = validStep(cur, prevCpy);
+            if (visited[cur] || !mz.hasIndex(cur))
             {
                 eraseLoop(indices, prev);
                 cur = prev;
+                prev = prevCpy;
             }
         }
+        indices.push_back(cur);
         return indices;
     }
 
     /** Returns a valid index in which a random walk can move. 
 
-    @return - an unsigned representing the cur valid index that can be stepped to
+    @return - an int representing the cur valid index that can be stepped to
     @return - mz.size() if there are no valid directions to move
     */
-    unsigned
-    validStep(unsigned cur)
+    int
+    validStep(int cur, int prev)
     {
-        if(!mz.hasIndex(cur)) { return mz.size(); }
+        if(!mz.hasIndex(cur) || !mz.hasIndex(prev)) { return mz.size(); }
 
-        unsigned next = mz.size();
-        while (!mz.hasIndex(next))
+        std::set <DIRECTION> visitedDirs;
+        int next = mz.size();
+        int nextIdx;
+        while (!mz.hasIndex(next) && visitedDirs.size() < 4)
         {
-            unsigned dir = r() % 4;
+            int dir = r() % 4;
             switch (dir)
             {
                 case UP:
-                    if(mz.validMove(cur, UP))
+                
+                    visitedDirs.emplace(UP);
+                    nextIdx = mz.getIdx(cur, UP);
+                    if(mz.validMove(cur, UP) && nextIdx != prev)
                     {
-                        return mz.getIdx(cur, UP);
+                        return nextIdx;
                     }
                     break;
                 case DOWN: 
-                    if(mz.validMove(cur, DOWN))
+                    visitedDirs.emplace(DOWN);
+                    nextIdx = mz.getIdx(cur, DOWN);
+                    if(mz.validMove(cur, DOWN) && nextIdx != prev)
                     {
-                        return mz.getIdx(cur, DOWN);
+                        return nextIdx;
                     }
                     break;
                 case LEFT:
-                    if(mz.validMove(cur, LEFT))
+                    visitedDirs.emplace(LEFT);
+                    nextIdx = mz.getIdx(cur, LEFT);
+                    if(mz.validMove(cur, LEFT) && nextIdx != prev)
                     {
-                        return mz.getIdx(cur, LEFT);
+                        return nextIdx;
                     }
                     break;
                 case RIGHT: 
-                    if(mz.validMove(cur, RIGHT))
+                    visitedDirs.emplace(RIGHT);
+                    nextIdx = mz.getIdx(cur, RIGHT);
+                    if(mz.validMove(cur, RIGHT) && nextIdx != prev)
                     {
-                        return mz.getIdx(cur, RIGHT);
+                        return nextIdx;
                     }
                     break;
             }
         }
-        std::cout << "Cur idx: " << cur << ", Next idx: " << next << '\n';
         return next;
     }
 
     /** Helper to find a neighbor that has been seen already. */
-    unsigned
-    connectedNeighbor(unsigned cur)
+    int
+    connectedNeighbor(int cur)
     {
         if (mz.validMove(cur, UP) && visited[mz.getIdx(cur, UP)])
         {
@@ -194,17 +200,18 @@ class Wilsons
     @p loopIdx - the end of the loop (the index that would reconnect to the existing path)
     */
     void
-    eraseLoop (std::list<unsigned> &indices, unsigned loopIdx)
+    eraseLoop (std::list<int> &indices, int loopIdx)
     {
-        unsigned seenNeighbor = connectedNeighbor(loopIdx);
+        int seenNeighbor = connectedNeighbor(loopIdx);
 
-        unsigned idx = indices.back();
+        int idx = indices.back();
         while (idx != seenNeighbor)
         {
             indices.pop_back();
             visited[idx] = false;
             idx = indices.back();
         }
+        visited[idx] = false;
     }
 
     /** Updates the maze to reflect the completed walk.
@@ -222,12 +229,12 @@ class Wilsons
             mark prev as unseen
     */
     void 
-    updateMaze(std::list<unsigned> walk)
+    updateMaze(std::list<int> walk)
     {
         if(walk.size() < 2) { return; }
 
-        unsigned cur = walk.back();
-        unsigned prev;
+        int cur = walk.back();
+        int prev;
         do {
             prev = *(std::prev(walk.end(), 2));
             mz.connect(cur, prev);
