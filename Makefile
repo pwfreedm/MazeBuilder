@@ -15,8 +15,8 @@ INCDIRS  :=
 
 # C++ compiler flags
 # Use the first for debugging, the second for release
-#CXXFLAGS := -g -Wall -std=c++20 $(INCDIRS)
-CXXFLAGS := -O3 -Wall -std=c++20 $(INCDIRS)
+CXXFLAGS := -g -Wall -std=c++20 $(INCDIRS)
+#CXXFLAGS := -O3 -Wall -std=c++20 $(INCDIRS)
 
 # Linker. For C++ should be $(CXX).
 LINK := $(CXX)
@@ -28,7 +28,7 @@ LDFLAGS :=
 LDPATHS := 
 
 # Executable name. 
-EXEC := M.o
+EXEC := M.exe
 
 # Libraries used, prefaced with "-l".
 LDLIBS := 

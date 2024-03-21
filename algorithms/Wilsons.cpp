@@ -6,55 +6,72 @@
 
 #include "../Maze.hpp"
 
-
+using DIR = DIRECTION;
 class Wilsons
 {
+
    Maze mz; 
+   std::minstd_rand0 r;
    std::set<unsigned> unvisited;
-   std::minstd_rand rand; 
    std::vector<bool> visited;
+   
 
     public:
 
-        //ctor.
+        //force passing in a maze
+        Wilsons() = delete;
+
+        //maze ctor
         Wilsons (Maze &mz)
-        :mz(mz), rand(std::minstd_rand(0)), visited(std::vector<bool>(mz.size()))
-        {    
-            genUnvisited();
-        }
+        :mz(mz), r(0), unvisited(genUnvisited()), visited(std::vector<bool>(mz.size()))
+        {}
+
+        //dimension ctor
+        Wilsons (unsigned rowCount, unsigned colCount)
+        :mz(Maze(rowCount, colCount)), r(0), unvisited(genUnvisited()), visited(std::vector<bool>(mz.size()))
+        {}
 
         //runs the algorithm on the maze it was constructed with
         void
         run()
         {
-            unsigned setIdx; 
+            mz.openStart();
+
             unsigned startIdx;
             while (unvisited.size() > 0)
             {
-                setIdx = rand() % unvisited.size();
-                startIdx = *(std::next(unvisited.begin(), setIdx));
-                updateMaze(randomWalk(startIdx));
+                startIdx = pickStartIdx();
+                std::list<unsigned> walkPath = randomWalk(startIdx);
+                updateMaze(walkPath);
             }
-            //update the right side of the last element so there is an exit to the maze
-            mz[mz.size() - 1].setRight();
+
+            mz.openEnd();
         }
 
         friend std::ostream& operator<<(std::ostream& os, const Wilsons &w);
 
    private:
-
-   enum
-   DIRECTIONS { UP, DOWN, LEFT, RIGHT};
-
+   
     /** Fills unvisited with all valid indices. Skips 0 because it is set 
         during maze generation.
     */
-    void genUnvisited()
+    std::set<unsigned> 
+    genUnvisited()
     {
+        std::set<unsigned> unvis;
         for(unsigned i = 1; i < mz.size(); ++i)
         {
-            unvisited.insert(i);
+            unvis.insert(i);
         }
+        return unvis;
+    }
+
+    /** Picks a random starting index from the set of unvisited indices */
+    unsigned
+    pickStartIdx()
+    {
+        unsigned setIdx = r() % unvisited.size();
+        return *(std::next(unvisited.begin(), setIdx));
     }
 
     /** Performs a random walk on maze mz. 
@@ -72,96 +89,101 @@ class Wilsons
     {
         std::list<unsigned> indices;
 
+        unsigned cur = startIdx; 
         unsigned prev = startIdx;
-        unsigned cur = startIdx;
-        unsigned temp = startIdx;
-
-        indices.push_back(cur);
-        mz[cur].isSeen();
-
-        //if cur's val is 0, cur is not in the maze
-        while (mz[cur].val() == 0)
+        
+        while(mz.hasIndex(cur) && !mz.hasCell(cur))
         {
-            cur = validStep(temp, cur);
-            if (mz[cur].checkSeen())
+            indices.push_back(cur);
+            visited[cur] = true;
+            prev = cur; 
+            cur = validStep(cur);
+            if (cur == mz.size())
             {
-                eraseLoop(indices, cur);
-                indices.push_back(prev);
-                mz[prev].isSeen();
+                eraseLoop(indices, prev);
+                cur = prev;
             }
-            else 
-            {
-                indices.push_back(cur);
-                mz[cur].isSeen();
-            }
-            temp = prev;
-            prev = cur;
-
         }
-        indices.push_back(cur);
-        return indices; 
+        return indices;
     }
 
     /** Returns a valid index in which a random walk can move. 
-    
-    @p mz - the maze to find the valid index in
-    @p cur - the index of the current cell
 
     @return - an unsigned representing the cur valid index that can be stepped to
     @return - mz.size() if there are no valid directions to move
     */
     unsigned
-    validStep(unsigned prev, unsigned cur)
+    validStep(unsigned cur)
     {
-        if(prev > mz.size() || cur > mz.size())
-        {
-            return mz.size();
-        }
+        if(!mz.hasIndex(cur)) { return mz.size(); }
 
-        std::set<int> triedDirs;
+        std::set<DIR> triedDirs;
         unsigned next = mz.size();
-
-        unsigned nextIDX  = 0;
-        while (next >= mz.size() && triedDirs.size() < 4)
+        int nextIdx;
+        while (!mz.hasIndex(next) && triedDirs.size() < 4)
         {
-            unsigned dir = rand() % 4;
+            unsigned dir = r() % 4;
             switch (dir)
             {
-                case UP:
-                    triedDirs.insert(UP);
-                    nextIDX = cur - mz.width();
-                    if(nextIDX >= 0 && nextIDX != prev)
+                case 0:
+                    triedDirs.insert(DIR::UP);
+                    nextIdx = mz.getIdx(cur, DIR::UP);
+                    if(mz.validMove(cur, DIR::UP) && !visited[nextIdx])
                     {
-                        next = nextIDX;
+                        next = nextIdx;
                     }
                     break;
-                case DOWN: 
-                    triedDirs.insert(DOWN);
-                    nextIDX = cur + mz.width();
-                    if(nextIDX < mz.size() && nextIDX != prev)
+                case 1: 
+                    triedDirs.insert(DIR::DOWN);
+                    nextIdx = mz.getIdx(cur, DIR::DOWN);
+                    if(mz.validMove(cur, DIR::DOWN) && !visited[nextIdx])
                     {
-                        next = nextIDX;
+                        next = nextIdx;
                     }
                     break;
-                case LEFT:
-                    triedDirs.insert(LEFT);
-                    nextIDX = cur % mz.width() - 1;
-                    if (nextIDX >= 0 && cur - 1 != prev)
+                case 2:
+                    triedDirs.insert(DIR::LEFT);
+                    nextIdx = mz.getIdx(cur, DIR::LEFT);
+                    if(mz.validMove(cur, DIR::LEFT) && !visited[nextIdx])
                     {
-                        next = cur - 1;
+                        next = nextIdx;
                     }
                     break;
-                case RIGHT: 
-                    triedDirs.insert(RIGHT);
-                    nextIDX = cur % mz.width() + 1;
-                    if (nextIDX < mz.width() && cur + 1 != prev)
+                case 3: 
+                    triedDirs.insert(DIR::RIGHT);
+                    nextIdx = mz.getIdx(cur, DIR::RIGHT);
+                    if(mz.validMove(cur, DIR::RIGHT) && !visited[nextIdx])
                     {
-                        next = cur + 1;
+                        next = nextIdx;
                     }
                     break;
             }
         }
+        std::cout << "Cur idx: " << cur << ", Next idx: " << next << '\n';
         return next;
+    }
+
+    /** Helper to find a neighbor that has been seen already. */
+    unsigned
+    connectedNeighbor(unsigned cur)
+    {
+        if (mz.validMove(cur, DIR::UP) && visited[mz.getIdx(cur, DIR::UP)])
+        {
+            return mz.getIdx(cur, DIR::UP);
+        }
+        if (mz.validMove(cur, DIR::DOWN) && visited[mz.getIdx(cur, DIR::DOWN)])
+        {
+            return mz.getIdx(cur, DIR::DOWN);
+        }
+        if (mz.validMove(cur, DIR::LEFT) && visited[mz.getIdx(cur, DIR::LEFT)])
+        {
+            return mz.getIdx(cur, DIR::LEFT);
+        }
+        if (mz.validMove(cur, DIR::RIGHT) && visited[mz.getIdx(cur, DIR::RIGHT)])
+        {
+            return mz.getIdx(cur, DIR::RIGHT);
+        }
+        return mz.size();
     }
 
     /** Erases the loop that starts at loopIdx 
@@ -169,9 +191,7 @@ class Wilsons
     ex: 
     Given the list of indices is A -> B -> C -> D -> E -> F -> G 
     when B is attempted to be readded to the list
-    this method will run and the list will instead become A -> B 
-    NOTE: the last item before the loop, in this case G, should be readded.
-        this logic is left to the randomWalk function.
+    this method will run and the list will instead become A -> B -> G
 
     @p mz - the maze from which the loop should be erased
     @p indices - the list of indexes from which the loop will be removed
@@ -180,11 +200,13 @@ class Wilsons
     void
     eraseLoop (std::list<unsigned> &indices, unsigned loopIdx)
     {
+        unsigned seenNeighbor = connectedNeighbor(loopIdx);
+
         unsigned idx = indices.back();
-        while (idx != loopIdx)
+        while (idx != seenNeighbor)
         {
             indices.pop_back();
-            mz[idx].unSeen();
+            visited[idx] = false;
             idx = indices.back();
         }
     }
@@ -213,13 +235,13 @@ class Wilsons
         do {
             prev = *(std::prev(walk.end(), 2));
             mz.connect(cur, prev);
-            mz[cur].unSeen();
+            visited[cur] = false;
             unvisited.erase(cur);
             walk.pop_back();
             cur = prev;
         } while (prev != walk.front());
 
-        mz[prev].unSeen();
+        visited[prev] = false;
     }
 
 };

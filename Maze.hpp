@@ -20,13 +20,11 @@
 */
 struct Cell 
 {
-    bool up{0};
-    bool down{0};
-    bool left{0};
-    bool right{0};
-    //this is so that random walks know if the cell has been seen without
-    //having been made part of the maze yet
-    bool seen{0};
+    bool up{false};
+    bool down{false};
+    bool left{false};
+    bool right{false};
+
 
     //Default ctor
     Cell()
@@ -35,28 +33,6 @@ struct Cell
     //Value ctor
     Cell(bool up, bool down, bool left, bool right)
     : up(up), down(down), left(left), right(right){}
-
-    /** Integral constructor for a node. Takes the lowest 4 bits of the Integral type 
-        and treats them as bools. 
-        
-        NOTE: The fourth bit is assigned to up, third to down, second to left
-            and first to right.
-        
-        NOTE: behavior undefined for integrals with less than four bits
-        
-        EX: 59 in binary is 0b111011. To convert it to a node, do the following:
-            1) take 0b111011 & 1000 - this returns 1, so up is set to 1
-            2) take 0b111011 & 100  - this returns 0, so down is set to 0
-            3) take 0b111011 & 10   - this returns 1, so left is set to 1
-            4) take 0b111011 & 1    - this returns 1, so right is set to 1
-            
-            Thus the resulting node can be accessed from above and either side
-            but not from below.
-    */
-    template<typename T>
-    requires (std::is_integral_v<T>)
-    Cell(const T n)
-    :up(n & 0b1000), down(n & 0b100), left(n & 0b10), right(n & 0b1){} 
 
     /** Returns an int representation of this node using the following method:
         (up << 3) + (down << 2) + (left << 1) + right
@@ -73,7 +49,7 @@ struct Cell
     bool
     operator== (const Cell &o)
     {
-        return val() == o.val() && seen == o.seen;
+        return val() == o.val();
     }
 
     /** Inequality op - inverts operator== */
@@ -97,114 +73,63 @@ struct Cell
         return val() - o.val();
     }
 
-    //marks a cell as seen
-    void
-    isSeen()
-    {
-        seen = 1;
-    }
-
-    //marks a cell as unseen (for loop erasing)
-    void
-    unSeen()
-    {
-        seen = 0;
-    }
-
-    /** Accessor for seen */
-    bool
-    checkSeen()
-    {
-        return seen;
-    }
-
     void
     setLeft ()
     {
-        left = 1;
+        left = true;
     }
 
     void 
     setRight ()
     {
-        right = 1;
+        right = true;
     }
 
     void 
     setUp ()
     {
-        up = 1;
+        up = true;
     }
 
     void 
     setDown ()
     {
-        down = 1;
-    }
-
-    /** Sets the value of this cell to the supplied param if param != val().
-
-        @param val - the new value for this cell to have
-
-        NOTE: This is done by taking the lowest four bits of the param supplied
-        NOTE: Marks the cell as seen as well
-    */
-    template<typename T>
-    requires(std::is_integral_v<T>)
-    void
-    set(const T val)
-    {
-        if(val != this->val())
-        {
-            up = val & 0b1000;
-            down = val & 0b100; 
-            left = val & 0b10;
-            right = val & 0b1; 
-        }
+        down = true;
     }
 };
+
+//Direction enum for maze methods
+enum class DIRECTION { UP, DOWN, LEFT, RIGHT };
 
 class Maze
 {
     std::vector<Cell> maze; 
     unsigned len;
     unsigned wid;
-
     
-
     public:
 
-    friend class Wilsons;
     friend std::ostream& operator<< (std::ostream& os, const Maze& mz);
 
+    //require dimensions
     Maze() = delete;
 
-    /** Value ctor - Reserves a vector of length x width size
+    /** Value ctor - Maze of length x width size
 
-        Inserts a cell with the left and right sides open to serve as the 
-        beginning of the maze 
-        
         @param length - the number of rows of cells in the maze
         @param width - the number of columns of cells in the maze 
     */
     Maze(unsigned length, unsigned width)
     :maze(length * width), len(length), wid(width)
-    {
-        maze[0].set(3);
-    }
+    {}
 
-    /** Value ctor - Reserves a vector of edgeLen * edgeLen size
-     * 
-     * Inserts a cell with the left and right sides open to serve as
-     *      the beginning of the maze
+    /** Value ctor - Maze of edgeLen * edgeLen size
      * 
      * @param edgeLen - the length both edges of the maze should be.
     */
     Maze(unsigned edgeLen)
     :maze(edgeLen * edgeLen), len(edgeLen), wid(edgeLen)
-    {
-        maze[0].set(3);
-    }
+    {}
 
     /** Equality op - Compares fields from smallest to largest*/
     bool
@@ -242,30 +167,6 @@ class Maze
     unsigned
     width() const
     { return wid; }
-
-    /** Mutator for length - changes the number of rows of cells in the maze
-        
-        NOTE: This method does not change the maze itself in any way.
-
-        @param newLen - the new row count of this maze
-    */
-    void
-    length(unsigned newLen)
-    { 
-        len = newLen; 
-    }
-
-    /** Mutator for length - changes the number of cols of cells in the maze
-    
-        NOTE: This method does not change the maze itself in any way
-
-        @param newWid - the new column count of this maze
-    */
-    void
-    width(unsigned newWid)
-    { 
-        wid = newWid; 
-    }
 
     /** Acessor for the size of the maze. Multiplies len and wid fields. */
     unsigned
@@ -322,21 +223,6 @@ class Maze
         maze[row * wid + col] = cell;
     }
 
-    /** Puts a cell into the maze at maze[row][col]
-    
-        @param row - the row of the maze in which to insert @p cell
-        @param col - the column of the maze in which to inser @p cell
-        @param value - the numeric value of the cell to be inserted
-
-        NOTE: This is accomplished using the cell's value ctor - reference
-        that documentation to understand usage in more depth.
-    */
-    void
-    set(unsigned row, unsigned col, int value)
-    {
-        maze[row * wid + col].set(value);
-    }
-
     /** Gets the cell at idx in the maze. */
     Cell&
     operator[] (int idx)
@@ -370,8 +256,71 @@ class Maze
             maze[idx1].setDown();
             maze[idx2].setUp();
         }
+    } 
+
+    /** Returns true if going in dir from startIdx would remain in maze bounds */
+    bool
+    validMove (unsigned startIdx, DIRECTION dir)
+    {
+        switch(dir)
+        {
+            case DIRECTION::UP:
+                return startIdx - wid > 0;
+            case DIRECTION::DOWN:
+                return startIdx + wid < size();
+            case DIRECTION::LEFT:
+                return startIdx % wid - 1 >= 0;
+            case DIRECTION::RIGHT:
+                return startIdx + 1 < wid;
+        }
+        return false;
+    }
+    
+    /** Returns the index that results from moving in dir from startIdx. Does not check bounds. */
+    unsigned
+    getIdx (unsigned startIdx, DIRECTION dir)
+    {
+        switch(dir)
+        {
+            case DIRECTION::UP:
+                return startIdx - wid;
+            case DIRECTION::DOWN:
+                return startIdx + wid; 
+            case DIRECTION::LEFT:
+                return startIdx - 1; 
+            case DIRECTION::RIGHT:
+                return startIdx + 1;
+        }
+        return size();
     }
 
+    /** Returns true if the cell at location idx has at least one open face. */
+    bool
+    hasCell (unsigned idx)
+    {
+        return maze[idx].val() != 0; 
+    }
+
+    /** Returns true if idx is a valid index into this maze. */
+    bool 
+    hasIndex (unsigned idx)
+    {
+        return idx < size();
+    }
+
+    /** Opens the left wall of the top left cell to create an entrance to the maze. */
+    void
+    openStart()
+    {
+        maze[0].setLeft();
+    }
+
+    /** Opens the right wall of the bottom right cell to create an exit to the maze. */
+    void
+    openEnd()
+    {
+        maze[size() - 1].setRight();
+    }
 };
 
 /** Overloaded output operator. Allows mazes to be manipulated with <<

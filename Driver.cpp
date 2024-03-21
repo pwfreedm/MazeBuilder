@@ -10,9 +10,11 @@
 int 
 main(int argc, char* argv[])
 {
-    Maze m(std::stoi(argv[1]));
-    Wilsons wilson(m);
+    int dimension = std::stoi(argv[1]);
+    Wilsons wilson(dimension, dimension);
+    std::cout << "through construction\n";
     wilson.run();
+    std::cout << "through run\n";
     std::cout << wilson;
 }
 
