@@ -11,6 +11,9 @@
 #include <type_traits> //is_integral
 #include <vector>      //cell storage in maze
 
+//Valid directions
+enum DIRECTION { UP, DOWN, LEFT, RIGHT };
+
 
 /**A cell in the maze consists of 5 bytes, [up, down, left, right, seen]
     By default, all five values are initialized to false. Seen is used
@@ -79,16 +82,16 @@ struct Cell
     {
         switch (dir)
         {
-            case DIRECTION::UP:
+            case UP:
                 up = true; 
                 break;
-            case DIRECTION::DOWN:
+            case DOWN:
                 down = true; 
                 break;
-            case DIRECTION::LEFT:
+            case LEFT:
                 left = true; 
                 break;
-            case DIRECTION::RIGHT:
+            case RIGHT:
                 right = true; 
                 break;
         }
@@ -100,24 +103,21 @@ struct Cell
     {
         switch (dir)
         {
-            case DIRECTION::UP:
+            case UP:
                 up = !up; 
                 break;
-            case DIRECTION::DOWN:
+            case DOWN:
                 down = !down; 
                 break;
-            case DIRECTION::LEFT:
+            case LEFT:
                 left = !left; 
                 break;
-            case DIRECTION::RIGHT:
+            case RIGHT:
                 right = !right; 
                 break;
         }
     }
 };
-
-//Direction enum for maze methods
-enum class DIRECTION { UP, DOWN, LEFT, RIGHT };
 
 class Maze
 {
@@ -256,23 +256,23 @@ class Maze
 
         if (diff == 1)
         {
-            maze[idx1].setDirection(DIRECTION::LEFT);
-            maze[idx2].setDirection(DIRECTION::RIGHT);
+            maze[idx1].setDirection(LEFT);
+            maze[idx2].setDirection(RIGHT);
         }
         else if (diff == -1)
         {
-            maze[idx1].setDirection(DIRECTION::RIGHT);
-            maze[idx2].setDirection(DIRECTION::LEFT);
+            maze[idx1].setDirection(RIGHT);
+            maze[idx2].setDirection(LEFT);
         }
         else if (diff > 1)
         {
-            maze[idx1].setDirection(DIRECTION::UP);
-            maze[idx2].setDirection(DIRECTION::DOWN);
+            maze[idx1].setDirection(UP);
+            maze[idx2].setDirection(DOWN);
         }
         else if (diff < -1)
         {
-            maze[idx1].setDirection(DIRECTION::DOWN);
-            maze[idx2].setDirection(DIRECTION::UP);
+            maze[idx1].setDirection(DOWN);
+            maze[idx2].setDirection(UP);
         }
     } 
 
@@ -282,13 +282,13 @@ class Maze
     {
         switch(dir)
         {
-            case DIRECTION::UP:
+            case UP:
                 return startIdx - wid > 0;
-            case DIRECTION::DOWN:
+            case DOWN:
                 return startIdx + wid < size();
-            case DIRECTION::LEFT:
+            case LEFT:
                 return startIdx % wid - 1 >= 0;
-            case DIRECTION::RIGHT:
+            case RIGHT:
                 return startIdx + 1 < wid;
         }
         return false;
@@ -300,13 +300,13 @@ class Maze
     {
         switch(dir)
         {
-            case DIRECTION::UP:
+            case UP:
                 return startIdx - wid;
-            case DIRECTION::DOWN:
+            case DOWN:
                 return startIdx + wid; 
-            case DIRECTION::LEFT:
+            case LEFT:
                 return startIdx - 1; 
-            case DIRECTION::RIGHT:
+            case RIGHT:
                 return startIdx + 1;
         }
         return size();
@@ -330,14 +330,14 @@ class Maze
     void
     openStart()
     {
-        maze[0].setDirection(DIRECTION::LEFT);
+        maze[0].setDirection(LEFT);
     }
 
     /** Opens the right wall of the bottom right cell to create an exit to the maze. */
     void
     openEnd()
     {
-        maze[size() - 1].setDirection(DIRECTION::RIGHT);
+        maze[size() - 1].setDirection(RIGHT);
     }
 };
 

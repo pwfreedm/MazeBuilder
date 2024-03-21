@@ -6,7 +6,6 @@
 
 #include "../Maze.hpp"
 
-using DIR = DIRECTION;
 class Wilsons
 {
 
@@ -92,13 +91,20 @@ class Wilsons
         unsigned cur = startIdx; 
         unsigned prev = startIdx;
         
-        while(mz.hasIndex(cur) && !mz.hasCell(cur))
+        while(true)
         {
             indices.push_back(cur);
             visited[cur] = true;
             prev = cur; 
             cur = validStep(cur);
-            if (cur == mz.size())
+
+            if (mz.hasCell(cur))
+            {
+                indices.push_back(cur);
+                break;
+            }
+            
+            if (visited[cur])
             {
                 eraseLoop(indices, prev);
                 cur = prev;
@@ -117,44 +123,34 @@ class Wilsons
     {
         if(!mz.hasIndex(cur)) { return mz.size(); }
 
-        std::set<DIR> triedDirs;
         unsigned next = mz.size();
-        int nextIdx;
-        while (!mz.hasIndex(next) && triedDirs.size() < 4)
+        while (!mz.hasIndex(next))
         {
             unsigned dir = r() % 4;
             switch (dir)
             {
-                case 0:
-                    triedDirs.insert(DIR::UP);
-                    nextIdx = mz.getIdx(cur, DIR::UP);
-                    if(mz.validMove(cur, DIR::UP) && !visited[nextIdx])
+                case UP:
+                    if(mz.validMove(cur, UP))
                     {
-                        next = nextIdx;
+                        return mz.getIdx(cur, UP);
                     }
                     break;
-                case 1: 
-                    triedDirs.insert(DIR::DOWN);
-                    nextIdx = mz.getIdx(cur, DIR::DOWN);
-                    if(mz.validMove(cur, DIR::DOWN) && !visited[nextIdx])
+                case DOWN: 
+                    if(mz.validMove(cur, DOWN))
                     {
-                        next = nextIdx;
+                        return mz.getIdx(cur, DOWN);
                     }
                     break;
-                case 2:
-                    triedDirs.insert(DIR::LEFT);
-                    nextIdx = mz.getIdx(cur, DIR::LEFT);
-                    if(mz.validMove(cur, DIR::LEFT) && !visited[nextIdx])
+                case LEFT:
+                    if(mz.validMove(cur, LEFT))
                     {
-                        next = nextIdx;
+                        return mz.getIdx(cur, LEFT);
                     }
                     break;
-                case 3: 
-                    triedDirs.insert(DIR::RIGHT);
-                    nextIdx = mz.getIdx(cur, DIR::RIGHT);
-                    if(mz.validMove(cur, DIR::RIGHT) && !visited[nextIdx])
+                case RIGHT: 
+                    if(mz.validMove(cur, RIGHT))
                     {
-                        next = nextIdx;
+                        return mz.getIdx(cur, RIGHT);
                     }
                     break;
             }
@@ -167,21 +163,21 @@ class Wilsons
     unsigned
     connectedNeighbor(unsigned cur)
     {
-        if (mz.validMove(cur, DIR::UP) && visited[mz.getIdx(cur, DIR::UP)])
+        if (mz.validMove(cur, UP) && visited[mz.getIdx(cur, UP)])
         {
-            return mz.getIdx(cur, DIR::UP);
+            return mz.getIdx(cur, UP);
         }
-        if (mz.validMove(cur, DIR::DOWN) && visited[mz.getIdx(cur, DIR::DOWN)])
+        if (mz.validMove(cur, DOWN) && visited[mz.getIdx(cur, DOWN)])
         {
-            return mz.getIdx(cur, DIR::DOWN);
+            return mz.getIdx(cur, DOWN);
         }
-        if (mz.validMove(cur, DIR::LEFT) && visited[mz.getIdx(cur, DIR::LEFT)])
+        if (mz.validMove(cur, LEFT) && visited[mz.getIdx(cur, LEFT)])
         {
-            return mz.getIdx(cur, DIR::LEFT);
+            return mz.getIdx(cur, LEFT);
         }
-        if (mz.validMove(cur, DIR::RIGHT) && visited[mz.getIdx(cur, DIR::RIGHT)])
+        if (mz.validMove(cur, RIGHT) && visited[mz.getIdx(cur, RIGHT)])
         {
-            return mz.getIdx(cur, DIR::RIGHT);
+            return mz.getIdx(cur, RIGHT);
         }
         return mz.size();
     }
@@ -235,13 +231,19 @@ class Wilsons
         do {
             prev = *(std::prev(walk.end(), 2));
             mz.connect(cur, prev);
+
+            //cleanup to mark cur as added
             visited[cur] = false;
             unvisited.erase(cur);
+
             walk.pop_back();
             cur = prev;
+
         } while (prev != walk.front());
 
+        //cleanup - this cell was connected already
         visited[prev] = false;
+        unvisited.erase(prev);
     }
 
 };
