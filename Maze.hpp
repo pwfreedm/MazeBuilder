@@ -8,7 +8,6 @@
 #pragma once
 
 #include <iostream>
-#include <type_traits> //is_integral
 #include <vector>      //cell storage in maze
 
 //Valid directions

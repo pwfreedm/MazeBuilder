@@ -28,7 +28,7 @@ LDFLAGS :=
 LDPATHS := 
 
 # Executable name. 
-EXEC := M.exe
+EXEC := M
 
 # Libraries used, prefaced with "-l".
 LDLIBS := 
