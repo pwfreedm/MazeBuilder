@@ -73,28 +73,46 @@ struct Cell
         return val() - o.val();
     }
 
+    /** Sets direction dir to true (removes that wall from the cell) */
     void
-    setLeft ()
+    setDirection (DIRECTION dir)
     {
-        left = true;
+        switch (dir)
+        {
+            case DIRECTION::UP:
+                up = true; 
+                break;
+            case DIRECTION::DOWN:
+                down = true; 
+                break;
+            case DIRECTION::LEFT:
+                left = true; 
+                break;
+            case DIRECTION::RIGHT:
+                right = true; 
+                break;
+        }
     }
 
-    void 
-    setRight ()
+    /** Flips the state of direction dir */
+    void
+    updateDirection(DIRECTION dir)
     {
-        right = true;
-    }
-
-    void 
-    setUp ()
-    {
-        up = true;
-    }
-
-    void 
-    setDown ()
-    {
-        down = true;
+        switch (dir)
+        {
+            case DIRECTION::UP:
+                up = !up; 
+                break;
+            case DIRECTION::DOWN:
+                down = !down; 
+                break;
+            case DIRECTION::LEFT:
+                left = !left; 
+                break;
+            case DIRECTION::RIGHT:
+                right = !right; 
+                break;
+        }
     }
 };
 
@@ -230,7 +248,7 @@ class Maze
         return maze[idx];
     }
 
-    //Connects cells idx1 and idx2 in this maze
+    /** Connects cells at idx1 and idx2 */
     void
     connect(unsigned idx1, unsigned idx2)
     {
@@ -238,23 +256,23 @@ class Maze
 
         if (diff == 1)
         {
-            maze[idx1].setLeft();
-            maze[idx2].setRight();
+            maze[idx1].setDirection(DIRECTION::LEFT);
+            maze[idx2].setDirection(DIRECTION::RIGHT);
         }
         else if (diff == -1)
         {
-            maze[idx1].setRight();
-            maze[idx2].setLeft();
+            maze[idx1].setDirection(DIRECTION::RIGHT);
+            maze[idx2].setDirection(DIRECTION::LEFT);
         }
         else if (diff > 1)
         {
-            maze[idx1].setUp();
-            maze[idx2].setDown();
+            maze[idx1].setDirection(DIRECTION::UP);
+            maze[idx2].setDirection(DIRECTION::DOWN);
         }
         else if (diff < -1)
         {
-            maze[idx1].setDown();
-            maze[idx2].setUp();
+            maze[idx1].setDirection(DIRECTION::DOWN);
+            maze[idx2].setDirection(DIRECTION::UP);
         }
     } 
 
@@ -312,14 +330,14 @@ class Maze
     void
     openStart()
     {
-        maze[0].setLeft();
+        maze[0].setDirection(DIRECTION::LEFT);
     }
 
     /** Opens the right wall of the bottom right cell to create an exit to the maze. */
     void
     openEnd()
     {
-        maze[size() - 1].setRight();
+        maze[size() - 1].setDirection(DIRECTION::RIGHT);
     }
 };
 
