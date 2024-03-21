@@ -2,31 +2,31 @@
 #include <random>
 #include <iostream>
 #include <list>
-
+#include <vector>
 
 #include "../Maze.hpp"
 
 
 class Wilsons
 {
-   int RNG_SEED = 0;
    Maze mz; 
-   std::set<unsigned> unvisited; 
+   std::set<unsigned> unvisited;
+   std::minstd_rand rand; 
+   std::vector<bool> visited;
 
     public:
 
         //ctor.
         Wilsons (Maze &mz)
-        :mz(mz)
+        :mz(mz), rand(std::minstd_rand(0)), visited(std::vector<bool>(mz.size()))
         {    
-                genUnvisited();
+            genUnvisited();
         }
 
         //runs the algorithm on the maze it was constructed with
         void
         run()
         {
-            std::minstd_rand rand(RNG_SEED);
             unsigned setIdx; 
             unsigned startIdx;
             while (unvisited.size() > 0)
@@ -87,6 +87,7 @@ class Wilsons
             {
                 eraseLoop(indices, cur);
                 indices.push_back(prev);
+                mz[prev].isSeen();
             }
             else 
             {
@@ -116,8 +117,6 @@ class Wilsons
         {
             return mz.size();
         }
-
-        static std::minstd_rand rand(RNG_SEED);
 
         std::set<int> triedDirs;
         unsigned next = mz.size();

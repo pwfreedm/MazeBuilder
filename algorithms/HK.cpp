@@ -106,7 +106,8 @@ class HK
         }
     }
 
-    /** Hunts for the next cell not currently in the maze. Updates lastIdx as it goes */
+    /** Hunts for the next cell not currently in the maze that is next to a connected cell. 
+        Updates lastIdx as it goes */
     void
     hunt()
     {
