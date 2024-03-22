@@ -322,7 +322,7 @@ class Maze
     std::vector<DIRECTION>
     getNeighbors (int idx, bool connected = true)
     {
-        std::vector<DIRECTION> out(4);
+        std::vector<DIRECTION> out;
         if (validMove(idx, UP) && 
             hasCell(getNeighbor(idx, UP)) == connected)
         {

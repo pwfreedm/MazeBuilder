@@ -1,4 +1,5 @@
 
+#include <cassert>
 #include <iostream>
 //#include <format>
 
@@ -50,6 +51,7 @@ int main()
     // std::cout << "\nMisc Tests: \n";
     // testValidStep();
     testValidMove();
+    testNeighbors();
 }
 
 // void
@@ -117,4 +119,18 @@ testValidMove()
     {
         std::cout << "Issue with moving right\n";
     }
+}
+
+void
+testNeighbors()
+{
+    Maze test(5,5);
+    test[11].setDirection(UP);
+    test[24].setDirection(DOWN);
+    test[23].setDirection(DOWN);
+
+    assert(test.getNeighbors(11).size() == 0);
+    assert(test.getNeighbors(11, false).size() == 4);
+    assert(test.getNeighbors(24).size() == 1);
+    assert(test.getNeighbors(23, false).size() == 2);
 }

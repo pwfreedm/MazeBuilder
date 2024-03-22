@@ -45,7 +45,7 @@ class HK
         int prev = startIdx;
         int cur = startIdx;
 
-        while (cur > 0 && cur < mz.size())
+        while (cur < mz.size())
         {
             mz.connect(cur, prev);
             prev = cur;
