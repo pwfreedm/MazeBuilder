@@ -1,5 +1,5 @@
 #include <random>
-#include <set>
+#include <vector> //neighbors
 
 #include "../Maze.hpp"
 
@@ -9,25 +9,24 @@ class HK
     //TODO: Replace this with a call that gets time after testing is done
     const static int RNG_SEED = 0;
     Maze mz;
-    int lastIdx;
     std::minstd_rand r;
 
     public: 
 
         //ctor
         HK (Maze &mz)
-        :mz(mz), lastIdx(0), r(RNG_SEED) {}
+        :mz(mz), r(RNG_SEED) {}
 
         HK (int rowCount, int colCount)
-        :mz(rowCount, colCount), lastIdx(0), r(RNG_SEED) {}
+        :mz(rowCount, colCount), r(RNG_SEED) {}
 
         //Runs the algorithm on the provided maze
         void
         run()
         {
             mz.openStart();
-            int startIdx = r() % mz.size();
-            while(lastIdx != mz.size() - 1)
+            int startIdx = 0;
+            while(startIdx < mz.size())
             {
                 randomWalk(startIdx);
                 startIdx = hunt();
@@ -43,67 +42,37 @@ class HK
     void
     randomWalk (int startIdx)
     {
-        int prev;
+        int prev = startIdx;
         int cur = startIdx;
 
-        while (!mz.hasCell(cur))
+        while (cur > 0 && cur < mz.size())
         {
-            prev = cur;
-            cur = validStep(cur, prev);
             mz.connect(cur, prev);
+            prev = cur;
+            cur = validStep(cur);
         }
-
     }
 
+    /** Picks a random but valid next index to move to. 
+        
+        A valid step is:
+        1) a neighbor of cell mz[cur]
+        2) within the boundaries of the maze 
+        3) not currently connected to the maze
+        
+        Returns the index of the valid step or mz.size() if there are none
+    */
     int
-    validStep(int cur, int prev)
+    validStep(int cur)
     {
-        if(!mz.hasIndex(cur) || !mz.hasIndex(prev)) { return mz.size(); }
+        if(!mz.hasIndex(cur)) { return mz.size(); }
 
-        std::set <DIRECTION> visitedDirs;
-        int next = mz.size();
-        int nextIdx;
-        while (!mz.hasIndex(next) && visitedDirs.size() < 4)
-        {
-            int dir = r() % 4;
-            switch (dir)
-            {
-                case UP:
-                
-                    visitedDirs.emplace(UP);
-                    nextIdx = mz.getIdx(cur, UP);
-                    if(mz.validMove(cur, UP) && nextIdx != prev)
-                    {
-                        return nextIdx;
-                    }
-                    break;
-                case DOWN: 
-                    visitedDirs.emplace(DOWN);
-                    nextIdx = mz.getIdx(cur, DOWN);
-                    if(mz.validMove(cur, DOWN) && nextIdx != prev)
-                    {
-                        return nextIdx;
-                    }
-                    break;
-                case LEFT:
-                    visitedDirs.emplace(LEFT);
-                    nextIdx = mz.getIdx(cur, LEFT);
-                    if(mz.validMove(cur, LEFT) && nextIdx != prev)
-                    {
-                        return nextIdx;
-                    }
-                    break;
-                case RIGHT: 
-                    visitedDirs.emplace(RIGHT);
-                    nextIdx = mz.getIdx(cur, RIGHT);
-                    if(mz.validMove(cur, RIGHT) && nextIdx != prev)
-                    {
-                        return nextIdx;
-                    }
-                    break;
-            }
-        }
-        return next;
+        auto neighbors = mz.getNeighbors(cur, false);
+
+        if (neighbors.empty()) { return mz.size(); }
+
+        int move = r() % neighbors.size();
+        return mz.getNeighbor(cur, neighbors[move]);
     }
 
     /** Hunts for the next cell not currently in the maze that is next to a connected cell. 
@@ -111,39 +80,17 @@ class HK
     int
     hunt()
     {
-        lastIdx = 0;
-        while (mz[lastIdx].val() != 0)
+        std::vector<DIRECTION> neighbors;
+        for (int lastIdx = 0; lastIdx < mz.size(); ++lastIdx)
         {
-            int neighbor = connectedNeighbor(lastIdx);
-            if (mz.hasCell(neighbor))
+            neighbors = mz.getNeighbors(lastIdx);
+            if (!neighbors.empty())
             {
+                DIRECTION dir = neighbors[r() % neighbors.size()];
+                int neighbor =  mz.getNeighbor(lastIdx, dir);
                 mz.connect(lastIdx, neighbor);
                 return lastIdx;
             }
-            ++lastIdx;
-        }
-        return mz.size();
-    }
-
-    /** Helper to find a neighbor that has been seen already. */
-    int
-    connectedNeighbor(int cur)
-    {
-        if (mz.validMove(cur, UP) && mz.hasCell(mz.getIdx(cur, UP)))
-        {
-            return mz.getIdx(cur, UP);
-        }
-        if (mz.validMove(cur, DOWN) && mz.hasCell(mz.getIdx(cur, DOWN)))
-        {
-            return mz.getIdx(cur, DOWN);
-        }
-        if (mz.validMove(cur, LEFT) && mz.hasCell(mz.getIdx(cur, LEFT)))
-        {
-            return mz.getIdx(cur, LEFT);
-        }
-        if (mz.validMove(cur, RIGHT) && mz.hasCell(mz.getIdx(cur, RIGHT)))
-        {
-            return mz.getIdx(cur, RIGHT);
         }
         return mz.size();
     }

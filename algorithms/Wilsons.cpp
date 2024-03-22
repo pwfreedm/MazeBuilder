@@ -119,42 +119,42 @@ class Wilsons
     {
         if(!mz.hasIndex(cur) || !mz.hasIndex(prev)) { return mz.size(); }
 
-        std::set <DIRECTION> visitedDirs;
+        std::set <DIRECTION> unvisitedDirs { UP, DOWN, LEFT, RIGHT };
         int next = mz.size();
         int nextIdx;
-        while (!mz.hasIndex(next) && visitedDirs.size() < 4)
+        for (int i = 0; i < 4; ++i)
         {
-            int dir = r() % 4;
+            int dir = r() % unvisitedDirs.size();
             switch (dir)
             {
                 case UP:
                 
-                    visitedDirs.emplace(UP);
-                    nextIdx = mz.getIdx(cur, UP);
+                    unvisitedDirs.extract(UP);
+                    nextIdx = mz.getNeighbor(cur, UP);
                     if(mz.validMove(cur, UP) && nextIdx != prev)
                     {
                         return nextIdx;
                     }
                     break;
                 case DOWN: 
-                    visitedDirs.emplace(DOWN);
-                    nextIdx = mz.getIdx(cur, DOWN);
+                    unvisitedDirs.extract(DOWN);
+                    nextIdx = mz.getNeighbor(cur, DOWN);
                     if(mz.validMove(cur, DOWN) && nextIdx != prev)
                     {
                         return nextIdx;
                     }
                     break;
                 case LEFT:
-                    visitedDirs.emplace(LEFT);
-                    nextIdx = mz.getIdx(cur, LEFT);
+                    unvisitedDirs.extract(LEFT);
+                    nextIdx = mz.getNeighbor(cur, LEFT);
                     if(mz.validMove(cur, LEFT) && nextIdx != prev)
                     {
                         return nextIdx;
                     }
                     break;
                 case RIGHT: 
-                    visitedDirs.emplace(RIGHT);
-                    nextIdx = mz.getIdx(cur, RIGHT);
+                    unvisitedDirs.extract(RIGHT);
+                    nextIdx = mz.getNeighbor(cur, RIGHT);
                     if(mz.validMove(cur, RIGHT) && nextIdx != prev)
                     {
                         return nextIdx;
@@ -169,21 +169,21 @@ class Wilsons
     int
     connectedNeighbor(int cur)
     {
-        if (mz.validMove(cur, UP) && visited[mz.getIdx(cur, UP)])
+        if (mz.validMove(cur, UP) && visited[mz.getNeighbor(cur, UP)])
         {
-            return mz.getIdx(cur, UP);
+            return mz.getNeighbor(cur, UP);
         }
-        if (mz.validMove(cur, DOWN) && visited[mz.getIdx(cur, DOWN)])
+        if (mz.validMove(cur, DOWN) && visited[mz.getNeighbor(cur, DOWN)])
         {
-            return mz.getIdx(cur, DOWN);
+            return mz.getNeighbor(cur, DOWN);
         }
-        if (mz.validMove(cur, LEFT) && visited[mz.getIdx(cur, LEFT)])
+        if (mz.validMove(cur, LEFT) && visited[mz.getNeighbor(cur, LEFT)])
         {
-            return mz.getIdx(cur, LEFT);
+            return mz.getNeighbor(cur, LEFT);
         }
-        if (mz.validMove(cur, RIGHT) && visited[mz.getIdx(cur, RIGHT)])
+        if (mz.validMove(cur, RIGHT) && visited[mz.getNeighbor(cur, RIGHT)])
         {
-            return mz.getIdx(cur, RIGHT);
+            return mz.getNeighbor(cur, RIGHT);
         }
         return mz.size();
     }

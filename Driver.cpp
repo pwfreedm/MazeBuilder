@@ -13,7 +13,7 @@ main(int argc, char* argv[])
 {
     int dimension = std::stoi(argv[1]);
     std::string w("w");
-    if (argc == 3 && w.compare(argv[2]))
+    if (argc == 3)
     {
         std::cout << "Wilsons Algorithm Maze: \n";
         Wilsons wilson(dimension, dimension);

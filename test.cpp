@@ -31,6 +31,10 @@
 void
 testValidMove();
 
+void
+testNeighbors();
+
+
 int main()
 {
     // std::cout << "Cell Tests: \n";

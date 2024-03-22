@@ -10,6 +10,7 @@
 #include <iostream>
 #include <vector>      //cell storage in maze
 
+
 //Valid directions
 enum DIRECTION { UP, DOWN, LEFT, RIGHT };
 
@@ -295,7 +296,7 @@ class Maze
     
     /** Returns the index that results from moving in dir from startIdx. Does not check bounds. */
     int
-    getIdx (int startIdx, DIRECTION dir)
+    getNeighbor (int startIdx, DIRECTION dir)
     {
         switch(dir)
         {
@@ -309,6 +310,43 @@ class Maze
                 return startIdx + 1;
         }
         return size();
+    }
+
+    /** Gets all neighbors to the cell at idx that meet criteria @p connected. 
+        
+        @p connected - whether or not the neighbors being searched for are connected
+
+        @return - A vector of DIRECTION values containing all the neighbors that 
+            are either connected or disconnected
+    */
+    std::vector<DIRECTION>
+    getNeighbors (int idx, bool connected = true)
+    {
+        std::vector<DIRECTION> out(4);
+        if (validMove(idx, UP) && 
+            hasCell(getNeighbor(idx, UP)) == connected)
+        {
+            out.push_back(UP);
+        }
+
+        if (validMove(idx, DOWN) && 
+            hasCell(getNeighbor(idx, DOWN)) == connected)
+        {
+            out.push_back(DOWN);
+        }
+
+        if (validMove(idx, LEFT) && 
+            hasCell(getNeighbor(idx, LEFT)) == connected)
+        {
+            out.push_back(LEFT);
+        }
+
+        if (validMove(idx, RIGHT) && 
+            hasCell(getNeighbor(idx, RIGHT)) == connected)
+        {
+            out.push_back(RIGHT);
+        }
+        return out;
     }
 
     /** Returns true if the cell at location idx has at least one open face. Bounds checked. */
