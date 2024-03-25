@@ -25,7 +25,7 @@ class HK
         run()
         {
             mz.openStart();
-            int startIdx = 0;
+            int startIdx = 5;
             while(startIdx < mz.size())
             {
                 randomWalk(startIdx);
@@ -42,14 +42,14 @@ class HK
     void
     randomWalk (int startIdx)
     {
-        int prev = startIdx;
+        int prev;
         int cur = startIdx;
 
         while (cur < mz.size())
         {
-            mz.connect(cur, prev);
             prev = cur;
             cur = validStep(cur);
+            mz.connect(cur, prev);
         }
     }
 
@@ -75,8 +75,7 @@ class HK
         return mz.getNeighbor(cur, neighbors[move]);
     }
 
-    /** Hunts for the next cell not currently in the maze that is next to a connected cell. 
-        Updates lastIdx as it goes */
+    /** Hunts for the next cell not currently in the maze that is next to a connected cell. */
     int
     hunt()
     {

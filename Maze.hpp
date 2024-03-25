@@ -294,10 +294,17 @@ class Maze
         return false;
     }
     
-    /** Returns the index that results from moving in dir from startIdx. Does not check bounds. */
+    /** Returns the index that results from moving in dir from startIdx.
+        Returns the size of the maze if the move would be out of bounds 
+    */
     int
     getNeighbor (int startIdx, DIRECTION dir)
     {
+        if(!validMove(startIdx, dir))
+        {
+            return size();
+        }
+
         switch(dir)
         {
             case UP:
@@ -320,40 +327,65 @@ class Maze
             are either connected or disconnected
     */
     std::vector<DIRECTION>
-    getNeighbors (int idx, bool connected = true)
+    getNeighbors (int idx, bool connect = true)
     {
         std::vector<DIRECTION> out;
+        out.reserve(4);
+
         if (validMove(idx, UP) && 
-            hasCell(getNeighbor(idx, UP)) == connected)
+            (maze[getNeighbor(idx, UP)].val() == connect))
         {
             out.push_back(UP);
         }
 
         if (validMove(idx, DOWN) && 
-            hasCell(getNeighbor(idx, DOWN)) == connected)
+            (maze[getNeighbor(idx, UP)].val() == connect))
         {
             out.push_back(DOWN);
         }
 
         if (validMove(idx, LEFT) && 
-            hasCell(getNeighbor(idx, LEFT)) == connected)
+            (maze[getNeighbor(idx, LEFT)].val() == connect))
         {
             out.push_back(LEFT);
         }
 
         if (validMove(idx, RIGHT) && 
-            hasCell(getNeighbor(idx, RIGHT)) == connected)
+            (maze[getNeighbor(idx, RIGHT)].val() == connect))
         {
             out.push_back(RIGHT);
         }
         return out;
     }
 
-    /** Returns true if the cell at location idx has at least one open face. Bounds checked. */
-    bool
-    hasCell (int idx)
+    /** Returns the direction to get to dstIdx from startIdx */
+    DIRECTION
+    getDirection (int startIdx, int dstIdx)
     {
+        int diff = startIdx - dstIdx; 
 
+        if (diff == 1)
+        {
+            return LEFT; 
+        }
+        else if (diff == -1)
+        {
+            return RIGHT;
+        }
+        else if (diff > 1)
+        {
+            return UP;
+        }
+        else 
+        {
+           return DOWN;
+        }
+    }
+
+    /** Returns true if the cell at location idx is connected to the maze. Bounds checked. */
+    bool
+    inMaze (int idx)
+    {
         return hasIndex(idx) ? maze[idx].val() != 0 : false;
     }
 

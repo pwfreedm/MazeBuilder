@@ -91,7 +91,7 @@ class Wilsons
         int prev;
         int prevCpy;
         
-        while(!mz.hasCell(cur))
+        while(!mz.inMaze(cur))
         {
             indices.push_back(cur);
             visited[cur] = true;
@@ -119,17 +119,18 @@ class Wilsons
     {
         if(!mz.hasIndex(cur) || !mz.hasIndex(prev)) { return mz.size(); }
 
-        std::set <DIRECTION> unvisitedDirs { UP, DOWN, LEFT, RIGHT };
+        std::set <DIRECTION> visitedDirs;
         int next = mz.size();
         int nextIdx;
-        for (int i = 0; i < 4; ++i)
+        while (!mz.hasIndex(next) && visitedDirs.size() < 4)
         {
-            int dir = r() % unvisitedDirs.size();
+            //TODO: Make this method run a maximum of once per direction
+            int dir = r() % 4;
             switch (dir)
             {
                 case UP:
                 
-                    unvisitedDirs.extract(UP);
+                    visitedDirs.emplace(UP);
                     nextIdx = mz.getNeighbor(cur, UP);
                     if(mz.validMove(cur, UP) && nextIdx != prev)
                     {
@@ -137,7 +138,7 @@ class Wilsons
                     }
                     break;
                 case DOWN: 
-                    unvisitedDirs.extract(DOWN);
+                    visitedDirs.emplace(DOWN);
                     nextIdx = mz.getNeighbor(cur, DOWN);
                     if(mz.validMove(cur, DOWN) && nextIdx != prev)
                     {
@@ -145,7 +146,7 @@ class Wilsons
                     }
                     break;
                 case LEFT:
-                    unvisitedDirs.extract(LEFT);
+                    visitedDirs.emplace(LEFT);
                     nextIdx = mz.getNeighbor(cur, LEFT);
                     if(mz.validMove(cur, LEFT) && nextIdx != prev)
                     {
@@ -153,7 +154,7 @@ class Wilsons
                     }
                     break;
                 case RIGHT: 
-                    unvisitedDirs.extract(RIGHT);
+                    visitedDirs.emplace(RIGHT);
                     nextIdx = mz.getNeighbor(cur, RIGHT);
                     if(mz.validMove(cur, RIGHT) && nextIdx != prev)
                     {
