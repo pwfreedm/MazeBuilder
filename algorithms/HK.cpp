@@ -24,13 +24,14 @@ class HK
         void
         run()
         {
-            mz.openStart();
-            int startIdx = 5;
+            int startIdx = r() % mz.size();
             while(startIdx < mz.size())
             {
                 randomWalk(startIdx);
                 startIdx = hunt();
             }
+            //open after the maze b/c otherwise they can mess with the walks
+            mz.openStart();
             mz.openEnd();
         }
         
@@ -65,8 +66,6 @@ class HK
     int
     validStep(int cur)
     {
-        if(!mz.hasIndex(cur)) { return mz.size(); }
-
         auto neighbors = mz.getNeighbors(cur, false);
 
         if (neighbors.empty()) { return mz.size(); }
@@ -83,7 +82,9 @@ class HK
         for (int lastIdx = 0; lastIdx < mz.size(); ++lastIdx)
         {
             neighbors = mz.getNeighbors(lastIdx);
-            if (!neighbors.empty())
+            //cells not in the maze with neighbors in the maze are
+            //valid candidates for starting a walk
+            if (!mz.inMaze(lastIdx) && !neighbors.empty())
             {
                 DIRECTION dir = neighbors[r() % neighbors.size()];
                 int neighbor =  mz.getNeighbor(lastIdx, dir);

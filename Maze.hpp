@@ -248,10 +248,12 @@ class Maze
         return maze[idx];
     }
 
-    /** Connects cells at idx1 and idx2 */
+    /** Connects cells at idx1 and idx2. Bounds checked. */
     void
     connect(int idx1, int idx2)
     {
+        if (!hasIndex(idx1) || !hasIndex(idx2)) { return; }
+
         int diff = idx1 - idx2; 
 
         if (diff == 1)
@@ -333,25 +335,25 @@ class Maze
         out.reserve(4);
 
         if (validMove(idx, UP) && 
-            (maze[getNeighbor(idx, UP)].val() == connect))
+            (inMaze(getNeighbor(idx, UP)) == connect))
         {
             out.push_back(UP);
         }
 
         if (validMove(idx, DOWN) && 
-            (maze[getNeighbor(idx, UP)].val() == connect))
+            (inMaze(getNeighbor(idx, DOWN)) == connect))
         {
             out.push_back(DOWN);
         }
 
         if (validMove(idx, LEFT) && 
-            (maze[getNeighbor(idx, LEFT)].val() == connect))
+            (inMaze(getNeighbor(idx, LEFT)) == connect))
         {
             out.push_back(LEFT);
         }
 
         if (validMove(idx, RIGHT) && 
-            (maze[getNeighbor(idx, RIGHT)].val() == connect))
+            (inMaze(getNeighbor(idx, RIGHT)) == connect))
         {
             out.push_back(RIGHT);
         }
