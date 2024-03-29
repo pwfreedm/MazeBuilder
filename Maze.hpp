@@ -254,28 +254,26 @@ class Maze
     {
         if (!hasIndex(idx1) || !hasIndex(idx2)) { return; }
 
-        int diff = idx1 - idx2; 
+        DIRECTION dir = getDirection(idx1, idx2);
 
-        if (diff == 1)
+        switch(dir)
         {
-            maze[idx1].setDirection(LEFT);
-            maze[idx2].setDirection(RIGHT);
-        }
-        else if (diff == -1)
-        {
-            maze[idx1].setDirection(RIGHT);
-            maze[idx2].setDirection(LEFT);
-        }
-        else if (diff > 1)
-        {
-            maze[idx1].setDirection(UP);
-            maze[idx2].setDirection(DOWN);
-        }
-        else if (diff < -1)
-        {
-            maze[idx1].setDirection(DOWN);
-            maze[idx2].setDirection(UP);
-        }
+            case UP:
+                maze[idx1].setDirection(UP);
+                maze[idx2].setDirection(DOWN);
+                break; 
+            case DOWN: 
+                maze[idx1].setDirection(DOWN);
+                maze[idx2].setDirection(UP);
+                break; 
+            case LEFT:
+                maze[idx1].setDirection(LEFT);
+                maze[idx2].setDirection(RIGHT);
+                break; 
+            case RIGHT:
+                maze[idx1].setDirection(RIGHT);
+                maze[idx2].setDirection(LEFT);
+        };
     } 
 
     /** Returns true if going in dir from startIdx would remain in maze bounds */
@@ -334,28 +332,13 @@ class Maze
         std::vector<DIRECTION> out;
         out.reserve(4);
 
-        if (validMove(idx, UP) && 
-            (inMaze(getNeighbor(idx, UP)) == connect))
+        for (DIRECTION dir : {UP, DOWN, LEFT, RIGHT})
         {
-            out.push_back(UP);
-        }
-
-        if (validMove(idx, DOWN) && 
-            (inMaze(getNeighbor(idx, DOWN)) == connect))
-        {
-            out.push_back(DOWN);
-        }
-
-        if (validMove(idx, LEFT) && 
-            (inMaze(getNeighbor(idx, LEFT)) == connect))
-        {
-            out.push_back(LEFT);
-        }
-
-        if (validMove(idx, RIGHT) && 
-            (inMaze(getNeighbor(idx, RIGHT)) == connect))
-        {
-            out.push_back(RIGHT);
+            if (validMove(idx, dir) && 
+                (inMaze(getNeighbor(idx, dir)) == connect))
+            {
+                out.push_back(dir);
+            }
         }
         return out;
     }
