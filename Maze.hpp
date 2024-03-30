@@ -288,10 +288,7 @@ class Maze
     int
     getNeighbor (int startIdx, DIRECTION dir)
     {
-        if(!validMove(startIdx, dir))
-        {
-            return size();
-        }
+        if(!validMove(startIdx, dir)) { return size(); }
 
         switch(dir)
         {
