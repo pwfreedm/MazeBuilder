@@ -122,7 +122,6 @@ struct Cell
 class Maze
 {
     std::vector<Cell> maze; 
-    int len;
     int wid;
     
     public:
@@ -138,7 +137,7 @@ class Maze
         @param width - the number of columns of cells in the maze 
     */
     Maze(int length, int width)
-    :maze(length * width), len(length), wid(width)
+    :maze(length * width), wid(width)
     {}
 
     /** Value ctor - Maze of edgeLen * edgeLen size
@@ -146,7 +145,7 @@ class Maze
      * @param edgeLen - the length both edges of the maze should be.
     */
     Maze(int edgeLen)
-    :maze(edgeLen * edgeLen), len(edgeLen), wid(edgeLen)
+    :maze(edgeLen * edgeLen), wid(edgeLen)
     {}
 
     /** Equality op - Compares fields from smallest to largest*/
@@ -154,7 +153,6 @@ class Maze
     operator== (Maze& o)
     {
         return 
-               len != o.len ? false :
                wid != o.wid ? false :
                maze.data() != o.maze.data() ? false : true;
     }
@@ -165,16 +163,6 @@ class Maze
     {
         return !(*this == o);
     }
-
-    /** Accessor for length - returns the number of rows of cells in this maze*/
-    int
-    length()
-    { return len; }
-   
-    /** const Accessor for length - returns the number of rows of cells in this maze*/
-    int
-    length() const
-    { return len; }
 
     /** Accessor for width - returns the number of cols of cells in this maze*/
     int
@@ -190,14 +178,14 @@ class Maze
     int
     size()
     {
-        return len * wid;
+        return maze.size();
     }
 
     /** const accessor for the size of the maze. Multiplies len and wid fields */
     int
     size() const
     {
-        return len * wid;
+        return maze.size();
     }
 
 
@@ -404,8 +392,8 @@ class Maze
 inline std::ostream& 
     operator<<(std::ostream& os, const Maze &mz)
     {
-
-        for(int row = 0; row < mz.len; ++row)
+        int len = mz.size() / mz.width();
+        for(int row = 0; row < len; ++row)
         {   
             for(int col = 0; col < mz.wid; ++col)
             {
