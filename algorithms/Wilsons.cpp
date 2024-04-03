@@ -89,20 +89,17 @@ class Wilsons
 
         int cur = startIdx; 
         int prev;
-        int prevCpy;
         
         while(!mz.inMaze(cur))
         {
             indices.push_back(cur);
             visited[cur] = true;
-            prevCpy = prev;
             prev = cur; 
-            cur = validStep(cur, prevCpy);
+            cur = validStep(cur);
             if (visited[cur] || !mz.hasIndex(cur))
             {
                 eraseLoop(indices, prev);
                 cur = prev;
-                prev = prevCpy;
             }
         }
         indices.push_back(cur);
@@ -115,76 +112,40 @@ class Wilsons
     @return - mz.size() if there are no valid directions to move
     */
     int
-    validStep(int cur, int prev)
+    validStep(int cur)
     {
-        if(!mz.hasIndex(cur) || !mz.hasIndex(prev)) { return mz.size(); }
+        std::vector<int> neighbors;
+        neighbors.reserve(4);
 
-        std::set <DIRECTION> visitedDirs;
-        int next = mz.size();
-        int nextIdx;
-        while (!mz.hasIndex(next) && visitedDirs.size() < 4)
+        for (DIRECTION dir : {UP, DOWN, LEFT, RIGHT})
         {
-            //TODO: Make this method run a maximum of once per direction
-            int dir = r() % 4;
-            switch (dir)
+            int nextIdx = mz.getNeighbor(cur, dir);
+            if (mz.hasIndex(nextIdx) && !visited[nextIdx])
             {
-                case UP:
-                
-                    visitedDirs.emplace(UP);
-                    nextIdx = mz.getNeighbor(cur, UP);
-                    if(mz.validMove(cur, UP) && nextIdx != prev)
-                    {
-                        return nextIdx;
-                    }
-                    break;
-                case DOWN: 
-                    visitedDirs.emplace(DOWN);
-                    nextIdx = mz.getNeighbor(cur, DOWN);
-                    if(mz.validMove(cur, DOWN) && nextIdx != prev)
-                    {
-                        return nextIdx;
-                    }
-                    break;
-                case LEFT:
-                    visitedDirs.emplace(LEFT);
-                    nextIdx = mz.getNeighbor(cur, LEFT);
-                    if(mz.validMove(cur, LEFT) && nextIdx != prev)
-                    {
-                        return nextIdx;
-                    }
-                    break;
-                case RIGHT: 
-                    visitedDirs.emplace(RIGHT);
-                    nextIdx = mz.getNeighbor(cur, RIGHT);
-                    if(mz.validMove(cur, RIGHT) && nextIdx != prev)
-                    {
-                        return nextIdx;
-                    }
-                    break;
+                neighbors.push_back(nextIdx); 
             }
         }
-        return next;
+        if (neighbors.empty()) { return mz.size(); }
+
+        int move = r() % neighbors.size();
+        return neighbors[move];
     }
 
-    /** Helper to find a neighbor that has been seen already. */
+    /** Helper to find a neighbor that has been seen already. 
+        NOTE: This method is a helper for beginning loop erasure. 
+        It does not search randomly, and so shouldn't be used in 
+        any context where a random connected neighbor is needed
+    */
     int
     connectedNeighbor(int cur)
     {
-        if (mz.validMove(cur, UP) && visited[mz.getNeighbor(cur, UP)])
+        for (DIRECTION dir : {UP, DOWN, LEFT, RIGHT})
         {
-            return mz.getNeighbor(cur, UP);
-        }
-        if (mz.validMove(cur, DOWN) && visited[mz.getNeighbor(cur, DOWN)])
-        {
-            return mz.getNeighbor(cur, DOWN);
-        }
-        if (mz.validMove(cur, LEFT) && visited[mz.getNeighbor(cur, LEFT)])
-        {
-            return mz.getNeighbor(cur, LEFT);
-        }
-        if (mz.validMove(cur, RIGHT) && visited[mz.getNeighbor(cur, RIGHT)])
-        {
-            return mz.getNeighbor(cur, RIGHT);
+            int nextIdx = mz.getNeighbor(cur, dir);
+            if (mz.hasIndex(nextIdx) && visited[nextIdx])
+            {
+                return mz.getNeighbor(cur, dir);
+            }
         }
         return mz.size();
     }
