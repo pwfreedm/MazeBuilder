@@ -78,18 +78,18 @@ class HK
     int
     hunt()
     {
-        std::vector<DIRECTION> neighbors;
         for (int lastIdx = 0; lastIdx < mz.size(); ++lastIdx)
         {
-            neighbors = mz.getNeighbors(lastIdx);
-            //cells not in the maze with neighbors in the maze are
-            //valid candidates for starting a walk
-            if (!mz.inMaze(lastIdx) && !neighbors.empty())
+            if (!mz.inMaze(lastIdx))
             {
-                DIRECTION dir = neighbors[r() % neighbors.size()];
-                int neighbor =  mz.getNeighbor(lastIdx, dir);
-                mz.connect(lastIdx, neighbor);
-                return lastIdx;
+                auto neighbors = mz.getNeighbors(lastIdx);
+                if (!neighbors.empty())
+                {
+                    DIRECTION dir = neighbors[r() % neighbors.size()];
+                    int neighbor =  mz.getNeighbor(lastIdx, dir);
+                    mz.connect(lastIdx, neighbor);
+                    return lastIdx;
+                }
             }
         }
         return mz.size();
