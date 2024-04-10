@@ -23,10 +23,10 @@ enum DIRECTION { UP, DOWN, LEFT, RIGHT };
 */
 struct Cell 
 {
-    bool up{false};
-    bool down{false};
-    bool left{false};
-    bool right{false};
+    bool up    : 1{false};
+    bool down  : 1{false};
+    bool left  : 1{false};
+    bool right : 1{false};
 
 
     //Default ctor
