@@ -37,6 +37,7 @@ class MazeBuilder
     {
         return lastSeed;
     }
+    
     /** Builds a maze using Wilson's algorithm 
     
         @p length - the number of rows in the maze generated
