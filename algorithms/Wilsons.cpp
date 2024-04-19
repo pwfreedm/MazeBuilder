@@ -8,26 +8,22 @@
 
 class Wilsons
 {
+    friend class MazeBuilder;
 
-   Maze mz; 
+   Maze &mz; 
    std::minstd_rand0 r;
    std::set<int> unvisited;
    std::vector<bool> visited;
    
 
-    public:
+    protected:
 
         //force passing in a maze
         Wilsons() = delete;
 
         //maze ctor
-        Wilsons (Maze &mz)
-        :mz(mz), r(0), unvisited(genUnvisited()), visited(std::vector<bool>(mz.size()))
-        {}
-
-        //dimension ctor
-        Wilsons (int rowCount, int colCount)
-        :mz(Maze(rowCount, colCount)), r(0), unvisited(genUnvisited()), visited(std::vector<bool>(mz.size()))
+        Wilsons (Maze &mz, long long int seed)
+        :mz(mz), r(seed), unvisited(genUnvisited()), visited(std::vector<bool>(mz.size()))
         {}
 
         //runs the algorithm on the maze it was constructed with

@@ -6,19 +6,16 @@
 
 class HK
 {
-    //TODO: Replace this with a call that gets time after testing is done
-    const static int RNG_SEED = 0;
-    Maze mz;
+    friend class MazeBuilder;
+
+    Maze &mz;
     std::minstd_rand r;
 
-    public: 
+    protected: 
 
         //ctor
-        HK (Maze &mz)
-        :mz(mz), r(RNG_SEED) {}
-
-        HK (int rowCount, int colCount)
-        :mz(rowCount, colCount), r(RNG_SEED) {}
+        HK (Maze &mz, long long int seed)
+        :mz(mz), r(seed) {}
 
         //Runs the algorithm on the provided maze
         void

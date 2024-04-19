@@ -124,9 +124,8 @@ class Maze
     std::vector<Cell> maze; 
     int wid;
     
-    public:
+    friend class MazeBuilder;
 
-    friend std::ostream& operator<< (std::ostream& os, const Maze& mz);
 
     //require dimensions
     Maze() = delete;
@@ -147,6 +146,11 @@ class Maze
     Maze(int edgeLen)
     :maze(edgeLen * edgeLen), wid(edgeLen)
     {}
+
+    public:
+
+    friend std::ostream& operator<< (std::ostream& os, const Maze& mz);
+
 
     /** Equality op - Compares fields from smallest to largest*/
     bool
