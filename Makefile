@@ -5,8 +5,8 @@ CXX := g++
 
 # C++ compiler flags
 # Use the first for debugging, the second for release
-CXXFLAGS := -g -Wall -std=c++20 
-#CXXFLAGS := -O3 -Wall -std=c++20
+CXXFLAGS := -g -Wall -fdeclspec -std=c++20 
+#CXXFLAGS := -O3 -Wall -fdeclspec -std=c++20
 
 #############################################################
 

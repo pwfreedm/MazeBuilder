@@ -1,3 +1,5 @@
+
+#define _MSC_EXTENSIONS
 #include <chrono>
 #include <optional>
 
@@ -97,3 +99,11 @@ class MazeBuilder
     }
 
 };
+
+extern "C"
+{
+    __declspec(dllexport) Maze genWilsons (int length, int width, long long int seed = 0)
+    {
+        
+    }
+}
