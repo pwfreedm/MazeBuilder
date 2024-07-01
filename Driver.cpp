@@ -5,8 +5,8 @@
 
 
 #include <string>
-#include "MazeBuilder.cpp"
-#include "Maze.hpp"
+#include "./include/MazeBuilder.cpp"
+#include "./include/Maze.hpp"
 
 int 
 main(int argc, char* argv[])

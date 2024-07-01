@@ -2,7 +2,7 @@
 #include <vector>
 #include <map>
 
-#include "../Maze.hpp"
+#include "../include/Maze.hpp"
 
 enum State 
 {

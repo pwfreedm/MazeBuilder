@@ -1,7 +1,7 @@
 #include <random>
 #include <vector> //neighbors
 
-#include "../Maze.hpp"
+#include "../include/Maze.hpp"
 
 
 class HK
@@ -92,9 +92,6 @@ class HK
         return mz.size();
     }
 };
-
-
-
 
 inline std::ostream& 
 operator<<(std::ostream& os, const HK &hk)

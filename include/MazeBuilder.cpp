@@ -1,10 +1,9 @@
-
 #include <chrono>
 #include <optional>
 
 #include "Maze.hpp"
-#include "algorithms/Wilsons.cpp"
-#include "algorithms/HK.cpp"
+#include "../algorithms/Wilsons.cpp"
+#include "../algorithms/HK.cpp"
 
 /** A factory class responsible for all maze building. */
 class MazeBuilder

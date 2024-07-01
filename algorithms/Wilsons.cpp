@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 
-#include "../Maze.hpp"
+#include "../include/Maze.hpp"
 
 class Wilsons
 {
