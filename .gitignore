@@ -1,6 +1,5 @@
 *.o
 *.out
 *.exe
-M
 settings.json
 .vscode
