@@ -3,3 +3,5 @@
 *.exe
 settings.json
 .vscode
+TestApp
+__pycache__

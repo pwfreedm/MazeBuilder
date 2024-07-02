@@ -354,7 +354,6 @@ operator<<(std::ostream& os, const Maze &mz)
 
 extern "C"
 {
-    #include <stdio.h>
     class Maze; 
 
     Maze*
@@ -406,7 +405,7 @@ extern "C"
     }
 
     void
-    set (Maze& self, int row, int col, const Cell& cell)
+    set (Maze& self, int row, int col, Cell& cell)
     {
         self.set(row, col, cell);
     }

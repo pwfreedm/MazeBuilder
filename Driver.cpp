@@ -5,7 +5,7 @@
 
 
 #include <string>
-#include "./include/MazeBuilder.cpp"
+#include "./include/MazeBuilder.hpp"
 #include "./include/Maze.hpp"
 
 int 

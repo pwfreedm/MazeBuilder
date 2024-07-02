@@ -67,7 +67,7 @@ Wilsons::validStep(int cur)
     std::vector<int> neighbors;
     neighbors.reserve(4);
 
-    for (DIRECTION dir : {UP, DOWN, LEFT, RIGHT})
+    for (Direction dir : {UP, DOWN, LEFT, RIGHT})
     {
         int nextIdx = mz.getNeighbor(cur, dir);
         if (mz.hasIndex(nextIdx) && !visited[nextIdx])
@@ -84,7 +84,7 @@ Wilsons::validStep(int cur)
 int
 Wilsons::connectedNeighbor(int cur)
 {
-    for (DIRECTION dir : {UP, DOWN, LEFT, RIGHT})
+    for (Direction dir : {UP, DOWN, LEFT, RIGHT})
     {
         int nextIdx = mz.getNeighbor(cur, dir);
         if (mz.hasIndex(nextIdx) && visited[nextIdx])

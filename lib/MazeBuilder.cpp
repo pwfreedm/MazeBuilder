@@ -4,9 +4,9 @@
 #include "../include/MazeBuilder.hpp"
 
 //algorithms being built
-#include "Wilsons.cpp"
-#include "HK.cpp"
-#include "CellularAutomata.cpp"
+#include "../include/Wilsons.hpp"
+#include "../include/HK.hpp"
+#include "../include/CellularAutomata.hpp"
     
 long long int
 MazeBuilder::getSeed()

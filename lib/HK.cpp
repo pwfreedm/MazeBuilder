@@ -52,7 +52,7 @@ HK::hunt()
             auto neighbors = mz.getNeighbors(lastIdx);
             if (!neighbors.empty())
             {
-                DIRECTION dir = neighbors[r() % neighbors.size()];
+                Direction dir = neighbors[r() % neighbors.size()];
                 int neighbor =  mz.getNeighbor(lastIdx, dir);
                 mz.connect(lastIdx, neighbor);
                 return lastIdx;
