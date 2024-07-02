@@ -9,7 +9,7 @@
 #include <iostream> 
 #include <vector>
 
-enum DIRECTION { UP, DOWN, LEFT, RIGHT };
+enum Direction { UP, DOWN, LEFT, RIGHT };
 
 /**A cell in the maze consists of 4 bits, [up, down, left, right]
     By default, all four values are initialized to false. 
@@ -49,10 +49,10 @@ struct Cell
     bool operator!= (const Cell &o);
 
     // Sets direction dir to true (removes that wall from the cell)
-    void setDirection (DIRECTION dir);
+    void setDirection (Direction dir);
 
     //Flips the state of the bit corresponding to dir
-    void updateDirection (DIRECTION dir);
+    void updateDirection (Direction dir);
 };
 
 /** A maze is a vector of cells and a width */
@@ -63,6 +63,8 @@ class Maze
 
     friend class MazeBuilder;
 
+public:
+
     //force a maze to have dimensions
     Maze () = delete; 
 
@@ -71,8 +73,6 @@ class Maze
 
     //shortcut to create a square maze with dimensions edgeLen x edgeLen
     Maze (int edgeLen);
-
-    public:
 
     //print a maze
     friend std::ostream& operator<< (std::ostream& os, const Maze& mz);
@@ -130,24 +130,24 @@ class Maze
     void connect (int idx1, int idx2);
 
     //Returns true if going in dir from startIdx would remain in maze bounds
-    bool validMove (int startIdx, DIRECTION dir);
+    bool validMove (int startIdx, Direction dir);
 
     /** Returns the index that results from moving in dir from startIdx.
         Returns the size of the maze if the move would be out of bounds 
     */
-    int getNeighbor (int startIdx, DIRECTION dir);
+    int getNeighbor (int startIdx, Direction dir);
 
     /** Gets all neighbors to the cell at idx that meet criteria @p connected. 
     
         @p connected - whether or not the neighbors being searched for are connected
 
-        @return - A vector of DIRECTION values containing all the neighbors that 
+        @return - A vector of Direction values containing all the neighbors that 
         are either connected or disconnected
     */
-    std::vector<DIRECTION> getNeighbors (int idx, bool connect = true);
+    std::vector<Direction> getNeighbors (int idx, bool connect = true);
 
     //Returns the direction to get to dstIdx from startIdx
-    DIRECTION getDirection (int startIdx, int dstIdx);
+    Direction getDirection (int startIdx, int dstIdx);
 
     //Returns true if the cell at location idx is connected to the maze. Bounds checked.
     bool inMaze (int idx);

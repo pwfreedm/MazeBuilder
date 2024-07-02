@@ -36,7 +36,7 @@ Cell::compare(const Cell &o) const
 }
 
 void
-Cell::setDirection (DIRECTION dir)
+Cell::setDirection (Direction dir)
 {
     switch (dir)
     {
@@ -56,7 +56,7 @@ Cell::setDirection (DIRECTION dir)
 }
 
 void
-Cell::updateDirection(DIRECTION dir)
+Cell::updateDirection(Direction dir)
 {
     switch (dir)
     {
@@ -74,6 +74,63 @@ Cell::updateDirection(DIRECTION dir)
             break;
     }
 }
+
+/*********************************************************************/
+//Cell Extern Interface
+
+extern "C"
+{
+    struct Cell;
+
+    Cell* 
+    newCell ()
+    {
+        return new Cell();
+    }
+
+    Cell* 
+    newPresetCell (bool up, bool down, bool left, bool right)
+    {
+        return new Cell(up, down, left, right);
+    }
+
+    int
+    val (Cell& self)
+    {
+        return self.val();
+    }
+
+    bool
+    equalCell (Cell& self, Cell& other)
+    {
+        return self == other;
+    }
+
+    bool
+    noteqCell (Cell& self, Cell& other)
+    {
+        return self != other;
+    }
+
+    int
+    cmpCell (Cell& self, Cell& other)
+    {
+        return self.compare(other);
+    }
+
+    void
+    setDir (Cell& self, Direction dir)
+    {
+        self.setDirection(dir);
+    }
+
+    void
+    updateDir (Cell& self, Direction dir)
+    {
+        self.updateDirection(dir);
+    }
+}
+
 
 /*********************************************************************/
 //Maze Definition
@@ -149,7 +206,7 @@ Maze::connect(int idx1, int idx2)
 {
     if (!hasIndex(idx1) || !hasIndex(idx2)) { return; }
 
-    DIRECTION dir = getDirection(idx1, idx2);
+    Direction dir = getDirection(idx1, idx2);
 
     switch(dir)
     {
@@ -172,7 +229,7 @@ Maze::connect(int idx1, int idx2)
 } 
 
 bool
-Maze::validMove (int startIdx, DIRECTION dir)
+Maze::validMove (int startIdx, Direction dir)
 {
     switch(dir)
     {
@@ -189,7 +246,7 @@ Maze::validMove (int startIdx, DIRECTION dir)
 }
 
 int
-Maze::getNeighbor (int startIdx, DIRECTION dir)
+Maze::getNeighbor (int startIdx, Direction dir)
 {
     if(!validMove(startIdx, dir)) { return size(); }
 
@@ -207,13 +264,13 @@ Maze::getNeighbor (int startIdx, DIRECTION dir)
     return size();
 }
 
-std::vector<DIRECTION>
+std::vector<Direction>
 Maze::getNeighbors (int idx, bool connect)
 {
-    std::vector<DIRECTION> out;
+    std::vector<Direction> out;
     out.reserve(4);
 
-    for (DIRECTION dir : {UP, DOWN, LEFT, RIGHT})
+    for (Direction dir : {UP, DOWN, LEFT, RIGHT})
     {
         if (validMove(idx, dir) && 
             (inMaze(getNeighbor(idx, dir)) == connect))
@@ -224,7 +281,7 @@ Maze::getNeighbors (int idx, bool connect)
     return out;
 }
 
-DIRECTION
+Direction
 Maze::getDirection (int startIdx, int dstIdx)
 {
     int diff = startIdx - dstIdx; 
@@ -291,3 +348,120 @@ operator<<(std::ostream& os, const Maze &mz)
     }
     return os;
 } 
+
+/*********************************************************************/
+//Maze Extern Interface
+
+extern "C"
+{
+    #include <stdio.h>
+    class Maze; 
+
+    Maze*
+    newMaze (int length, int width)
+    {
+        return new Maze(length, width);
+    }
+
+    Maze*
+    newSquareMaze (int edgeLen)
+    {
+        return new Maze(edgeLen);
+    }
+
+    bool
+    equalMaze (Maze& self, Maze& other)
+    {
+        return self == other;
+    }
+
+    bool
+    noteqMaze (Maze& self, Maze& other)
+    {
+        return self != other;
+    }
+
+    int
+    width (Maze& self)
+    {
+        return self.width();
+    }
+
+    int 
+    size (Maze& self)
+    {
+        return self.size();
+    }
+
+    int 
+    length (Maze& self)
+    {
+        return self.size() / self.width();
+    }
+
+    Cell*
+    get (Maze& self, int row, int col)
+    {
+        return &self.get(row, col);
+    }
+
+    void
+    set (Maze& self, int row, int col, const Cell& cell)
+    {
+        self.set(row, col, cell);
+    }
+
+    void
+    connect (Maze& self, int idx1, int idx2)
+    {
+        self.connect(idx1, idx2);
+    }
+
+    bool
+    validMove (Maze& self, int startIdx, Direction dir)
+    {
+        return self.validMove(startIdx, dir);
+    }
+
+    int
+    getNeighbor (Maze& self, int startIdx, Direction dir)
+    {
+        return self.getNeighbor(startIdx, dir);
+    }
+
+    Direction
+    getDirection (Maze& self, int startIdx, int dstIdx)
+    {
+        return self.getDirection(startIdx,  dstIdx);
+    }
+
+    bool
+    inMaze (Maze& self, int idx)
+    {
+        return self.inMaze(idx);
+    }
+
+    bool
+    hasIndex (Maze& self, int idx)
+    {
+        return self.hasIndex(idx);
+    }
+
+    void
+    openStart (Maze& self)
+    {
+        self.openStart();
+    }
+
+    void
+    openEnd (Maze& self)
+    {
+        self.openEnd();
+    }
+
+    void
+    printMaze (Maze& self)
+    {
+        std::cout << self;
+    }
+}
