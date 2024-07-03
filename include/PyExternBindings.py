@@ -1,7 +1,7 @@
 from ctypes import *
 
 lib = CDLL("/git/Thesis/shared/Maze.so")
-builder = CDLL("/git/Thesis/shared/MazeBuilder.so")
+builder = CDLL("/git/Thesis/shared/MazeBuilding.so")
 
 ################## Class Definitions ##################
 
@@ -17,30 +17,21 @@ class MazeBuilder (Structure):
     pass
 MazeBuilder._fields_ = [("seed", c_longlong)]
 
-################## MazeBuilder Bindings ##################
-
-newMazeBuilder = builder.newMazeBuilder
-newMazeBuilder.argtypes = []
-newMazeBuilder.restype = MazeBuilder
-
 genEmptyMaze = builder.genEmptyMaze
 genEmptyMaze.argtypes = [c_int32, c_int32]
 genEmptyMaze.restype = Maze
 
-getLastSeed = builder.getLastSeed
-getLastSeed.argtypes = []
-getLastSeed.restype = c_longlong
-
+#updates provided maze and returns seed
 genWilsons = builder.genWilsons
-genWilsons.argtypes = [MazeBuilder, Maze, c_longlong]
+genWilsons.argtypes = [Maze, c_longlong]
 
+#updates provided maze and returns seed
 genHuntAndKill = builder.genHuntAndKill
-genHuntAndKill.argtypes = [MazeBuilder, Maze, c_longlong]
+genHuntAndKill.argtypes = [Maze, c_longlong]
 
+#updates provided maze and returns seed
 genCellularAutomata = builder.genCellularAutomata
-genCellularAutomata.argtypes = [MazeBuilder, Maze, c_longlong]
-
-################## Maze Bindings ##################
+genCellularAutomata.argtypes = [Maze, c_longlong]
 
 printMaze = lib.printMaze
 printMaze.argtypes = [Maze]

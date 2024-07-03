@@ -10,14 +10,13 @@
 
 class Wilsons
 {
-    friend class MazeBuilder;
 
    Maze &mz; 
    std::minstd_rand0 r;
    std::set<int> unvisited;
    std::vector<bool> visited;
 
-protected:
+public:
 
    Wilsons () = delete;
    

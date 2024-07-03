@@ -25,7 +25,6 @@ struct Transition_Table
 
 class CellularAutomata
 {
-    friend class MazeBuilder;
 
     Maze& mz;
     std::minstd_rand r;

@@ -1,6 +1,5 @@
 #include "../include/HK.hpp"
-extern "C"
-{
+
     HK::HK (Maze &mz, long long int seed)
     :mz(mz), r(seed) {}
 
@@ -62,7 +61,7 @@ extern "C"
         }
         return mz.size();
     }
-}
+
 inline std::ostream& 
 operator<<(std::ostream& os, const HK &hk)
 {

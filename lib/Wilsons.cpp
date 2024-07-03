@@ -1,8 +1,5 @@
 #include "../include/Wilsons.hpp"
 
-extern "C"
-{
-
     Wilsons::Wilsons (Maze &mz, long long int seed)
     :mz(mz), r(seed), unvisited(genUnvisited()), visited(std::vector<bool>(mz.size()))
     {}
@@ -137,7 +134,7 @@ extern "C"
         visited[prev] = false;
         unvisited.erase(prev);
     }
-}
+
 inline std::ostream& 
 operator<<(std::ostream& os, const Wilsons &w)
 {

@@ -61,7 +61,6 @@ class Maze
     std::vector<Cell> maze; 
     int wid;
 
-    friend class MazeBuilder;
 
 public:
 
