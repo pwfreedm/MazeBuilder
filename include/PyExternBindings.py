@@ -20,6 +20,7 @@ MazeBuilder._fields_ = [("seed", c_longlong)]
 ################## MazeBuilder Bindings ##################
 
 newMazeBuilder = builder.newMazeBuilder
+newMazeBuilder.argtypes = []
 newMazeBuilder.restype = MazeBuilder
 
 genEmptyMaze = builder.genEmptyMaze
@@ -27,6 +28,7 @@ genEmptyMaze.argtypes = [c_int32, c_int32]
 genEmptyMaze.restype = Maze
 
 getLastSeed = builder.getLastSeed
+getLastSeed.argtypes = []
 getLastSeed.restype = c_longlong
 
 genWilsons = builder.genWilsons

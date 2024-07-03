@@ -19,6 +19,8 @@ class Wilsons
 
 protected:
 
+   Wilsons () = delete;
+   
    //ctor
    Wilsons (Maze&mz, long long int seed);
 

@@ -9,15 +9,13 @@ CXXFLAGS := -g -Wall -std=c++20
 #CXXFLAGS := -O3 -Wall -std=c++20
 
 #############################################################
-
-TestApp : Driver.cpp ./shared/Maze.so ./shared/MazeBuilder.so 
-	$(CXX) $(CXXFLAGS)$^ -o $@
+all: ./shared/Maze.so ./shared/MazeBuilder.so 
 
 ./shared/Maze.so : ./lib/Maze.cpp ./include/Maze.hpp 
 	$(CXX) $(CXXFLAGS) -shared $< -fPIC -o $@
 
-./shared/MazeBuilder.so : ./lib/MazeBuilder.cpp ./include/MazeBuilder.hpp ./lib/Wilsons.cpp ./include/Wilsons.hpp ./lib/HK.cpp ./include/HK.hpp ./lib/CellularAutomata.cpp ./include/CellularAutomata.hpp
-	$(CXX) $(CXXFLAGS) -shared $< -fPIC -o $@
+./shared/MazeBuilder.so : ./include/Maze.hpp ./include/Wilsons.hpp ./include/HK.hpp ./include/CellularAutomata.hpp ./include/MazeBuilder.hpp ./lib/Maze.cpp ./lib/Wilsons.cpp ./lib/HK.cpp ./lib/CellularAutomata.cpp ./lib/MazeBuilder.cpp
+	$(CXX) $(CXXFLAGS) -shared -fPIC ./lib/Maze.cpp ./lib/Wilsons.cpp ./lib/HK.cpp ./lib/CellularAutomata.cpp ./lib/MazeBuilder.cpp -o $@
 
 #############################################################
 

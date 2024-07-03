@@ -13,6 +13,8 @@ class HK
 
 protected: 
 
+    HK () = delete;
+    
     //Constructor
     HK (Maze &mz, long long int seed);
 

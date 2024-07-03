@@ -1,5 +1,6 @@
-from include.PyExternBindings import genEmptyMaze, genWilsons, printMaze
+from include.PyExternBindings import genEmptyMaze, printMaze, newMazeBuilder, genWilsons
 
-maze = genEmptyMaze (5,5)
+builder = newMazeBuilder()
+maze = genEmptyMaze(5,5)
+genWilsons(builder, maze, 0)
 printMaze(maze)
-
