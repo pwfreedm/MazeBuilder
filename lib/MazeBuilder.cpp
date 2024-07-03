@@ -36,6 +36,13 @@ MazeBuilder::genWilsons (int length, int width, long long int seed)
     return mz;
 }
 
+void
+MazeBuilder::genWilsons (Maze& mz, long long int seed)
+{
+    lastSeed = seed == -1 ? getSeed() : seed;
+    Wilsons wil (mz, lastSeed.value());
+    wil.run();
+}
 
 Maze
 MazeBuilder::genHuntAndKill (int length, int width, long long int seed)
@@ -47,6 +54,13 @@ MazeBuilder::genHuntAndKill (int length, int width, long long int seed)
     return mz;
 }
 
+void
+MazeBuilder::genHuntAndKill (Maze& mz, long long int seed)
+{
+    lastSeed = seed == -1 ? getSeed() : seed;
+    HK hunt(mz, lastSeed.value());
+    hunt.run();
+}
 
 Maze 
 MazeBuilder::genCellularAutomata (int length, int width, long long int seed)
@@ -58,4 +72,44 @@ MazeBuilder::genCellularAutomata (int length, int width, long long int seed)
     HK hunt (mz, lastSeed.value());
     hunt.run();
     return mz;
+}
+
+extern "C"
+{
+    MazeBuilder*
+    newMazeBuilder ()
+    {
+        return new MazeBuilder();
+    }
+
+    Maze*
+    genEmptyMaze (int length, int width)
+    {
+        return new Maze(length, width);
+    }
+
+    long long int
+    getLastSeed (MazeBuilder& self)
+    {
+        return self.getLastSeed().value_or(-1);
+    }
+
+    void
+    genWilsons (MazeBuilder& self, Maze& mz, long long int seed)
+    {
+        self.genWilsons(mz, seed);
+    }
+
+    void
+    genHuntAndKill (MazeBuilder& self, Maze& mz, long long int seed)
+    {
+        self.genHuntAndKill(mz, seed);
+    }
+
+    void
+    genCellularAutomata (MazeBuilder& self, Maze& mz, long long int seed)
+    {
+        self.genCellularAutomata(mz, seed);
+    }
+
 }
