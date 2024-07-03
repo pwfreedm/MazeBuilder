@@ -69,9 +69,14 @@ MazeBuilder::genCellularAutomata (int length, int width, long long int seed)
     Maze mz(length, width);
     //TODO: this is where I'd put my call to generate with cellular automata...
     //IF I HAD ONE
-    HK hunt (mz, lastSeed.value());
-    hunt.run();
     return mz;
+}
+
+void
+MazeBuilder::genCellularAutomata (Maze& mz, long long int seed)
+{
+    lastSeed = seed == -1 ? getSeed() : seed;
+    //TODO: put generate cellular automata call here
 }
 
 extern "C"
