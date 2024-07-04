@@ -18,30 +18,27 @@ long long int getSeed ()
     return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
 }
 
-long long int
-buildWilsons (Maze& mz, long long int seed = -1)
+Maze*
+buildWilsons (Maze& mz, long long int seed)
 {
-    auto lastSeed = seed == -1 ? getSeed() : seed;
-    Wilsons wil (mz, lastSeed);
+    Wilsons wil (mz, seed);
     wil.run();
-    return lastSeed;
+    return &mz;
 }
 
-long long int
-buildHuntAndKill (Maze& mz, long long int seed = -1)
+Maze*
+buildHuntAndKill (Maze& mz, long long int seed)
 {
-    auto lastSeed = seed == -1 ? getSeed() : seed;
-    HK hunt(mz, lastSeed);
+    HK hunt(mz, seed);
     hunt.run();
-    return lastSeed;
+    return &mz;
 }
 
-long long int
-buildCellularAutomata (Maze& mz, long long int seed = -1)
+Maze*
+buildCellularAutomata (Maze& mz, long long int seed)
 {
-    auto lastSeed = seed == -1 ? getSeed() : seed;
     //TODO: put generate cellular automata call here
-    return lastSeed;
+    return &mz;
 }
 
 extern "C"
@@ -54,18 +51,24 @@ extern "C"
     }
 
     long long int
+    genSeed ()
+    {
+        return getSeed();
+    }
+
+    Maze*
     genWilsons (Maze& mz, long long int seed)
     {
         return buildWilsons(mz, seed);
     }
 
-    long long int
+    Maze*
     genHuntAndKill (Maze& mz, long long int seed)
     {
         return buildHuntAndKill(mz, seed);
     }
 
-    long long int
+    Maze*
     genCellularAutomata (Maze& mz, long long int seed)
     {
         return buildCellularAutomata(mz, seed);

@@ -21,17 +21,21 @@ genEmptyMaze = builder.genEmptyMaze
 genEmptyMaze.argtypes = [c_int32, c_int32]
 genEmptyMaze.restype = Maze
 
-#updates provided maze and returns seed
 genWilsons = builder.genWilsons
 genWilsons.argtypes = [Maze, c_longlong]
+genWilsons.restype = Maze
 
-#updates provided maze and returns seed
 genHuntAndKill = builder.genHuntAndKill
 genHuntAndKill.argtypes = [Maze, c_longlong]
+genHuntAndKill.restype = Maze
 
-#updates provided maze and returns seed
 genCellularAutomata = builder.genCellularAutomata
 genCellularAutomata.argtypes = [Maze, c_longlong]
+genCellularAutomata.restype = Maze
+
+genSeed = builder.genSeed
+genSeed.argtypes = []
+genSeed.restype = c_longlong
 
 printMaze = lib.printMaze
 printMaze.argtypes = [Maze]
