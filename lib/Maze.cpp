@@ -141,6 +141,11 @@ Maze::Maze(int edgeLen)
 :maze(edgeLen * edgeLen), wid(edgeLen)
 {}
 
+Cell* Maze::data()
+{
+    return maze.data();
+}
+
 bool
 Maze::operator== (Maze& o)
 {
@@ -366,6 +371,12 @@ extern "C"
         return new Maze(edgeLen);
     }
 
+    Cell*
+    mazeData (Maze& self)
+    {
+        return self.data();
+    }
+
     bool
     equalMaze (Maze& self, Maze& other)
     {
@@ -402,6 +413,12 @@ extern "C"
         return &self.get(row, col);
     }
 
+    Cell*
+    getIdx (Maze& self, int idx)
+    {
+        return &self[idx];
+    }
+
     void
     set (Maze& self, int row, int col, Cell& cell)
     {
@@ -421,10 +438,12 @@ extern "C"
     }
 
     int
-    getNeighbor (Maze& self, int startIdx, Direction dir)
+    getNeighborIdx (Maze& self, int startIdx, Direction dir)
     {
         return self.getNeighbor(startIdx, dir);
     }
+
+
 
     Direction
     getDirection (Maze& self, int startIdx, int dstIdx)

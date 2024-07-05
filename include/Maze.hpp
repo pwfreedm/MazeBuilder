@@ -73,6 +73,8 @@ public:
     //shortcut to create a square maze with dimensions edgeLen x edgeLen
     Maze (int edgeLen);
 
+    //returns the vector as a pointer to a pointer to a cell - assists with extern 
+    Cell* data ();
     //print a maze
     friend std::ostream& operator<< (std::ostream& os, const Maze& mz);
 
