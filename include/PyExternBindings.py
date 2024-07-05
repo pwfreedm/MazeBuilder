@@ -41,10 +41,12 @@ class Maze (Structure):
     def length (self) -> int:
         return lib.length(self)
     
+    #TODO: figure out how to allow square brackets
+    #TODO: link up the method that takes a single index as well
     def at (self, row: int, col: int) -> Cell: 
         return lib.get(self, c_int32(row), c_int32(col))
     
-    
+
     def print (self):
         builder.printMaze(self)
         
