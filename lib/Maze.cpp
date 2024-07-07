@@ -1,5 +1,5 @@
 #include "../include/Maze.hpp"
-
+#include <sstream> 
 /*********************************************************************/
 //Cell Definition
 
@@ -331,6 +331,23 @@ Maze::openEnd()
     maze[size() - 1].setDirection(RIGHT);
 }
 
+std::string
+Maze::toString() const
+{
+    std::stringstream ss;
+    int len = size() / width();
+    for(int row = 0; row < len; ++row)
+    {   
+        for(int col = 0; col < wid; ++col)
+        {
+            Cell cur = get(row, col);
+            ss << "[" << cur.up << "," << cur.down << "," << cur.left << "," << cur.right << "] ";
+        }
+        ss << '\n';
+    }
+    return ss.str();
+}
+
 /** Overloaded output operator. Allows mazes to be manipulated with <<
     
     @param os - the output stream to insert maze's data into
@@ -339,16 +356,7 @@ Maze::openEnd()
 inline std::ostream& 
 operator<<(std::ostream& os, const Maze &mz)
 {
-    int len = mz.size() / mz.width();
-    for(int row = 0; row < len; ++row)
-    {   
-        for(int col = 0; col < mz.wid; ++col)
-        {
-            Cell cur = mz.get(row, col);
-            os << "[" << cur.up << "," << cur.down << "," << cur.left << "," << cur.right << "] ";
-        }
-        os << '\n';
-    }
+    os << mz.toString();
     return os;
 } 
 

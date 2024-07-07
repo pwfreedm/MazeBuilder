@@ -161,4 +161,7 @@ public:
 
     //Opens the right wall of the bottom left cell of the maze to create an exit
     void openEnd();
+
+    //returns a string representation of this maze
+    std::string toString () const;
 };
