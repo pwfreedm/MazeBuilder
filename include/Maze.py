@@ -23,7 +23,7 @@ class Cell (Structure):
     def __str__ (self):
         return '[' + str(int(not self.up)) + ',' + str(int(self.down)) + ',' + str(int(self.left)) + ',' + str(int(self.right)) + '] '
  
-Cell._fields_ = [("up", c_bool), ("down", c_bool), ("left", c_bool), ("right", c_bool)]
+Cell._fields_ = [("up", c_bool, 1), ("down", c_bool, 1), ("left", c_bool, 1), ("right", c_bool, 1)]
 
 class Maze (Structure):
 
@@ -65,11 +65,12 @@ class Maze (Structure):
     def __str__ (self) -> str:
         '''Converts the maze to a string
             NOTE: Please be careful with this function, it is very memory intensive. 
-            There are two copies of the string in memory during this function. Maze.print() 
+            A deep copy of the string is made. Maze.print() 
             is provided to prevent the copying if writing to output is all that's needed. 
         '''
         data = lib.toString(self).decode("utf-8")
-        out = data
+        #copy the string so the original can be destructed so the memory is properly garbage collected
+        out = ''.join(data)
         
         return out
     

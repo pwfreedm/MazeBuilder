@@ -1,17 +1,9 @@
 from os import urandom
 from include.Maze import genEmptyMaze, Maze, genWilsons, Direction
 
-#TODO: give the python maze an __str__ so that you can print it with the built print
-def test(m: Maze) -> int:
-    str(m)
-    return 1
-
 seed = int.from_bytes(urandom(8))
-maze: Maze = genEmptyMaze(100000,100000)
+maze: Maze = genEmptyMaze(7, 7)
 genWilsons(maze, 0)
-
-while True:
-    test(maze)
 
 print(maze.size())
 print("Seed: ", seed)
