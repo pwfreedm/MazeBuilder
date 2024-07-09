@@ -5,7 +5,7 @@ from os import urandom
 lib = CDLL("/git/Thesis/shared/Maze.so")
 builder = CDLL("/git/Thesis/shared/MazeBuilding.so")
 
-
+lib.toString.restype = c_char_p
 ################## Class Definitions ##################
 
 class Direction (Enum):
@@ -63,11 +63,14 @@ class Maze (Structure):
         return lib.hasIndex(self, c_int32(idx))
     
     def __str__ (self) -> str:
-        out: str = ""
-        for row in range(0, self.len()):
-            for col in range(0, self.width):
-                out += str(self.at(row, col))
-            out += '\n'
+        '''Converts the maze to a string
+            NOTE: Please be careful with this function, it is very memory intensive. 
+            There are two copies of the string in memory during this function. Maze.print() 
+            is provided to prevent the copying if writing to output is all that's needed. 
+        '''
+        data = lib.toString(self).decode("utf-8")
+        out = data
+        
         return out
     
     def print (self):

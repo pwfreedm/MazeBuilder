@@ -488,4 +488,11 @@ extern "C"
     {
         std::cout << self;
     }
+
+    const char *
+    toString (Maze& self)
+    {
+        std::string* st = new std::string(self.toString());
+        return st->c_str();
+    }
 }
