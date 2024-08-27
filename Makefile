@@ -5,7 +5,7 @@ CXX := g++
 
 # C++ compiler flags
 # Use the first for debugging, the second for release
-CXXFLAGS := -g -Wall -std=c++20 
+CXXFLAGS := -g -Wall -std=c++20 -I/usr/include/python3.12 -lpython3.12
 #CXXFLAGS := -O3 -Wall -std=c++20
 
 #############################################################
