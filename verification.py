@@ -1,9 +1,12 @@
 from os import urandom
-from include.Maze import genEmptyMaze, Maze, genWilsons, Direction
+import faulthandler
+from include.Maze import genEmptyMaze, Maze, genHuntAndKill, genWilsons
+
+faulthandler.enable()
 
 seed = int.from_bytes(urandom(8))
 maze: Maze = genEmptyMaze(7, 7)
-genWilsons(maze, 0)
+genHuntAndKill(maze, 0)
 
 print(maze.size())
 print("Seed: ", seed)

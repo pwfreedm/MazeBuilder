@@ -40,38 +40,3 @@ buildCellularAutomata (Maze& mz, long long int seed)
     //TODO: put generate cellular automata call here
     return &mz;
 }
-
-extern "C"
-{
-
-    Maze*
-    genEmptyMaze (int length, int width)
-    {
-        return new Maze(length, width);
-    }
-
-    long long int
-    genSeed ()
-    {
-        return getSeed();
-    }
-
-    Maze*
-    genWilsons (Maze& mz, long long int seed)
-    {
-        return buildWilsons(mz, seed);
-    }
-
-    Maze*
-    genHuntAndKill (Maze& mz, long long int seed)
-    {
-        return buildHuntAndKill(mz, seed);
-    }
-
-    Maze*
-    genCellularAutomata (Maze& mz, long long int seed)
-    {
-        return buildCellularAutomata(mz, seed);
-    }
-
-}

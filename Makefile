@@ -11,6 +11,9 @@ CXXFLAGS := -g -Wall -std=c++20
 #############################################################
 all: ./shared/Maze.so ./shared/MazeBuilding.so 
 
+Driver: Driver.cpp ./include/Maze.hpp ./include/Wilsons.hpp
+	$(CXX) $(CXXFLAGS) Driver.cpp ./lib/Maze.cpp ./lib/Wilsons.cpp -o $@
+
 ./shared/Maze.so : ./lib/Maze.cpp ./include/Maze.hpp 
 	$(CXX) $(CXXFLAGS) -shared $< -fPIC -o $@
 
@@ -20,5 +23,6 @@ all: ./shared/Maze.so ./shared/MazeBuilding.so
 #############################################################
 
 clean:
-	$(RM) TestApp
+	$(RM) Driver
 	$(RM) ./shared/*.so
+
