@@ -5,3 +5,4 @@ settings.json
 .vscode
 TestApp
 __pycache__
+venv

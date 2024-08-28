@@ -1,7 +1,9 @@
 #include <pybind11/pybind11.h>
-#include "Maze.hpp"
+#include <vector>
 
-namespace py = pybind11
+#include "../lib/Maze.cpp"
+
+namespace py = std::pybind11;
 
 PYBIND11_MODULE(Cell, Cell)
 {
@@ -19,6 +21,8 @@ PYBIND11_MODULE(Maze, Maze)
 {
     Maze.doc() = "A pybind module wrapping a C++ implementation of a Maze"
     
-    py::def
+    py::class_<Maze>(Maze, "Maze")
+        .def(py::init<int, int>())
+        
     Maze.def()
 }
