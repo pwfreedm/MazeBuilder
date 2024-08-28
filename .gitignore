@@ -1,8 +1,16 @@
+
+#don't upload any executables
 *.o
 *.out
 *.exe
+
+#don't upload vscode config garbage
 settings.json
 .vscode
-TestApp
+
+#don't upload python environment garbage
 __pycache__
 venv
+
+#don't upload CMake garbage to repo
+build/out/*
