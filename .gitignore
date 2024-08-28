@@ -7,10 +7,12 @@
 #don't upload vscode config garbage
 settings.json
 .vscode
+.cache
 
 #don't upload python environment garbage
 __pycache__
 venv
+pyvenv.cfg
 
 #don't upload CMake garbage to repo
-build/out/*
+build/*

@@ -1,14 +1,14 @@
 #include <pybind11/pybind11.h>
 #include <vector>
 
-#include "../lib/Maze.cpp"
+#include "../Maze.cpp"
 
-namespace py = std::pybind11;
+namespace py = pybind11;
 
-PYBIND11_MODULE(Cell, Cell)
+PYBIND11_MODULE(Cell, C)
 {
-    Cell.doc() = "A pybind module wrapping a 4-bit cell implementation"
-    py::class_<Cell>(Cell, "Cell")
+    C.doc() = "A pybind module wrapping a 4-bit cell implementation";
+    py::class_<Cell>(C, "Cell")
         .def(py::init<bool, bool, bool, bool>())
         .def("val" &Cell::val)
         .def("compare", &Cell::compare)
@@ -17,12 +17,12 @@ PYBIND11_MODULE(Cell, Cell)
 }
 
 
-PYBIND11_MODULE(Maze, Maze)
+PYBIND11_MODULE(Maze, M)
 {
-    Maze.doc() = "A pybind module wrapping a C++ implementation of a Maze"
+    M.doc() = "A pybind module wrapping a C++ implementation of a Maze";
     
-    py::class_<Maze>(Maze, "Maze")
-        .def(py::init<int, int>())
+    py::class_<Maze>(M, "Maze")
+        .def(py::init<int, int>());
         
     Maze.def()
 }
