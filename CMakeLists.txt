@@ -4,6 +4,7 @@ project(Maze)
 
 #CMake Config Options
 set(CMAKE_EXPORT_COMPILE_COMMANDS on)
+set(CMAKE_CXX_COMPILE Clang++)
 
 #C++ Version Control
 set(CMAKE_CXX_STANDARD 20 CACHE STRING "C++ version selection")

@@ -1,5 +1,4 @@
 #include <pybind11/pybind11.h>
-#include <vector>
 
 #include "../Maze.cpp"
 
@@ -13,7 +12,7 @@ PYBIND11_MODULE(Cell, C)
         .def("val" &Cell::val)
         .def("compare", &Cell::compare)
         .def("setDirection", &Cell::setDirection)
-        .def("updateDirection", &Cell::updateDirection)
+        .def("updateDirection", &Cell::updateDirection);
 }
 
 
