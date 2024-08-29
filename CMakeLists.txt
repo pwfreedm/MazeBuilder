@@ -14,5 +14,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Python 3.12 COMPONENTS Interpreter Development REQUIRED)
 find_package(pybind11 CONFIG REQUIRED)
 
+#Creating the module 
 pybind11_add_module(Maze src/lib/bindings/Maze_Bindings.cpp)
 install(TARGETS Maze DESTINATION .)
