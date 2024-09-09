@@ -1,4 +1,3 @@
-from Maze import Cell
+from Maze import Maze
 
-c = Cell.__init__(0,0,0,0)
-print(c)
+Cell = Maze(5,3)
