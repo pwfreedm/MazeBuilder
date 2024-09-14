@@ -1,7 +1,10 @@
 #include "../include/HK.hpp"
 
     HK::HK (Maze &mz, long long int seed)
-    :mz(mz), r(seed) {}
+    :mz(mz), r(seed) 
+    {
+        run();
+    }
 
     void
     HK::run()

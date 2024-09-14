@@ -6,17 +6,22 @@
 
 namespace py = pybind11;
 
-
+//TODO: __setitem__ doesn't work b/c the C++ function expects two indices
 PYBIND11_MODULE(Maze, M)
 {
     M.doc() = "A pybind module wrapping a C++ implementation of a Maze";
     
     py::class_<Cell>(M, "Cell")
         .def(py::init<bool, bool, bool, bool>())
+        .def_property_readonly("up", &Cell::getUp)
+        .def_property_readonly("down", &Cell::getDown)
+        .def_property_readonly("left", &Cell::getLeft)
+        .def_property_readonly("right", &Cell::getRight)
         .def("val", &Cell::val, "get a numeric value of this cells current state")
         .def("compare", &Cell::compare, "compare this cell to another. Returns 1 if this cell has a greater value, -1 if other has a greater value, and 0 if they are equal.")
         .def("setDirection", &Cell::setDirection, "sets the given direction to true")
-        .def("updateDirection", &Cell::updateDirection, "flips the state of the given direction");
+        .def("updateDirection", &Cell::updateDirection, "flips the state of the given direction")
+        .def("__str__", &Cell::str);
 
     py::class_<Maze>(M, "Maze")
         .def(py::init<int, int>())
@@ -36,10 +41,10 @@ PYBIND11_MODULE(Maze, M)
         .def("__str__", &Maze::toString);
 
     py::class_<Wilsons>(M, "Wilsons")
-        .def(py::init<Maze, int>())
+        .def(py::init<Maze&, int>())
         .def("run", &Wilsons::run);
 
     py::class_<HK>(M, "HK")
-        .def(py::init<Maze, int>())
+        .def(py::init<Maze&, int>())
         .def("run", &HK::run);
 }

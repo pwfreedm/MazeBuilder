@@ -1,3 +1,10 @@
+[tool.scikit.dependencies]
+python = "^3.10"
+
+[tool.scikit.dev-dependencies]
+pytest = "^8"
+mypy = "*"
+
 [build-system]
 requires = ["scikit-build-core", "pybind11"]
 build-backend = "scikit_build_core.build"

@@ -16,6 +16,30 @@ Cell::val() const
 }
 
 bool
+Cell::getUp()
+{
+    return up;
+}
+
+bool 
+Cell::getDown()
+{
+    return down;
+}
+
+bool
+Cell::getRight()
+{
+    return right;
+}
+
+bool 
+Cell::getLeft()
+{
+    return left;
+}
+
+bool
 Cell::operator== (const Cell &o)
 {
     return val() == o.val();
@@ -71,6 +95,14 @@ Cell::updateDirection(Direction dir)
             right = !right; 
             break;
     }
+}
+
+std::string
+Cell::str()
+{
+    std::stringstream ss;
+    ss << "[" << up << "," << down << "," << left << "," << right << "] ";
+    return ss.str();
 }
 
 /*********************************************************************/

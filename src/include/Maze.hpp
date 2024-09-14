@@ -32,6 +32,16 @@ struct Cell
     */
     int val () const;
 
+    /** Get the value of the up field */
+    bool getUp();
+    /** Get the value of the down field */
+    bool getDown();
+    /** Get the value of the left field */
+    bool getLeft();
+    /** Get the value of the right field */
+    bool getRight();
+
+
     /** Compares this cell to another cell
 
     @p o - the cell to compare to this one
@@ -53,6 +63,8 @@ struct Cell
 
     //Flips the state of the bit corresponding to dir
     void updateDirection (Direction dir);
+
+    std::string str();
 };
 
 /** A maze is a vector of cells and a width */

@@ -2,7 +2,9 @@
 
     Wilsons::Wilsons (Maze &mz, long long int seed)
     :mz(mz), r(seed), unvisited(genUnvisited()), visited(std::vector<bool>(mz.size()))
-    {}
+    {
+        run();
+    }
 
     void
     Wilsons::run()
