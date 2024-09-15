@@ -89,18 +89,18 @@ parser.add_argument('-r', '--repeat',
                     help='define the number of times to repeat maze generation (default 0)')
 
 parser.add_argument('-ls', '--len-step',
-                              action='store',
-                              type=int,
-                              default=0,
-                              nargs=1,
-                              help='define the amount to grow the length of the maze by between repetitions. Ignored if repetitions = 0 (default 0)')
+                    action='store',
+                    type=int,
+                    default=0,
+                    nargs=1,
+                    help='define the amount to grow the length of the maze by between repetitions. Ignored if repetitions = 0 (default 0)')
 
 parser.add_argument('-ws', '--wid-step',
-                              action='store',
-                              type=int,
-                              default=0,
-                              nargs=1,
-                              help='define the amount to grow the width of the maze by between repetitions. Ignored if repetitions = 0 (default 0)')
+                    action='store',
+                    type=int,
+                    default=0,
+                    nargs=1,
+                    help='define the amount to grow the width of the maze by between repetitions. Ignored if repetitions = 0 (default 0)')
 
 #TODO: expand this to a proper main of some kind
 args = parser.parse_args()
