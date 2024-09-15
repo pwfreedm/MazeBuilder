@@ -19,13 +19,11 @@ from pathlib import Path
 '''
 parser = argparse.ArgumentParser(prog="MazeBuilder",
                                  description="CLI Parser for Maze Generation")
-subparsers = parser.add_subparsers(help='help with the subcommands to the --repeat command')
 
 parser.add_argument('-a', '--algo',
                     action='store',
                     choices=['wilsons', 'hk'],
                     default='wilsons',
-                    nargs=2,
                     help="select which algorithm(s) should be used to generate the output maze(s) (default wilsons)")
 
 parser.add_argument('-s', '-seed',
@@ -61,31 +59,26 @@ parser.add_argument('-o', '--output',
 parser.add_argument('-n', '--no-pdf',
                     action='store_true',
                     default=False,
-                    nargs=1,
                     help='prevent pdfs of the mazes from being generated')
 
 parser.add_argument('-c', '--csv',
                     action='store_true',
                     default=False,
-                    nargs=1,
                     help='output a csv with maze generation data')
 
 parser.add_argument('-t', '--test',
                     action='store_true',
                     default=False,
-                    nargs=1,
                     help='tests each maze after its generation to ensure all connections are valid. if used in conjunction with --csv, adds that data to the csv (default false)')
 
 parser.add_argument('-v', '--verbose',
                     action='store_true',
                     default=False,
-                    nargs=1,
                     help='tests each maze after its generation, returning all connections in the maze that are invalid. If used with --csv, adds this data to the csv (default false)')
 
 parser.add_argument('-d', '--debug',
                     action='store_true',
                     default=False,
-                    nargs=1,
                     help='print debug information (this may be nothing, who knows.) (default false)')
 
 parser.add_argument('-r', '--repeat',
@@ -95,23 +88,20 @@ parser.add_argument('-r', '--repeat',
                     nargs=1,
                     help='define the number of times to repeat maze generation (default 0)')
 
-repeat_subparser = subparsers.add_parser('repeat steps',
-                                         help='command definitions for subcommands to the repeat command')
-
-repeat_subparser.add_argument('-ls', '--len-step',
+parser.add_argument('-ls', '--len-step',
                               action='store',
                               type=int,
                               default=0,
                               nargs=1,
-                              help='define the amount to grow the length of the maze by between repetitions (default 0)')
+                              help='define the amount to grow the length of the maze by between repetitions. Ignored if repetitions = 0 (default 0)')
 
-repeat_subparser.add_argument('-ws', '--wid-step',
+parser.add_argument('-ws', '--wid-step',
                               action='store',
                               type=int,
                               default=0,
                               nargs=1,
-                              help='define the amount to grow the width of the maze by between repetitions (default 0)')
+                              help='define the amount to grow the width of the maze by between repetitions. Ignored if repetitions = 0 (default 0)')
 
 #TODO: expand this to a proper main of some kind
 args = parser.parse_args()
-print(args.algo)
+print(args._get_args)
