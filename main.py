@@ -1,4 +1,5 @@
 import argparse
+from Maze import Maze, Wilsons, HK
 from pathlib import Path
 '''supportable options: 
         [-h, help]; displays all commands
@@ -24,27 +25,24 @@ parser.add_argument('-a', '--algo',
                     action='store',
                     choices=['wilsons', 'hk'],
                     default='wilsons',
-                    help="select which algorithm(s) should be used to generate the output maze(s) (default wilsons)")
+                    help="select which algorithm should be used to generate the output maze (default wilsons)")
 
 parser.add_argument('-s', '-seed',
                     action='store',
                     type=int,
                     default=0,
-                    nargs=1,
                     help='generates the maze with seed S (default 0)')
 
 parser.add_argument('-w', '--width',
                     action='store',
                     type=int,
                     default=50,
-                    nargs=1,
                     help="define the width of the maze (default 50)")
 
 parser.add_argument('-l', '--length',
                     action='store',
                     type=int,
                     default=50,
-                    nargs=1,
                     help='define the length of the maze (default 50)')
 
 #TODO: this will not work on Windows because ./output is an invalid path
@@ -52,7 +50,6 @@ parser.add_argument('-o', '--output',
                     action='store',
                     type=Path,
                     default=Path('./output'),
-                    nargs=1,
                     help='define the directory to which output should be stored'
                     )
 
@@ -84,24 +81,36 @@ parser.add_argument('-d', '--debug',
 parser.add_argument('-r', '--repeat',
                     action='store',
                     type=int, 
-                    default=0,
-                    nargs=1,
-                    help='define the number of times to repeat maze generation (default 0)')
+                    default=1,
+                    help='define the number of times to repeat maze generation (default 1)')
 
-parser.add_argument('-ls', '--len-step',
+parser.add_argument('-ls', '--lenstep',
                     action='store',
                     type=int,
                     default=0,
-                    nargs=1,
                     help='define the amount to grow the length of the maze by between repetitions. Ignored if repetitions = 0 (default 0)')
 
-parser.add_argument('-ws', '--wid-step',
+parser.add_argument('-ws', '--widstep',
                     action='store',
                     type=int,
                     default=0,
-                    nargs=1,
                     help='define the amount to grow the width of the maze by between repetitions. Ignored if repetitions = 0 (default 0)')
 
 #TODO: expand this to a proper main of some kind
-args = parser.parse_args()
-print(args._get_args)
+
+def main():
+   args = parser.parse_args()
+   for run in range(args.repeat):
+      wid = args.width + (run * args.widstep)
+      len = args.length + (run * args.lenstep)
+      mz = Maze(len, wid)
+      if(args.algo == 'wilsons'):
+         Wilsons(mz, args.s)
+      else:
+         HK(mz, args.s)
+      print (mz)
+
+
+
+
+main()
