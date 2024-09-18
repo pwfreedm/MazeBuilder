@@ -1,6 +1,2 @@
-From top level:
-cmake -S . -B ./build
-
-To make:
-cd ./build
-make
+To build: pip install -e .
+To run: python main.py {cli args| help}

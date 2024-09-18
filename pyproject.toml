@@ -1,5 +1,7 @@
 [tool.scikit.dependencies]
 python = "^3.10"
+pypng = "*"
+numpy = "^2"
 
 [tool.scikit.dev-dependencies]
 pytest = "^8"
