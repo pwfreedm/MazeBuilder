@@ -7,7 +7,7 @@
 namespace py = pybind11;
 
 //TODO: __setitem__ doesn't work b/c the C++ function expects two indices
-PYBIND11_MODULE(Maze, M)
+PYBIND11_MODULE(maze, M)
 {
     M.doc() = "A pybind module wrapping a C++ implementation of a Maze";
     

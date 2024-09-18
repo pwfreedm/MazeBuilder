@@ -1,6 +1,11 @@
 import argparse
-from Maze import Maze, Wilsons, HK
+from os import urandom
 from pathlib import Path
+
+
+from maze import Maze, Wilsons, HK
+from src.tests.verification import check_connections
+
 '''supportable options: 
         [-h, help]; displays all commands
         [-a, --algo] N; selects an algorithm to use (default Wilsons)
@@ -15,7 +20,9 @@ from pathlib import Path
         [-o, --output] N; defines a filepath to write data to
         [-t, --test]; runs mazes through the connection verification algorithm
         [-v, --verbose]; runs mazes through the connection verification algorithm and prints verbose output
-        [-d, --debug] N; defines an output destination for debug information (default stdout)
+        [-d, --debug] N; defines an output destination for debug information
+        (default stdout)
+        [-rs, --regenseed]; regenerates the seed between repeated runs
 
 '''
 parser = argparse.ArgumentParser(prog="MazeBuilder",
@@ -30,8 +37,13 @@ parser.add_argument('-a', '--algo',
 parser.add_argument('-s', '-seed',
                     action='store',
                     type=int,
-                    default=0,
-                    help='generates the maze with seed S (default 0)')
+                    default=int.from_bytes(urandom(4), signed=True),
+                    help='generates the maze with seed S (default random)')
+
+parser.add_argument('-ks', '--keepseed',
+                    action='store_true',
+                    default=False,
+                    help='if this flag is provided, the same seed will be used for each run in repeat trials')
 
 parser.add_argument('-w', '--width',
                     action='store',
@@ -53,7 +65,7 @@ parser.add_argument('-o', '--output',
                     help='define the directory to which output should be stored'
                     )
 
-parser.add_argument('-n', '--no-pdf',
+parser.add_argument('-n', '--nopdf',
                     action='store_true',
                     default=False,
                     help='prevent pdfs of the mazes from being generated')
@@ -96,21 +108,32 @@ parser.add_argument('-ws', '--widstep',
                     default=0,
                     help='define the amount to grow the width of the maze by between repetitions. Ignored if repetitions = 0 (default 0)')
 
-#TODO: expand this to a proper main of some kind
 
 def main():
    args = parser.parse_args()
    for run in range(args.repeat):
+      #generate blank maze
       wid = args.width + (run * args.widstep)
       len = args.length + (run * args.lenstep)
       mz = Maze(len, wid)
-      if(args.algo == 'wilsons'):
+
+      #pick and run the algorithm
+      if args.algo == 'wilsons':
          Wilsons(mz, args.s)
       else:
          HK(mz, args.s)
-      print (mz)
+      
+      #optionally verify connections
+      if args.test and not args.verbose:
+         check_connections(mz, args.s)
+      if args.verbose: 
+         check_connections(mz, args.s, False)
+      
+      #update seed before next run if needed
+      if not args.keepseed:
+         args.s = int.from_bytes(urandom(4), signed=True)
 
 
 
-
-main()
+if __name__ == '__main__':
+   main()

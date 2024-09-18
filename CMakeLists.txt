@@ -19,5 +19,5 @@ find_package(pybind11 CONFIG REQUIRED)
 include_directories(./lib)
 
 #Creating the module 
-pybind11_add_module(Maze src/lib/Maze_Bindings.cpp WITH_SOABI)
-install(TARGETS Maze DESTINATION ./)
+pybind11_add_module(maze src/lib/Maze_Bindings.cpp WITH_SOABI)
+install(TARGETS maze DESTINATION ./)
