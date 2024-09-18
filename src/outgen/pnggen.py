@@ -1,6 +1,5 @@
-from png import Writer, Image, from_array
+from png import Writer
 import os
-import array
 import time
 
 from maze import Maze
