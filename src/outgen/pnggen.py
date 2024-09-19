@@ -3,14 +3,21 @@ import os
 import time
 
 from maze import Maze
-#png is encoded in greyscale-alpha, so pixels only have two specifiers
+#edgelen is how many pixels the edge of an individual cell is
 edgelen = 18
-ptsize = 3
+#thickness of any given line in pixels 
+ptsize = 2
 
 #default file stuff
 default_path = os.path.join(os.path.dirname(__file__), '../', '../', 'output')
 default_filename = time.strftime("%Y.%m.%d-%H:%M:%S")
 
+'''
+    Maze Width: 15 columns
+    Maze Length: 1 column
+    
+    Line thickness: 3 pixels
+    '''
 '''General Approach: 
     each line in the output maze will be 3 pixels thick
     each cell will be 18 pixels thick (minus 3 for its top line)
@@ -29,15 +36,20 @@ default_filename = time.strftime("%Y.%m.%d-%H:%M:%S")
 '''
 def add_black_px (row: list):
     row.append(0)
-    row.append(0)
+    row.append(255)
 
 def add_transparent_px (row: list):
     row.append(0)
-    row.append(255)
+    row.append(0)
 
-def make_top_row (rowlen: int):
-    for line in range(ptsize):
-        pass
+def make_top_row (numcols: int) -> list[list[int]]:
+    out = []
+    for row in range(ptsize):
+        line = []
+        for col in range(numcols):
+            add_black_px(line)
+        out.append(line)
+    return out
 
 def create_file (filepath, filename):
     if not os.path.exists(filepath):
@@ -46,17 +58,18 @@ def create_file (filepath, filename):
     fullpath = os.path.join(filepath, filename + '.png')
     return open(fullpath, 'wb')
 
-def convert_to_png (mz: Maze, filepath = default_path, filename: str = default_filename):
-    rowlen = mz.width * edgelen
-    collen = (mz.size() / mz.width) * edgelen
+def convert_to_png (mz: Maze, filepath: str = default_path, filename: str = default_filename):
+    numrows = int(mz.width * ptsize)
+    numcols = int((mz.size() / mz.width) * edgelen)
 
-    image = Writer(width=15, height=1, greyscale=True, alpha=True)
-    line = []
-    for i in range (15):
-        add_black_px(line)
-    lines = [line]
-    image.write(create_file(filepath, filename), lines)
+    image = Writer(width=numcols, height=numrows, 
+                   greyscale=True, alpha=True)
+    
+    picture_data = make_top_row(numcols)
+    
+
+    image.write(create_file(filepath, filename), picture_data)
 
 
-convert_to_png(Maze(1,1))
+convert_to_png(Maze(15,1))
 
