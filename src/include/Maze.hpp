@@ -109,6 +109,8 @@ public:
     //Const accessor for number of cells in the maze
     int size () const;
 
+    int length ();
+
     /** Element access operator for a maze. Returns a reference to the element
     at position row * maze width + col
     

@@ -155,6 +155,12 @@ Maze::size() const
     return maze.size();
 }
 
+int
+Maze::length()
+{
+    return maze.size() / wid;
+}
+
 Cell&
 Maze::get(int row, int col)
 {
