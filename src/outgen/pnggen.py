@@ -47,7 +47,7 @@ def boundary_row(mz: Maze, row_num: int, top_row: bool = True) -> list[int]:
         if (top_row and not mz[cell].up) or (mz[cell].down and not top_row):
             px_start = cell * edgewid * bpp
             for px in range(px_start + 1, px_start + edgewid * bpp, 2):
-                out[px] = 255
+                out[px] = black_alpha
 
     return out
 
@@ -58,7 +58,7 @@ def middle_row(mz: Maze, row_num: int) -> list[int]:
         if mz[cell].left:
             px_start = cell * edgewid * bpp
             for px in range(px_start + 1, px_start + edgewid * bpp, 2):
-                out[px] = 255
+                out[px] = black_alpha
         if mz[cell].right:
             pass
     
