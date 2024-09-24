@@ -1,10 +1,25 @@
 import argparse
+import os
 from os import urandom
 from pathlib import Path
+import time
 
 
 from maze import Maze, Wilsons, HK
 from src.tests.verification import check_connections
+from src.outgen.pnggen import convert_to_png
+
+#default file stuff
+default_path = os.path.join(os.path.dirname(__file__), './', 'output')
+
+def create_file (filename, filepath = default_path):
+    ''' creates a file given a filepath and a file name
+        returns the open file object '''
+    if not os.path.exists(filepath):
+        os.makedirs(filepath)
+    
+    fullpath = os.path.join(filepath, filename + '.png')
+    return open(fullpath, 'ab')
 
 '''supportable options: 
         [-h, help]; displays all commands
@@ -48,24 +63,24 @@ parser.add_argument('-ks', '--keepseed',
 parser.add_argument('-w', '--width',
                     action='store',
                     type=int,
-                    default=50,
+                    default=3,
                     help="define the width of the maze (default 50)")
 
 parser.add_argument('-l', '--length',
                     action='store',
                     type=int,
-                    default=50,
+                    default=3,
                     help='define the length of the maze (default 50)')
 
 #TODO: this will not work on Windows because ./output is an invalid path
 parser.add_argument('-o', '--output',
                     action='store',
-                    type=Path,
-                    default=Path('./output'),
-                    help='define the directory to which output should be stored'
+                    type=str,
+                    default=time.strftime("%Y.%m.%d-%H:%M:%S"),
+                    help='rename the output maze (exclude filetype)'
                     )
 
-parser.add_argument('-n', '--nopdf',
+parser.add_argument('-n', '--nopng',
                     action='store_true',
                     default=False,
                     help='prevent pdfs of the mazes from being generated')
@@ -133,6 +148,8 @@ def main():
       if not args.keepseed:
          args.s = int.from_bytes(urandom(4), signed=True)
 
+      if not args.nopng:
+         convert_to_png(mz, create_file(args.output))
 
 
 if __name__ == '__main__':

@@ -79,8 +79,8 @@ public:
     //force a maze to have dimensions
     Maze () = delete; 
 
-    //dimension ctor, creates a length x width maze
-    Maze (int length, int width);
+    //dimension ctor, creates a numRows x numCols maze
+    Maze (int numRows, int numCols);
 
     //shortcut to create a square maze with dimensions edgeLen x edgeLen
     Maze (int edgeLen);

@@ -13,87 +13,79 @@ ptsize = 2
 #bytes per pixel. Does not change
 bpp = 2
 
-black_alpha = 255
-transparent_alpha = 0
-#default file stuff
-default_path = os.path.join(os.path.dirname(__file__), '../', '../', 'output')
-default_filename = time.strftime("%Y.%m.%d-%H:%M:%S")
+#these are all just named values for readability
+black_px = [0, 255]
+transparent_px = [0, 0]
 
-def add_black_px (row: list, count: int = 1) -> list[int]:
-    '''adds a black pixel to the provieded list'''
-    row.append([0, 255] * count)
-    return row
+def close_top_face () -> list[int]:
+    return black_px * edgewid
 
-def add_transparent_px (row: list, count: int = 1) -> list[int]:
-    '''adds a transparent pixel to the provided list'''
-    row.append([0, 0] * count)
-    return row
+def close_bottom_face() -> list[int]:
+    return black_px * edgewid
 
-def create_file (filepath, filename):
-    ''' creates a file given a filepath and a file name
-        returns the open file object '''
-    if not os.path.exists(filepath):
-        os.makedirs(filepath)
-    
-    fullpath = os.path.join(filepath, filename + '.png')
-    return open(fullpath, 'ab')
+def close_left_face() -> list[int]:
+    return (black_px * ptsize) + transparent_px * (edgewid - ptsize)
+
+def close_right_face() -> list[int]:
+    return (transparent_px * (edgewid - ptsize)) + black_px * ptsize
+
+def close_lr_face() -> list[int]:
+    return black_px * ptsize + transparent_px * (edgewid - 2 * ptsize) + black_px * ptsize
 
 def boundary_row(mz: Maze, row_num: int, top_row: bool = True) -> list[int]:
+    out = []
 
-    out = add_transparent_px([], (edgewid * mz.width))
-
-    start = row_num * mz.width
-    for cell in range(start, start + mz.width):
-        if (top_row and not mz[cell].up) or (mz[cell].down and not top_row):
-            px_start = cell * edgewid * bpp
-            for px in range(px_start + 1, px_start + edgewid * bpp, 2):
-                out[px] = black_alpha
-
+    for idx in range(mz.width):
+        cell = mz[(mz.width * row_num) + idx]
+        if top_row and not cell.up: 
+            out += close_top_face()
+        if not top_row and not cell.down: 
+            out += close_bottom_face()
+    
+    print("Boundary: ", len(out))
     return out
 
 def middle_row(mz: Maze, row_num: int) -> list[int]:
-    out = add_transparent_px([], (edgewid * mz.width))
-    start = row_num * mz.width
-    for cell in range(start, start + mz.width):
-        if mz[cell].left:
-            px_start = cell * edgewid * bpp
-            for px in range(px_start + 1, px_start + edgewid * bpp, 2):
-                out[px] = black_alpha
-        if mz[cell].right:
-            pass
-    
+    out = []
+
+    for idx in range(mz.width):
+        cell = mz[(mz.width * row_num) + idx]
+        if not cell.right and not cell.left: 
+            out += close_lr_face()
+        elif not cell.right and cell.left:
+            out += close_right_face()
+        elif cell.right and not cell.left: 
+            out += close_left_face()
+    print("Middle: " , len(out))
     return out
 
 
 def pngify_row(mz: Maze, row_num: int) -> list[list[int]]:
     '''converts one row of maze cells into a chunk of png data'''
-    cell_row = []
+    cell_row = [boundary_row(mz, row_num)]
     
-    for _ in range(int(ptsize / 2)):
+    for _ in range(ptsize - 1):
         cell_row.append(boundary_row(mz, row_num))
 
     #each middle row is identical to each other middle row, create one and copy.
-    next_row = add_transparent_px([], (edgewid * mz.width))
-    for _ in range(edgewid - ptsize):
+    next_row = middle_row(mz, row_num)
+    for _ in range(edgewid - (ptsize * 2)):
         cell_row.append(next_row)
     
-    for _ in range(int(ptsize / 2)):
-        cell_row.append(boundary_row(mz, top_row=False))
+    for _ in range(ptsize):
+        cell_row.append(boundary_row(mz, row_num, top_row=False))
     
     return cell_row
 
-def convert_to_png (mz: Maze, filepath: str = default_path, filename: str = default_filename):
+def convert_to_png (mz: Maze, file):
     numrows = edgewid * mz.length()
     numcols = edgewid * mz.width
 
-    image = Writer(width=numcols, height=numrows, 
-                   greyscale=True, alpha=True)
+    image = Writer(width=numcols, height=numrows,
+                    greyscale=True, alpha=True)
     
-    image_array: list[list[int]] = [[]]
-    for row in range(numrows):
+    image_array: list[list[int]] = pngify_row(mz, 0)
+
+    for row in range(1, mz.width - 1):
         image_array += pngify_row(mz, row)
-        
-    image.write(create_file(filepath, filename), None)
-
-convert_to_png(Maze(15,1))
-
+    image.write(file, image_array)
