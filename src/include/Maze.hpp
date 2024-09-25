@@ -9,7 +9,7 @@
 #include <iostream> 
 #include <vector>
 
-enum Direction { UP, DOWN, LEFT, RIGHT };
+enum Direction { UP, DOWN, LEFT, RIGHT, NONE };
 
 /**A cell in the maze consists of 4 bits, [up, down, left, right]
     By default, all four values are initialized to false. 
@@ -161,6 +161,9 @@ public:
         are either connected or disconnected
     */
     std::vector<Direction> getNeighbors (int idx, bool connect = true);
+
+    /** Gets all directions that would be valid moves from idx */
+    std::vector<Direction> getAllNeighbors (int idx);
 
     //Returns the direction to get to dstIdx from startIdx
     Direction getDirection (int startIdx, int dstIdx);

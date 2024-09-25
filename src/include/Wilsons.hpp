@@ -47,7 +47,7 @@ private:
 
     @return a list of indices representing the walk path
     */
-    std::list<int> randomWalk (int startIdx);
+    void randomWalk (int startIdx);
 
     /** Returns a valid index in which a random walk can move. 
 
@@ -56,26 +56,6 @@ private:
     */
     int validStep (int cur);
 
-    /** Helper to find a neighbor that has been seen already. 
-        NOTE: This method is a helper for beginning loop erasure. 
-        It does not search randomly, and so shouldn't be used in 
-        any context where a random connected neighbor is needed
-    */
-    int connectedNeighbor (int cur);
-
-    /** Erases the loop that starts at loopIdx 
-
-    ex: 
-    Given the list of indices is A -> B -> C -> D -> E -> F -> G 
-    when B is attempted to be readded to the list
-    this method will run and the list will instead become A -> B -> G
-
-    @p mz - the maze from which the loop should be erased
-    @p indices - the list of indexes from which the loop will be removed
-    @p loopIdx - the end of the loop (the index that would reconnect to the existing path)
-    */
-    void eraseLoop (std::list<int> &indices, int loopIdx);
-
     //Writes the completed loop-erased walk into the maze that will be returned
-    void updateMaze (std::list<int> walk);
+    void updateMaze (int startIdx);
 };

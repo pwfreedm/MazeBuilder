@@ -74,6 +74,8 @@ Cell::setDirection (Direction dir)
         case RIGHT:
             right = true; 
             break;
+        default:
+            break;
     }
 }
 
@@ -94,6 +96,8 @@ Cell::updateDirection(Direction dir)
         case RIGHT:
             right = !right; 
             break;
+        default:
+            break; 
     }
 }
 
@@ -209,6 +213,8 @@ Maze::connect(int idx1, int idx2)
         case RIGHT:
             maze[idx1].setDirection(RIGHT);
             maze[idx2].setDirection(LEFT);
+        default:
+            break;
     };
 } 
 
@@ -225,6 +231,8 @@ Maze::validMove (int startIdx, Direction dir)
             return ((startIdx % wid > 0) && hasIndex(startIdx));
         case RIGHT:
             return (startIdx % wid + 1) < wid;
+        default:
+            break;
     }
     return false;
 }
@@ -244,6 +252,8 @@ Maze::getNeighbor (int startIdx, Direction dir)
             return startIdx - 1; 
         case RIGHT:
             return startIdx + 1;
+        default:
+            break; 
     }
     return size();
 }
@@ -258,6 +268,22 @@ Maze::getNeighbors (int idx, bool connect)
     {
         if (validMove(idx, dir) && 
             (inMaze(getNeighbor(idx, dir)) == connect))
+        {
+            out.push_back(dir);
+        }
+    }
+    return out;
+}
+
+std::vector<Direction> 
+Maze::getAllNeighbors(int idx)
+{
+    std::vector<Direction> out; 
+    out.reserve(4);
+
+    for (Direction dir : {UP, DOWN, LEFT, RIGHT})
+    {
+        if (validMove(idx, dir))
         {
             out.push_back(dir);
         }
