@@ -2,7 +2,7 @@ import argparse
 import os
 from os import urandom
 from pathlib import Path
-import time
+from time import time, strftime, time_ns
 
 
 from maze import Maze, Wilsons, HK
@@ -76,7 +76,7 @@ parser.add_argument('-l', '--length',
 parser.add_argument('-o', '--output',
                     action='store',
                     type=str,
-                    default=time.strftime("%Y.%m.%d-%H:%M:%S"),
+                    default=strftime("%Y.%m.%d-%H:%M:%S"),
                     help='rename the output maze (exclude filetype)'
                     )
 
@@ -123,9 +123,9 @@ parser.add_argument('-ws', '--widstep',
                     default=0,
                     help='define the amount to grow the width of the maze by between repetitions. Ignored if repetitions = 0 (default 0)')
 
-
 def main():
    args = parser.parse_args()
+   start = 0
    for run in range(args.repeat):
       #generate blank maze
       wid = args.width + (run * args.widstep)
@@ -134,10 +134,16 @@ def main():
 
       #pick and run the algorithm
       if args.algo == 'wilsons':
+         start = time_ns()
          Wilsons(mz, args.s)
       else:
+         start = time_ns()
          HK(mz, args.s)
       
+      #just print time for now, eventually csv
+      runtime = time_ns() - start
+      print ("Time:", runtime, "ns or", runtime / 1000000000, "seconds")
+
       #optionally verify connections
       if args.test and not args.verbose:
          check_connections(mz, args.s)

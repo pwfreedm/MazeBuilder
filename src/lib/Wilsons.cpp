@@ -9,7 +9,7 @@
     void
     Wilsons::run()
     {
-        mz.openStart();
+        
 
         int startIdx;
         while (unvisited.size() > 0)
@@ -18,6 +18,8 @@
             std::list<int> walkPath = randomWalk(startIdx);
             updateMaze(walkPath);
         }
+
+        mz.openStart();
         mz.openEnd();
     }
 
@@ -25,7 +27,7 @@
     Wilsons::genUnvisited()
     {
         std::set<int> unvis;
-        for(int i = 1; i < mz.size(); ++i)
+        for(int i = 0; i < mz.size(); ++i)
         {
             unvis.insert(i);
         }
@@ -53,7 +55,8 @@
             visited[cur] = true;
             prev = cur; 
             cur = validStep(cur);
-            if (visited[cur] || !mz.hasIndex(cur))
+            //changed from if(visited[cur] || !mz.hasIndex(cur))
+            if (visited[cur] || mz.inMaze(cur))
             {
                 eraseLoop(indices, prev);
                 cur = prev;
@@ -74,7 +77,7 @@
             int nextIdx = mz.getNeighbor(cur, dir);
             if (mz.hasIndex(nextIdx) && !visited[nextIdx])
             {
-                neighbors.push_back(nextIdx); 
+                neighbors[dir] = nextIdx; 
             }
         }
         if (neighbors.empty()) { return mz.size(); }
@@ -103,7 +106,7 @@
         int seenNeighbor = connectedNeighbor(loopIdx);
 
         int idx = indices.back();
-        while (idx != seenNeighbor)
+        while (idx > 0 && idx != seenNeighbor)
         {
             indices.pop_back();
             visited[idx] = false;
