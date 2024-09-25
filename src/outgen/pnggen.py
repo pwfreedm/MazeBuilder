@@ -8,14 +8,18 @@ from maze import Maze
 edgewid = 12
 
 #thickness of any given line in pixels 
-ptsize = 2
+ptsize = 1
 
 #bytes per pixel. Does not change
 bpp = 2
 
 #these are all just named values for readability
+#65 is a good grey shade
 black_px = [0, 255]
 transparent_px = [0, 0]
+
+#=============================================================================#
+#helper functions so actual code reads more clearly
 
 def close_top_face () -> list[int]:
     return black_px * edgewid
@@ -32,6 +36,12 @@ def close_right_face() -> list[int]:
 def close_lr_face() -> list[int]:
     return black_px * ptsize + transparent_px * (edgewid - 2 * ptsize) + black_px * ptsize
 
+def open_face() -> list[int]:
+    return transparent_px * edgewid
+
+
+#=============================================================================#
+
 def boundary_row(mz: Maze, row_num: int, top_row: bool = True) -> list[int]:
     out = []
 
@@ -39,10 +49,11 @@ def boundary_row(mz: Maze, row_num: int, top_row: bool = True) -> list[int]:
         cell = mz[(mz.width * row_num) + idx]
         if top_row and not cell.up: 
             out += close_top_face()
-        if not top_row and not cell.down: 
+        elif not top_row and not cell.down: 
             out += close_bottom_face()
+        else:
+            out += close_lr_face()
     
-    print("Boundary: ", len(out))
     return out
 
 def middle_row(mz: Maze, row_num: int) -> list[int]:
@@ -56,7 +67,9 @@ def middle_row(mz: Maze, row_num: int) -> list[int]:
             out += close_right_face()
         elif cell.right and not cell.left: 
             out += close_left_face()
-    print("Middle: " , len(out))
+        else:
+            out += open_face()
+
     return out
 
 
@@ -86,6 +99,6 @@ def convert_to_png (mz: Maze, file):
     
     image_array: list[list[int]] = pngify_row(mz, 0)
 
-    for row in range(1, mz.width - 1):
+    for row in range(1, mz.width):
         image_array += pngify_row(mz, row)
     image.write(file, image_array)

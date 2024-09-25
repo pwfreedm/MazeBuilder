@@ -63,13 +63,13 @@ parser.add_argument('-ks', '--keepseed',
 parser.add_argument('-w', '--width',
                     action='store',
                     type=int,
-                    default=3,
+                    default=50,
                     help="define the width of the maze (default 50)")
 
 parser.add_argument('-l', '--length',
                     action='store',
                     type=int,
-                    default=3,
+                    default=50,
                     help='define the length of the maze (default 50)')
 
 #TODO: this will not work on Windows because ./output is an invalid path
@@ -148,8 +148,12 @@ def main():
       if not args.keepseed:
          args.s = int.from_bytes(urandom(4), signed=True)
 
+      #generate the output png
       if not args.nopng:
-         convert_to_png(mz, create_file(args.output))
+         file = create_file(args.output)
+         convert_to_png(mz, file)
+         file.close()
+         
 
 
 if __name__ == '__main__':
