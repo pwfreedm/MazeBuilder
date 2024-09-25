@@ -14,7 +14,7 @@ class Wilsons
    Maze &mz; 
    std::minstd_rand0 r;
    std::set<int> unvisited;
-   std::vector<bool> visited;
+   std::vector<Direction> visited;
 
 public:
 

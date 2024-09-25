@@ -1,7 +1,7 @@
 #include "../include/Wilsons.hpp"
 
     Wilsons::Wilsons (Maze &mz, long long int seed)
-    :mz(mz), r(seed), unvisited(genUnvisited()), visited(std::vector<bool>(mz.size()))
+    :mz(mz), r(seed), unvisited(genUnvisited()), visited(std::vector<Direction>(mz.size()))
     {
         run();
     }
@@ -52,15 +52,9 @@
         while(!mz.inMaze(cur))
         {
             indices.push_back(cur);
-            visited[cur] = true;
             prev = cur; 
             cur = validStep(cur);
-            //changed from if(visited[cur] || !mz.hasIndex(cur))
-            if (visited[cur] || mz.inMaze(cur))
-            {
-                eraseLoop(indices, prev);
-                cur = prev;
-            }
+            visited[prev] = mz.getDirection(prev, cur);
         }
         indices.push_back(cur);
         return indices;
