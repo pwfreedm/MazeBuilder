@@ -1,10 +1,9 @@
 #pragma once
 
-#include <set>
+
 #include <random>
 #include <iostream>
-#include <list>
-#include <vector>
+#include <map>
 
 #include "Maze.hpp"
 
@@ -13,8 +12,9 @@ class Wilsons
 
    Maze &mz; 
    std::minstd_rand0 r;
-   std::set<int> unvisited;
-   std::vector<Direction> visited;
+   // TODO: probably make this an int to int map where key is start and val is
+   // dst
+   std::map<int, Direction> visited;
 
 public:
 
@@ -31,10 +31,12 @@ public:
 
 private:
 
-    // Fills unvisited with all valid indices. Skips 0 because it is set during maze generation.
-    std::set<int> genUnvisited ();
-
-    //Picks a random starting index from the set of unvisited indices
+    /** Picks a start idx using the following process:
+      1) pick a random number. If the cell at that idx has been visited, 
+      2) add one to that number. Repeat until an unvisited cell is found
+      3) if the end of the maze is reached, check every index from 0 
+      4) if no valid index is found, return maze size
+    */
     int pickStartIdx();
 
     /** Performs a random walk on maze mz. 

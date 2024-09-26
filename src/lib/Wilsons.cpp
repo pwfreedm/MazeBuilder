@@ -9,16 +9,17 @@
     void
     Wilsons::run()
     {
-        int startIdx = 0;
-        while (!mz.inMaze(startIdx))
+        mz.openStart();
+
+        int startIdx = pickStartIdx();
+        while (startIdx != mz.size())
         {
-            visited = std::vector<Direction>(mz.size(), NONE);
-            startIdx = pickStartIdx();
+            visited.clear();
             randomWalk(startIdx);
             updateMaze(startIdx);
+            startIdx = pickStartIdx();
         }
 
-        mz.openStart();
         mz.openEnd();
     }
 
@@ -26,8 +27,17 @@
     Wilsons::pickStartIdx()
     {
         int setIdx = r() % mz.size();
-        while (mz.inMaze(setIdx)) { ++setIdx; }
-        return setIdx;
+        for (int i = setIdx; i < mz.size(); ++i)
+        {
+            if (!mz.inMaze(i)) { return i; }
+        }
+
+        for (int i = 0; i < setIdx; ++i)
+        {
+            if (!mz.inMaze(i)) { return i; }
+        }
+
+        return mz.size();
     }
 
     void
@@ -65,17 +75,16 @@
     void 
     Wilsons::updateMaze(int startIdx)
     {
-        //from startIdx get the index in direction listed in visited
-        //
         int curIdx = startIdx; 
         int nextIdx = mz.getNeighbor(startIdx, visited[curIdx]);
 
-        while (!mz.inMaze(curIdx))
+        while (visited.contains(mz.getNeighbor(curIdx, visited[curIdx])))
         {
             mz.connect(curIdx, nextIdx);
             curIdx = nextIdx; 
             nextIdx = mz.getNeighbor(curIdx, visited[curIdx]);
         }
+        mz.connect(curIdx, nextIdx);
     }
 
 inline std::ostream& 
