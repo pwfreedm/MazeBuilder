@@ -4,101 +4,105 @@ import time
 
 from maze import Maze
 
-#edgewid is how many pixels the edge of an individual cell is
-edgewid = 12
-
-#thickness of any given line in pixels 
-ptsize = 1
-
-#bytes per pixel. Does not change
-bpp = 2
-
-#these are all just named values for readability
-#65 is a good grey shade
-black_px = [0, 255]
-transparent_px = [0, 0]
+class metadata: 
+    '''contains metadata used in generating png
+    
+    fields: 
+        edgewid: the number of pixes that each cell edge should be
+        ptsize: the thickness of the lines in the maze (DO NOT CHANGE)
+        fg: the color of the foreground pixel (0 = transparent, 255 = black)
+        bg: the color of the background pixel (0 = transparent, 255 = black)
+    '''
+    def __init__ (self, edgewid: int, fg: int, bg: int):
+        self.edgewid = edgewid
+        self.ptsize = 1
+        self.fg_px = [fg, 255]
+        self.bg_px = [bg, 0 if bg == 0 else 255]
 
 #=============================================================================#
 #helper functions so actual code reads more clearly
 
-def close_top_face () -> list[int]:
-    return black_px * edgewid
+def close_top_face (md: metadata) -> list[int]:
+    return md.fg_px * md.edgewid
 
-def close_bottom_face() -> list[int]:
-    return black_px * edgewid
+def close_bottom_face(md: metadata) -> list[int]:
+    return md.fg_px * md.edgewid
 
-def close_left_face() -> list[int]:
-    return (black_px * ptsize) + transparent_px * (edgewid - ptsize)
+def close_left_face(md: metadata) -> list[int]:
+    return (md.fg_px * md.ptsize) + md.bg_px * (md.edgewid - md.ptsize)
 
-def close_right_face() -> list[int]:
-    return (transparent_px * (edgewid - ptsize)) + black_px * ptsize
+def close_right_face(md: metadata) -> list[int]:
+    return (md.bg_px * (md.edgewid - md.ptsize)) + md.fg_px * md.ptsize
 
-def close_lr_face() -> list[int]:
-    return black_px * ptsize + transparent_px * (edgewid - 2 * ptsize) + black_px * ptsize
+def close_lr_face(md: metadata) -> list[int]:
+    return md.fg_px * md.ptsize + md.bg_px * (md.edgewid - 2 * md.ptsize) + md.fg_px * md.ptsize
 
-def open_face() -> list[int]:
-    return transparent_px * edgewid
+def open_face(md: metadata) -> list[int]:
+    return md.bg_px * md.edgewid
 
 
 #=============================================================================#
 
-def boundary_row(mz: Maze, row_num: int, top_row: bool = True) -> list[int]:
+def boundary_row(md: metadata, mz: Maze, row_num: int, top_row: bool = True) -> list[int]:
     out = []
 
     for idx in range(mz.width):
         cell = mz[(mz.width * row_num) + idx]
         if top_row and not cell.up: 
-            out += close_top_face()
+            out += close_top_face(md)
         elif not top_row and not cell.down: 
-            out += close_bottom_face()
+            out += close_bottom_face(md)
         else:
-            out += close_lr_face()
+            out += close_lr_face(md)
     
     return out
 
-def middle_row(mz: Maze, row_num: int) -> list[int]:
+def middle_row(md: metadata, mz: Maze, row_num: int) -> list[int]:
     out = []
 
     for idx in range(mz.width):
         cell = mz[(mz.width * row_num) + idx]
         if not cell.right and not cell.left: 
-            out += close_lr_face()
+            out += close_lr_face(md)
         elif not cell.right and cell.left:
-            out += close_right_face()
+            out += close_right_face(md)
         elif cell.right and not cell.left: 
-            out += close_left_face()
+            out += close_left_face(md)
         else:
-            out += open_face()
+            out += open_face(md)
 
     return out
 
 
-def pngify_row(mz: Maze, row_num: int) -> list[list[int]]:
+def pngify_row(md: metadata, mz: Maze, row_num: int) -> list[list[int]]:
     '''converts one row of maze cells into a chunk of png data'''
-    cell_row = [boundary_row(mz, row_num)]
+    cell_row = [boundary_row(md, mz, row_num)]
     
-    for _ in range(ptsize - 1):
-        cell_row.append(boundary_row(mz, row_num))
+    for _ in range(md.ptsize - 1):
+        cell_row.append(boundary_row(md, mz, row_num))
 
     #each middle row is identical to each other middle row, create one and copy.
-    next_row = middle_row(mz, row_num)
-    for _ in range(edgewid - (ptsize * 2)):
+    next_row = middle_row(md, mz, row_num)
+    for _ in range(md.edgewid - (md.ptsize * 2)):
         cell_row.append(next_row)
     
-    for _ in range(ptsize):
-        cell_row.append(boundary_row(mz, row_num, top_row=False))
+    for _ in range(md.ptsize):
+        cell_row.append(boundary_row(md, mz, row_num, top_row=False))
     
     return cell_row
 
-def convert_to_png (mz: Maze, file):
-    numrows = edgewid * mz.length()
-    numcols = edgewid * mz.width
+def convert_to_png (mz: Maze, file, edgewid: int = 12, fg: int = 255, bg: int = 0):
+    
+    md = metadata(edgewid, fg, bg)
+
+    numrows = md.edgewid * mz.length()
+    numcols = md.edgewid * mz.width
 
     image = Writer(width=numcols, height=numrows,
                     greyscale=True, alpha=True)
     
-    image_array: list[list[int]] = pngify_row(mz, 0)
+    image_array: list[list[int]] = pngify_row(md, mz, 0)
 
     for row in range(1, mz.width):
-        image_array += pngify_row(mz, row)
+        image_array += pngify_row(md, mz, row)
     image.write(file, image_array)

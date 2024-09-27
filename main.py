@@ -83,7 +83,31 @@ parser.add_argument('-o', '--output',
 parser.add_argument('-n', '--nopng',
                     action='store_true',
                     default=False,
-                    help='prevent pdfs of the mazes from being generated')
+                    help='prevent pdfs of the mazes from being generated'
+                    )
+
+parser.add_argument('-fg', '--foreground',
+                    action='store',
+                    type=int,
+                    default=0,
+                    help='define the foreground color. Some helpful starting points: \
+                    \n\t0  : black\n\t65 : dark grey\n\t135: light grey\n\t255: white' 
+                    )
+
+parser.add_argument('-bg', '--background',
+                    action='store',
+                    type=int, 
+                    default=0,
+                    help='define the foreground color. Some helpful starting points: \
+                    \n\t0  : transparent\n\t65 : light grey\n\t135: dark grey\n\t255: black'
+                    )
+
+parser.add_argument('-e', '--edgewidth',
+                    action='store',
+                    type=int,
+                    default=12,
+                    help='define the number of pixels in each face of a given maze cell (default 12)'
+                    )
 
 parser.add_argument('-c', '--csv',
                     action='store_true',
@@ -148,7 +172,7 @@ def main():
       if args.test and not args.verbose:
          check_connections(mz, args.s)
       if args.verbose: 
-         check_connections(mz, args.s, False)
+         check_connections(mz, args.s, silent=False)
       
       #update seed before next run if needed
       if not args.keepseed:
@@ -157,7 +181,7 @@ def main():
       #generate the output png
       if not args.nopng:
          file = create_file(args.output)
-         convert_to_png(mz, file)
+         convert_to_png(mz, file, args.edgewidth, args.foreground, args.background)
          file.close()
          
 
