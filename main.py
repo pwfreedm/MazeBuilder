@@ -150,6 +150,7 @@ parser.add_argument('-ws', '--widstep',
 def main():
    args = parser.parse_args()
    start = 0
+   csv = None
    for run in range(args.repeat):
       #generate blank maze
       wid = args.width + (run * args.widstep)
@@ -183,6 +184,14 @@ def main():
          file = create_file(args.output)
          convert_to_png(mz, file, args.edgewidth, args.foreground, args.background)
          file.close()
+      
+      if args.csv: 
+         if run == 0:
+            #create a csv file and append this row
+            pass
+         else:
+            #append this row
+            pass
          
 
 
