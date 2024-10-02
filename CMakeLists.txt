@@ -20,4 +20,5 @@ include_directories(./lib)
 
 #Creating the module 
 pybind11_add_module(maze src/lib/Maze_Bindings.cpp WITH_SOABI)
+target_compile_options(maze PUBLIC -O3 -Wall -Wextra -Werror)
 install(TARGETS maze DESTINATION ./)
