@@ -124,6 +124,12 @@ parser.add_argument('-p', '-parallel',
                     default=False,
                     help='parallelizes maze generation with the provided algorithm')
 
+parser.add_argument('-nc', '--num-cores',
+                    action='store',
+                    type=int, 
+                    default=-1,
+                    help='limit the number of cores used for parallelization to the provided amount. The default is the return of std::thread::hardware_concurrency().')
+
 parser.add_argument('-v', '--verbose',
                     action='store_true',
                     default=False,
