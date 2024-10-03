@@ -5,7 +5,7 @@ from pathlib import Path
 from time import time, strftime, time_ns
 
 
-from maze import Maze, Wilsons, HK
+from maze import Maze, Wilsons, HK, parallelize
 from src.tests.verification import check_connections
 from src.outgen.pnggen import convert_to_png
 
@@ -169,12 +169,16 @@ def main():
       mz = Maze(len, wid)
 
       #pick and run the algorithm
-      if args.algo == 'wilsons':
-         start = time_ns()
-         Wilsons(mz, args.s)
+      if not args.parallel:
+         if args.algo == 'wilsons':
+            start = time_ns()
+            Wilsons(mz, args.s)
+         else:
+            start = time_ns()
+            HK(mz, args.s)
       else:
          start = time_ns()
-         HK(mz, args.s)
+         parallelize(args.algo, args.length, args.width, args.s)
       
       #calculate time for csv later
       runtime = time_ns() - start

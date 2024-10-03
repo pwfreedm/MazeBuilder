@@ -2,6 +2,7 @@
 #include <string>
 #include <omp.h>
 #include <thread>
+#include <future>
 
 #include "../include/Maze.hpp"
 #include "../include/Wilsons.hpp"
@@ -10,17 +11,17 @@
 
 Maze parallelize (std::string algo, int length, int width, int seed, int maxCores = std::thread::hardware_concurrency());
 std::vector<int>  block_dimensions (int length, int numcores); 
-Maze run_algorithm (std::string algorithm, int length, int width, int seed);
+std::vector<Cell> run_algorithm (std::string algorithm, int length, int width, int seed);
 
 Maze
 parallelize (std::string algo, int length, int width, int seed, int numcores)
 {
-    Maze full_mz(length, width);
+    
     //if the requested maze is too small, do it serially
     if (length < numcores * 2 || width < numcores * 2) 
     {
        Maze mz = Maze(length, width); 
-       if (algo == "Wilsons") { 
+       if (algo == "wilsons") { 
         Wilsons(mz, seed);
        }
        else {
@@ -29,23 +30,26 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
       return mz; 
     }
 
-    
-
+    std::vector<Cell> mz (length * width);
+    std::vector<std::future<std::vector<Cell>>> futures(numcores);
     std::vector<int> blocks = block_dimensions(length, numcores);
-
 
     for (int i = 0; i < numcores; ++i)
     {
-        //create a maze of size blocks[i], width
-        //pass it, algorithm, and seed to a new thread
+        futures[i] = std::async(std::launch::async, &run_algorithm, algo, blocks[i], width, seed);
     }
 
-    //another for loop to wait for all the threads, recollecting as needed. 
-    //is ordering really necessary? 
+    for (auto &f : futures)
+    {
+        auto mazeFrag = f.get();
+        mz.insert(mz.end(), mazeFrag.begin(), mazeFrag.end());
+    }
+ 
+    Maze full_mz(mz, width);
+    full_mz.openStart();
+    full_mz.openEnd();
 
-    //another loop to reconnect/smooth. 
-
-    return Maze(1,1);
+    return full_mz;
 }
 
 std::vector<int>
@@ -69,14 +73,15 @@ block_dimensions (int length, int numcores)
     return blocks;
 }
 
-Maze run_algorithm (std::string algorithm, int length, int width, int seed)
+std::vector<Cell> 
+run_algorithm (std::string algorithm, int length, int width, int seed)
 {
     Maze maze(length, width);
-    if (algorithm == "Wilsons") {
+    if (algorithm == "wilsons") {
         Wilsons(maze, seed, false);
     }
-    else if (algorithm == "HK") {
+    else if (algorithm == "hk") {
         HK(maze, seed, false);
     }
-    return maze; 
+    return maze.getMaze(); 
 }
