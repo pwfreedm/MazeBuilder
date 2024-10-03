@@ -1,6 +1,7 @@
 
 #include <string>
 #include <omp.h>
+#include <thread>
 
 #include "../include/Maze.hpp"
 #include "../include/Wilsons.hpp"
@@ -9,13 +10,14 @@
 
 Maze parallelize (std::string algo, int length, int width, int seed, int maxCores = std::thread::hardware_concurrency());
 std::vector<int>  block_dimensions (int length, int numcores); 
-void run_algorithm (std::string algorithm, int length, int width, Maze* mz, int seed);
+Maze run_algorithm (std::string algorithm, int length, int width, int seed);
 
 Maze
 parallelize (std::string algo, int length, int width, int seed, int numcores)
 {
+    Maze full_mz(length, width);
     //if the requested maze is too small, do it serially
-    if (length < numcores * 2 && width < numcores * 2) 
+    if (length < numcores * 2 || width < numcores * 2) 
     {
        Maze mz = Maze(length, width); 
        if (algo == "Wilsons") { 
@@ -26,6 +28,8 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
        }
       return mz; 
     }
+
+    
 
     std::vector<int> blocks = block_dimensions(length, numcores);
 
@@ -65,7 +69,14 @@ block_dimensions (int length, int numcores)
     return blocks;
 }
 
-void run_algorithm (std::string algorithm, int length, int width, Maze* mz, int seed)
+Maze run_algorithm (std::string algorithm, int length, int width, int seed)
 {
-    Maze (length, width);
+    Maze maze(length, width);
+    if (algorithm == "Wilsons") {
+        Wilsons(maze, seed, false);
+    }
+    else if (algorithm == "HK") {
+        HK(maze, seed, false);
+    }
+    return maze; 
 }
