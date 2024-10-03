@@ -82,6 +82,8 @@ public:
     //dimension ctor, creates a numRows x numCols maze
     Maze (int numRows, int numCols);
 
+    Maze (std::vector<Cell> &maze, int numCols);
+
     //shortcut to create a square maze with dimensions edgeLen x edgeLen
     Maze (int edgeLen);
 

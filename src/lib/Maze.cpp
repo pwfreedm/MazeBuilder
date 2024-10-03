@@ -116,6 +116,10 @@ Maze::Maze(int length, int width)
 :maze(length * width), wid(width)
 {}
 
+Maze::Maze(std::vector<Cell> &mz, int width)
+:maze(std::move(mz)), wid(width)
+{}
+
 Maze::Maze(int edgeLen)
 :maze(edgeLen * edgeLen), wid(edgeLen)
 {}
