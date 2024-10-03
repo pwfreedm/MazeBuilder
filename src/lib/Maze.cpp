@@ -124,6 +124,11 @@ Maze::Maze(int edgeLen)
 :maze(edgeLen * edgeLen), wid(edgeLen)
 {}
 
+std::vector<Cell> Maze::getMaze()
+{
+    return maze;
+}
+
 Cell* Maze::data()
 {
     return maze.data();

@@ -3,6 +3,7 @@
 #include "Maze.cpp"
 #include "Wilsons.cpp"
 #include "HK.cpp"
+#include "Threading.cpp"
 
 namespace py = pybind11;
 
@@ -39,7 +40,8 @@ PYBIND11_MODULE(maze, M)
         .def("getDirection", &Maze::getDirection)
         .def("inMaze", &Maze::inMaze)
         .def("hasIndex", &Maze::hasIndex)
-        .def("__str__", &Maze::toString);
+        .def("__str__", &Maze::toString)
+        .def("parallelize", &parallelize);
 
     py::class_<Wilsons>(M, "Wilsons")
         .def(py::init<Maze&, int>())
