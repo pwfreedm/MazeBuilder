@@ -1,13 +1,15 @@
 
 #include <string>
-#include <thread>
+#include <omp.h>
 
 #include "../include/Maze.hpp"
 #include "../include/Wilsons.hpp"
 #include "../include/HK.hpp"
 
+
 Maze parallelize (std::string algo, int length, int width, int seed, int maxCores = std::thread::hardware_concurrency());
 std::vector<int>  block_dimensions (int length, int numcores); 
+void run_algorithm (std::string algorithm, int length, int width, Maze* mz, int seed);
 
 Maze
 parallelize (std::string algo, int length, int width, int seed, int numcores)
@@ -26,6 +28,7 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
     }
 
     std::vector<int> blocks = block_dimensions(length, numcores);
+
 
     for (int i = 0; i < numcores; ++i)
     {
@@ -60,4 +63,9 @@ block_dimensions (int length, int numcores)
         else { blocks[i] = blen; }
     }
     return blocks;
+}
+
+void run_algorithm (std::string algorithm, int length, int width, Maze* mz, int seed)
+{
+    Maze (length, width);
 }
