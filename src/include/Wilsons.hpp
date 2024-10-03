@@ -21,10 +21,10 @@ public:
    Wilsons () = delete;
    
    //ctor
-   Wilsons (Maze&mz, long long int seed);
+   Wilsons (Maze&mz, long long int seed, bool open_ends = true);
 
    //runs the algorithm on the maze it was constructed with
-   void run ();
+   void run (bool open_ends);
    
    //ostream operator. Prints the underlying maze
    friend std::ostream& operator<<(std::ostream& os, const Wilsons &w);

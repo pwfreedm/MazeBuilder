@@ -15,10 +15,10 @@ public:
     HK () = delete;
     
     //Constructor
-    HK (Maze &mz, long long int seed);
+    HK (Maze &mz, long long int seed, bool open_ends = true);
 
     //Runs the algorithm on the provided maze
-    void run ();
+    void run (bool open_ends);
 
     //output stream operator. Prints the underlying maze
     friend std::ostream& operator<<(std::ostream& os, const HK &hk);

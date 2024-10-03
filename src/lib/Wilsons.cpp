@@ -1,13 +1,13 @@
 #include "../include/Wilsons.hpp"
 
-    Wilsons::Wilsons (Maze &mz, long long int seed)
+    Wilsons::Wilsons (Maze &mz, long long int seed, bool open_ends)
     :mz(mz), r(seed)
     {
-        run();
+        run(open_ends);
     }
 
     void
-    Wilsons::run()
+    Wilsons::run(bool open_ends)
     {
         mz.openStart();
 
@@ -19,8 +19,9 @@
             updateMaze(startIdx);
             startIdx = pickStartIdx();
         }
-
-        mz.openEnd();
+        
+        if (!open_ends) { mz[0].left = 0; }
+        else { mz.openEnd(); }
     }
 
     int

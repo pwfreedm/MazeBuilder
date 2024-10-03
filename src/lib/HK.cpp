@@ -1,13 +1,13 @@
 #include "../include/HK.hpp"
 
-    HK::HK (Maze &mz, long long int seed)
+    HK::HK (Maze &mz, long long int seed, bool open_ends)
     :mz(mz), r(seed) 
     {
-        run();
+        run(open_ends);
     }
 
     void
-    HK::run()
+    HK::run(bool open_ends)
     {
         int startIdx = r() % mz.size();
         while(startIdx < mz.size())
@@ -15,9 +15,12 @@
             randomWalk(startIdx);
             startIdx = hunt();
         }
-        //open after the maze b/c otherwise they can mess with the walks
-        mz.openStart();
-        mz.openEnd();
+        
+        if (open_ends)
+        {
+            mz.openStart();
+            mz.openEnd();
+        }
     }
 
     void
