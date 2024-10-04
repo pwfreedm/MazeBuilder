@@ -12,6 +12,8 @@ PYBIND11_MODULE(maze, M)
 {
     M.doc() = "A pybind module wrapping a C++ implementation of a Maze";
     
+    M.def("parallelize", &parallelize);
+
     py::class_<Cell>(M, "Cell")
         .def(py::init<bool, bool, bool, bool>())
         .def_property_readonly("up", &Cell::getUp)
@@ -40,8 +42,7 @@ PYBIND11_MODULE(maze, M)
         .def("getDirection", &Maze::getDirection)
         .def("inMaze", &Maze::inMaze)
         .def("hasIndex", &Maze::hasIndex)
-        .def("__str__", &Maze::toString)
-        .def("parallelize", &parallelize);
+        .def("__str__", &Maze::toString);
 
     py::class_<Wilsons>(M, "Wilsons")
         .def(py::init<Maze&, int>())

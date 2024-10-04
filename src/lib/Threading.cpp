@@ -3,6 +3,7 @@
 #include <omp.h>
 #include <thread>
 #include <future>
+#include <random>
 
 #include "../include/Maze.hpp"
 #include "../include/Wilsons.hpp"
@@ -30,13 +31,16 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
       return mz; 
     }
 
-    std::vector<Cell> mz (length * width);
+    std::minstd_rand0 r(seed);
+    std::vector<Cell> mz;
+    mz.reserve(length * width);
+
     std::vector<std::future<std::vector<Cell>>> futures(numcores);
     std::vector<int> blocks = block_dimensions(length, numcores);
 
     for (int i = 0; i < numcores; ++i)
     {
-        futures[i] = std::async(std::launch::async, &run_algorithm, algo, blocks[i], width, seed);
+        futures[i] = std::async(std::launch::async, &run_algorithm, algo, blocks[i], width, r());
     }
 
     for (auto &f : futures)

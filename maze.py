@@ -1,5 +1,6 @@
 import argparse
 import os
+from multiprocessing import cpu_count
 from os import urandom
 from pathlib import Path
 from time import time, strftime, time_ns
@@ -127,8 +128,8 @@ parser.add_argument('-p', '-parallel',
 parser.add_argument('-nc', '--num-cores',
                     action='store',
                     type=int, 
-                    default=-1,
-                    help='limit the number of cores used for parallelization to the provided amount. The default is the return of std::thread::hardware_concurrency().')
+                    default=cpu_count(),
+                    help='limit the number of cores used for parallelization to the provided amount. The default is the return of multiprocessing.cpu_count.')
 
 parser.add_argument('-v', '--verbose',
                     action='store_true',
@@ -169,7 +170,7 @@ def main():
       mz = Maze(len, wid)
 
       #pick and run the algorithm
-      if not args.parallel:
+      if not args.p:
          if args.algo == 'wilsons':
             start = time_ns()
             Wilsons(mz, args.s)
@@ -178,7 +179,7 @@ def main():
             HK(mz, args.s)
       else:
          start = time_ns()
-         parallelize(args.algo, args.length, args.width, args.s)
+         mz = parallelize(args.algo, args.length, args.width, args.s, args.num_cores)
       
       #calculate time for csv later
       runtime = time_ns() - start
