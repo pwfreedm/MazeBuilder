@@ -2,4 +2,4 @@ This project is still in progress. A more involved readme will be created upon c
 
 
 To build: pip install -e . (from the top level)
-To run: python maze.py {cli args| help}
+To run: python maze.py {cli args| -h}
