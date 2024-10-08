@@ -6,8 +6,7 @@
 
 class HK
 {
-
-    Maze &mz;
+    Maze<> &mz;
     std::minstd_rand r;
 
 public: 
@@ -15,7 +14,8 @@ public:
     HK () = delete;
     
     //Constructor
-    HK (Maze &mz, long long int seed, bool open_ends = true);
+    template<CanMaze Mazeable>
+    HK (Maze<Mazeable> &mz, long long int seed, bool open_ends = true);
 
     //Runs the algorithm on the provided maze
     void run (bool open_ends);

@@ -1,6 +1,7 @@
 #include <pybind11/pybind11.h>
 
-#include "Maze.cpp"
+#include "../include/Maze.hpp"
+#include "Cell.cpp"
 #include "Wilsons.cpp"
 #include "HK.cpp"
 #include "Threading.cpp"
@@ -12,7 +13,7 @@ PYBIND11_MODULE(maze, M)
 {
     M.doc() = "A pybind module wrapping a C++ implementation of a Maze";
     
-    M.def("parallelize", &parallelize);
+    M.def<Maze<>>("parallelize", &parallelize);
 
     py::class_<Cell>(M, "Cell")
         .def(py::init<bool, bool, bool, bool>())
@@ -26,29 +27,30 @@ PYBIND11_MODULE(maze, M)
         .def("updateDirection", &Cell::updateDirection, "flips the state of the given direction")
         .def("__str__", &Cell::str);
 
-    py::class_<Maze>(M, "Maze")
+    py::class_<Maze<>>(M, "Maze")
         .def(py::init<int, int>())
-        .def_property_readonly("width", py::overload_cast<>(&Maze::width))
-        .def_property_readonly("maze", &Maze::data)
-        .def("__eq__", &Maze::operator==)
-        .def("__ne__", &Maze::operator!=)
-        .def("size", py::overload_cast<>(&Maze::size))
-        .def("length", &Maze::length)
-        .def("__getitem__", &Maze::operator[])
-        .def("__setitem__", &Maze::set)
-        .def("connect", &Maze::connect)
-        .def("validMove", &Maze::validMove)
-        .def("getNeighbor", &Maze::getNeighbor)
-        .def("getDirection", &Maze::getDirection)
-        .def("inMaze", &Maze::inMaze)
-        .def("hasIndex", &Maze::hasIndex)
-        .def("__str__", &Maze::toString);
+        .def_property_readonly("width", py::overload_cast<>(&Maze<>::width))
+        //TODO: generic way to dump the whole maze into python?
+        .def_property_readonly("maze", &Maze<>::data)
+        .def("__eq__", &Maze<>::operator==)
+        .def("__ne__", &Maze<>::operator!=)
+        .def("size", py::overload_cast<>(&Maze<>::size))
+        .def("length", &Maze<>::length)
+        .def("__getitem__", &Maze<>::operator[])
+        .def("__setitem__", &Maze<>::set)
+        .def("connect", &Maze<>::connect)
+        .def("validMove", &Maze<>::validMove)
+        .def("getNeighbor", &Maze<>::getNeighbor)
+        .def("getDirection", &Maze<>::getDirection)
+        .def("inMaze", &Maze<>::inMaze)
+        .def("hasIndex", &Maze<>::hasIndex)
+        .def("__str__", &Maze<>::toString);
 
     py::class_<Wilsons>(M, "Wilsons")
-        .def(py::init<Maze&, int>())
+        .def(py::init<Maze<>&, int>())
         .def("run", &Wilsons::run);
 
     py::class_<HK>(M, "HK")
-        .def(py::init<Maze&, int>())
+        .def(py::init<Maze<>&, int>())
         .def("run", &HK::run);
 }

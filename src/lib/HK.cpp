@@ -1,6 +1,7 @@
 #include "../include/HK.hpp"
 
-    HK::HK (Maze &mz, long long int seed, bool open_ends)
+    template<CanMaze Mazeable>
+    HK::HK (Maze<Mazeable> &mz, long long int seed, bool open_ends)
     :mz(mz), r(seed) 
     {
         run(open_ends);

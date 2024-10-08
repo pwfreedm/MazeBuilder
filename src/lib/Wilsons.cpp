@@ -1,6 +1,7 @@
 #include "../include/Wilsons.hpp"
 
-    Wilsons::Wilsons (Maze &mz, long long int seed, bool open_ends)
+    template<CanMaze Mazeable> 
+    Wilsons::Wilsons (Maze<Mazeable> &mz, long long int seed, bool open_ends)
     :mz(mz), r(seed)
     {
         run(open_ends);

@@ -2,19 +2,21 @@
 #include <string>
 #include <omp.h>
 #include <thread>
-#include <future>
+#include <span>
 #include <random>
 
 #include "../include/Maze.hpp"
 #include "../include/Wilsons.hpp"
 #include "../include/HK.hpp"
 
+using std::jthread; 
 
-Maze parallelize (std::string algo, int length, int width, int seed, int maxCores = std::thread::hardware_concurrency());
+template<CanMaze Mazeable> Maze<Mazeable> parallelize (std::string algo, int length, int width, int seed, int maxCores = std::thread::hardware_concurrency());
 std::vector<int>  block_dimensions (int length, int numcores); 
-std::vector<Cell> run_algorithm (std::string algorithm, int length, int width, int seed);
+void run_algorithm (std::string algorithm, std::span<Cell> maze, int len, int wid, int seed);
 
-Maze
+template<CanMaze Mazeable>
+Maze<Mazeable>
 parallelize (std::string algo, int length, int width, int seed, int numcores)
 {
     
@@ -32,24 +34,21 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
     }
 
     std::minstd_rand0 r(seed);
-    std::vector<Cell> mz;
-    mz.reserve(length * width);
-
-    std::vector<std::future<std::vector<Cell>>> futures(numcores);
+    //enforce width multiple of 64, pass spans. Cuts allocation in half
     std::vector<int> blocks = block_dimensions(length, numcores);
+    auto mz = std::make_unique_for_overwrite<Cell[]>( length * width);
+    auto start = &(mz.get()[0]);
 
-    for (int i = 0; i < numcores; ++i)
+    for (int th = 0; th < numcores; ++th)
     {
-        futures[i] = std::async(std::launch::async, &run_algorithm, algo, blocks[i], width, r());
+        auto end = start + (width * blocks[th]);
+        jthread thread(run_algorithm, algo, std::span<Cell>(start, end), blocks[th], width,  r());
+        start = end;
     }
 
-    for (auto &f : futures)
-    {
-        auto mazeFrag = f.get();
-        mz.insert(mz.end(), mazeFrag.begin(), mazeFrag.end());
-    }
+    
  
-    Maze full_mz(mz, width);
+    Maze full_mz(std::move(mz), length, width);
     full_mz.openStart();
     full_mz.openEnd();
 
@@ -77,15 +76,18 @@ block_dimensions (int length, int numcores)
     return blocks;
 }
 
-std::vector<Cell> 
-run_algorithm (std::string algorithm, int length, int width, int seed)
+void
+run_algorithm (std::string algorithm, std::span<Cell> maze, int length, int width, int seed)
 {
-    Maze maze(length, width);
+    //initialize the memory because algorithms rely on it being zeroed
+    //initialize it here so main doesn't do all the init serially
+    for (Cell c : maze) { c = Cell(); }
+    Maze m(maze, length, width);
+
     if (algorithm == "wilsons") {
-        Wilsons(maze, seed, false);
+        Wilsons(m, seed, false);
     }
     else if (algorithm == "hk") {
-        HK(maze, seed, false);
+        HK(m, seed, false);
     }
-    return maze.getMaze(); 
 }

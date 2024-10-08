@@ -4,13 +4,14 @@
 #include <random>
 #include <iostream>
 #include <map>
+#include <span>
 
 #include "Maze.hpp"
 
 class Wilsons
 {
 
-   Maze &mz; 
+   Maze<> &mz; 
    std::minstd_rand0 r;
    // TODO: probably make this an int to int map where key is start and val is
    // dst
@@ -21,7 +22,8 @@ public:
    Wilsons () = delete;
    
    //ctor
-   Wilsons (Maze&mz, long long int seed, bool open_ends = true);
+   template<CanMaze Mazeable>
+   Wilsons (Maze<Mazeable> &mz, long long int seed, bool open_ends = true);
 
    //runs the algorithm on the maze it was constructed with
    void run (bool open_ends);
