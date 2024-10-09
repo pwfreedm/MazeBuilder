@@ -1,9 +1,13 @@
+#include <memory>
 #include <pybind11/pybind11.h>
 
-#include "../include/Maze.hpp"
+#include "../include/Cell.hpp"
 #include "Cell.cpp"
-#include "Wilsons.cpp"
-#include "HK.cpp"
+
+#include "../include/Maze.hpp"
+#include "../include/Cell.hpp"
+#include "../include/Wilsons.hpp"
+#include "../include/HK.hpp"
 #include "Threading.cpp"
 
 namespace py = pybind11;
@@ -13,7 +17,7 @@ PYBIND11_MODULE(maze, M)
 {
     M.doc() = "A pybind module wrapping a C++ implementation of a Maze";
     
-    M.def<Maze<>>("parallelize", &parallelize);
+    M.def("parallelize", &parallelize<>);
 
     py::class_<Cell>(M, "Cell")
         .def(py::init<bool, bool, bool, bool>())
@@ -27,11 +31,10 @@ PYBIND11_MODULE(maze, M)
         .def("updateDirection", &Cell::updateDirection, "flips the state of the given direction")
         .def("__str__", &Cell::str);
 
-    py::class_<Maze<>>(M, "Maze")
+    py::class_<Maze<std::unique_ptr<Cell[]>>>(M, "Maze")
         .def(py::init<int, int>())
         .def_property_readonly("width", py::overload_cast<>(&Maze<>::width))
         //TODO: generic way to dump the whole maze into python?
-        .def_property_readonly("maze", &Maze<>::data)
         .def("__eq__", &Maze<>::operator==)
         .def("__ne__", &Maze<>::operator!=)
         .def("size", py::overload_cast<>(&Maze<>::size))
@@ -46,11 +49,11 @@ PYBIND11_MODULE(maze, M)
         .def("hasIndex", &Maze<>::hasIndex)
         .def("__str__", &Maze<>::toString);
 
-    py::class_<Wilsons>(M, "Wilsons")
-        .def(py::init<Maze<>&, int>())
-        .def("run", &Wilsons::run);
+    py::class_<Wilsons<>>(M, "Wilsons")
+        .def(py::init<Maze<>, int>())
+        .def("run", &Wilsons<>::run);
 
-    py::class_<HK>(M, "HK")
-        .def(py::init<Maze<>&, int>())
-        .def("run", &HK::run);
+    py::class_<HK<>>(M, "HK")
+        .def(py::init<Maze<>, int>())
+        .def("run", &HK<>::run);
 }

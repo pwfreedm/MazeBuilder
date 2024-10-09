@@ -20,16 +20,16 @@ struct Cell
     /** Returns an int representation of this node using the following method:
         (up << 3) + (down << 2) + (left << 1) + right
     */
-    int val () const;
+    inline int val () const;
 
     /** Get the value of the up field */
-    bool getUp();
+    inline bool getUp();
     /** Get the value of the down field */
-    bool getDown();
+    inline bool getDown();
     /** Get the value of the left field */
-    bool getLeft();
+    inline bool getLeft();
     /** Get the value of the right field */
-    bool getRight();
+    inline bool getRight();
 
 
     /** Compares this cell to another cell

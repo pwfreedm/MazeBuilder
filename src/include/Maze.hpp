@@ -14,15 +14,6 @@
 
 #include "Cell.hpp"
 
-
-
-
-
-/**A cell in the maze consists of 4 bits, [up, down, left, right]
-    By default, all four values are initialized to false. 
-*/
-
-
 template <typename T>
 concept CanMaze = requires (T const& maze) {
   { maze[0] } -> std::same_as<Cell&>;
@@ -53,10 +44,10 @@ public:
     {}
     
     //print a maze
-    friend std::ostream& operator<< (std::ostream& os, const Maze& mz);
+    friend std::ostream& operator<< (std::ostream& os, const Maze<>& mz);
 
     //Equality op - Compares fields from smallest to largest
-    bool operator== (Maze& o)
+    bool operator== (Maze<Mazeable> const &o) const
     {
         return 
         wid != o.wid ? false :
@@ -65,9 +56,9 @@ public:
     }
 
     //Inequality op - Compares fields from smallest to largest
-    bool operator!= (Maze &o)
+    bool operator!= (Maze<Mazeable> const &o) const
     {
-        return !(this == o);
+        return !(*this == o);
     }
 
     //Accessor for number of columns of cells in the maze (width)

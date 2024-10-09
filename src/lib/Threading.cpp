@@ -1,4 +1,5 @@
 
+#include <memory>
 #include <string>
 #include <omp.h>
 #include <thread>
@@ -15,7 +16,7 @@ template<CanMaze Mazeable> Maze<Mazeable> parallelize (std::string algo, int len
 std::vector<int>  block_dimensions (int length, int numcores); 
 void run_algorithm (std::string algorithm, std::span<Cell> maze, int len, int wid, int seed);
 
-template<CanMaze Mazeable>
+template<CanMaze Mazeable = std::unique_ptr<Cell[]>>
 Maze<Mazeable>
 parallelize (std::string algo, int length, int width, int seed, int numcores)
 {
@@ -25,10 +26,10 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
     {
        Maze mz = Maze(length, width); 
        if (algo == "wilsons") { 
-        Wilsons(mz, seed);
+        Wilsons(std::move(mz), seed);
        }
        else {
-        HK(mz, seed);
+        HK(std::move(mz), seed);
        }
       return mz; 
     }
@@ -82,7 +83,7 @@ run_algorithm (std::string algorithm, std::span<Cell> maze, int length, int widt
     //initialize the memory because algorithms rely on it being zeroed
     //initialize it here so main doesn't do all the init serially
     for (Cell c : maze) { c = Cell(); }
-    Maze m(maze, length, width);
+    Maze<std::span<Cell>> m(maze, length, width);
 
     if (algorithm == "wilsons") {
         Wilsons(m, seed, false);
