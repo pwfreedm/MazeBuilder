@@ -24,7 +24,7 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
     //if the requested maze is too small, do it serially
     if (length < numcores * 2 || width < numcores * 2) 
     {
-       Maze mz = Maze(length, width); 
+       Maze<Mazeable> mz = Maze<Mazeable>(length, width); 
        if (algo == "wilsons") { 
         Wilsons(std::move(mz), seed);
        }
@@ -48,8 +48,8 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
     }
 
     
- 
-    Maze full_mz(std::move(mz), length, width);
+    std::shared_ptr<Cell[]> sh(std::move(mz));
+    Maze full_mz(sh, length, width);
     full_mz.openStart();
     full_mz.openEnd();
 

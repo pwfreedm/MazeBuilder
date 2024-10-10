@@ -18,7 +18,7 @@ PYBIND11_MODULE(maze, M)
 {
     M.doc() = "A pybind module wrapping a C++ implementation of a Maze";
     
-    M.def("parallelize", &parallelize<>);
+    M.def("parallelize", &parallelize<std::shared_ptr<Cell[]>>);
 
     py::class_<Cell>(M, "Cell")
         .def(py::init<bool, bool, bool, bool>())
