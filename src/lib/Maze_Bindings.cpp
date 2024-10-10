@@ -1,5 +1,6 @@
 #include <memory>
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 #include "../include/Cell.hpp"
 #include "Cell.cpp"
@@ -31,29 +32,28 @@ PYBIND11_MODULE(maze, M)
         .def("updateDirection", &Cell::updateDirection, "flips the state of the given direction")
         .def("__str__", &Cell::str);
 
-    py::class_<Maze<std::unique_ptr<Cell[]>>>(M, "Maze")
+    py::class_<Maze<std::shared_ptr<Cell[]>>>(M, "Maze")
         .def(py::init<int, int>())
-        .def_property_readonly("width", py::overload_cast<>(&Maze<>::width))
-        //TODO: generic way to dump the whole maze into python?
-        .def("__eq__", &Maze<>::operator==)
-        .def("__ne__", &Maze<>::operator!=)
-        .def("size", py::overload_cast<>(&Maze<>::size))
-        .def("length", &Maze<>::length)
-        .def("__getitem__", &Maze<>::operator[])
-        .def("__setitem__", &Maze<>::set)
-        .def("connect", &Maze<>::connect)
-        .def("validMove", &Maze<>::validMove)
-        .def("getNeighbor", &Maze<>::getNeighbor)
-        .def("getDirection", &Maze<>::getDirection)
-        .def("inMaze", &Maze<>::inMaze)
-        .def("hasIndex", &Maze<>::hasIndex)
-        .def("__str__", &Maze<>::toString);
+        .def_property_readonly("width", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::width))
+        .def("__eq__", &Maze<std::shared_ptr<Cell[]>>::operator==)
+        .def("__ne__", &Maze<std::shared_ptr<Cell[]>>::operator!=)
+        .def("size", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::size))
+        .def("length", &Maze<std::shared_ptr<Cell[]>>::length)
+        .def("__getitem__", &Maze<std::shared_ptr<Cell[]>>::operator[])
+        .def("__setitem__", &Maze<std::shared_ptr<Cell[]>>::set)
+        .def("connect", &Maze<std::shared_ptr<Cell[]>>::connect)
+        .def("validMove", &Maze<std::shared_ptr<Cell[]>>::validMove)
+        .def("getNeighbor", &Maze<std::shared_ptr<Cell[]>>::getNeighbor)
+        .def("getDirection", &Maze<std::shared_ptr<Cell[]>>::getDirection)
+        .def("inMaze", &Maze<std::shared_ptr<Cell[]>>::inMaze)
+        .def("hasIndex", &Maze<std::shared_ptr<Cell[]>>::hasIndex)
+        .def("__str__", &Maze<std::shared_ptr<Cell[]>>::toString);
 
-    py::class_<Wilsons<>>(M, "Wilsons")
-        .def(py::init<Maze<>, int>())
-        .def("run", &Wilsons<>::run);
+    py::class_<Wilsons<std::shared_ptr<Cell[]>>>(M, "Wilsons")
+        .def(py::init<Maze<std::shared_ptr<Cell[]>>, int>())
+        .def("run", &Wilsons<std::shared_ptr<Cell[]>>::run);
 
-    py::class_<HK<>>(M, "HK")
-        .def(py::init<Maze<>, int>())
-        .def("run", &HK<>::run);
+    py::class_<HK<std::shared_ptr<Cell[]>>>(M, "HK")
+        .def(py::init<Maze<std::shared_ptr<Cell[]>>, int>())
+        .def("run", &HK<std::shared_ptr<Cell[]>>::run);
 }
