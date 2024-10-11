@@ -2,8 +2,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "../include/Cell.hpp"
-#include "Cell.cpp"
 
 #include "../include/Maze.hpp"
 #include "../include/Cell.hpp"
@@ -21,11 +19,11 @@ PYBIND11_MODULE(maze, M)
     M.def("parallelize", &parallelize<std::shared_ptr<Cell[]>>);
 
     py::class_<Cell>(M, "Cell")
-        .def(py::init<bool, bool, bool, bool>())
-        .def_property_readonly("up", &Cell::getUp)
-        .def_property_readonly("down", &Cell::getDown)
-        .def_property_readonly("left", &Cell::getLeft)
-        .def_property_readonly("right", &Cell::getRight)
+        .def(py::init<>())
+        .def("up", &Cell::up)
+        .def("down", &Cell::down)
+        .def("left", &Cell::left)
+        .def("right", &Cell::right)
         .def("val", &Cell::val, "get a numeric value of this cells current state")
         .def("compare", &Cell::compare, "compare this cell to another. Returns 1 if this cell has a greater value, -1 if other has a greater value, and 0 if they are equal.")
         .def("setDirection", &Cell::setDirection, "sets the given direction to true")
@@ -56,4 +54,12 @@ PYBIND11_MODULE(maze, M)
     py::class_<HK<std::shared_ptr<Cell[]>>>(M, "HK")
         .def(py::init<Maze<std::shared_ptr<Cell[]>>, int>())
         .def("run", &HK<std::shared_ptr<Cell[]>>::run);
+
+    py::class_<Wilsons<std::span<Cell>>>(M, "Wilsons")
+        .def(py::init<Maze<std::span<Cell>>, int>())
+        .def("run", &Wilsons<std::span<Cell>>::run);
+
+    py::class_<HK<std::span<Cell>>>(M, "HK")
+        .def(py::init<Maze<std::span<Cell>>, int>())
+        .def("run", &HK<std::span<Cell>>::run);
 }

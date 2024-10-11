@@ -1,0 +1,368 @@
+Obtaining file:///git/Thesis
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: maze
+  Building editable for maze (pyproject.toml): started
+  Building editable for maze (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building editable for maze (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [345 lines of output]
+      *** scikit-build-core 0.10.7 using CMake 3.30.5 (editable)
+      2024-10-11 16:14:48,947 - scikit_build_core - WARNING - No license files found, set wheel.license-files to [] to suppress this warning
+      *** Configuring CMake...
+      loading initial cache file /tmp/tmpfskz1hnb/build/CMakeInit.txt
+      -- The CXX compiler identification is GNU 14.2.1
+      -- Detecting CXX compiler ABI info
+      -- Detecting CXX compiler ABI info - done
+      -- Check for working CXX compiler: /usr/bin/g++ - skipped
+      -- Detecting CXX compile features
+      -- Detecting CXX compile features - done
+      -- Found Python: /git/Thesis/venv/bin/python (found suitable version "3.12.6", minimum required is "3.12") found components: Interpreter Development Development.Module Development.Embed
+      -- Performing Test HAS_FLTO
+      -- Performing Test HAS_FLTO - Success
+      -- Found pybind11: /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include (found version "2.13.6")
+      -- Configuring done (1.8s)
+      -- Generating done (0.0s)
+      -- Build files have been written to: /tmp/tmpfskz1hnb/build
+      *** Building project with Ninja...
+      [1/4] Scanning /git/Thesis/src/lib/Maze_Bindings.cpp for CXX dependencies
+      [2/4] Generating CXX dyndep file CMakeFiles/maze.dir/CXX.dd
+      [3/4] Building CXX object CMakeFiles/maze.dir/src/lib/Maze_Bindings.cpp.o
+      FAILED: CMakeFiles/maze.dir/src/lib/Maze_Bindings.cpp.o
+      /usr/bin/g++ -Dmaze_EXPORTS -I/git/Thesis/./lib -isystem /usr/include/python3.12 -isystem /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include -O3 -DNDEBUG -std=gnu++20 -fPIC -fvisibility=hidden -O3 -Wall -Wextra -Werror -flto -fno-fat-lto-objects -MD -MT CMakeFiles/maze.dir/src/lib/Maze_Bindings.cpp.o -MF CMakeFiles/maze.dir/src/lib/Maze_Bindings.cpp.o.d -fmodules-ts -fmodule-mapper=CMakeFiles/maze.dir/src/lib/Maze_Bindings.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/maze.dir/src/lib/Maze_Bindings.cpp.o -c /git/Thesis/src/lib/Maze_Bindings.cpp
+      /git/Thesis/src/lib/Maze_Bindings.cpp: In function ‘void pybind11_init_maze(pybind11::module_&)’:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:27:13: error: no matching function for call to ‘pybind11::class_<Cell>::def(const char [4], <unresolved overloaded function type>, const char [48])’
+         21 |     py::class_<Cell>(M, "Cell")
+            |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         22 |         .def(py::init<>())
+            |         ~~~~~~~~~~~~~~~~~~
+         23 |         .def("up", &Cell::up)
+            |         ~~~~~~~~~~~~~~~~~~~~~
+         24 |         .def("down", &Cell::down)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~
+         25 |         .def("left", &Cell::left)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~
+         26 |         .def("right", &Cell::right)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         27 |         .def("val", &Cell::val, "get a numeric value of this cells current state")
+            |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      In file included from /git/Thesis/src/lib/Maze_Bindings.cpp:2:
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1620:13: note: candidate: ‘template<class Func, class ... Extra> pybind11::class_<type_, options>& pybind11::class_<type_, options>::def(const char*, Func&&, const Extra& ...) [with Extra = Func; type_ = Cell; options = {}]’
+       1620 |     class_ &def(const char *name_, Func &&f, const Extra &...extra) {
+            |             ^~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1620:13: note:   template argument deduction/substitution failed:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:27:13: note:   couldn’t deduce template parameter ‘Func’
+         21 |     py::class_<Cell>(M, "Cell")
+            |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         22 |         .def(py::init<>())
+            |         ~~~~~~~~~~~~~~~~~~
+         23 |         .def("up", &Cell::up)
+            |         ~~~~~~~~~~~~~~~~~~~~~
+         24 |         .def("down", &Cell::down)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~
+         25 |         .def("left", &Cell::left)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~
+         26 |         .def("right", &Cell::right)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         27 |         .def("val", &Cell::val, "get a numeric value of this cells current state")
+            |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1645:13: note: candidate: ‘template<class T, class ... Extra, typename std::enable_if<T::op_enable_if_hook, int>::type <anonymous> > pybind11::class_<type_, options>& pybind11::class_<type_, options>::def(const T&, const Extra& ...) [with Extra = T; typename std::enable_if<T::op_enable_if_hook, int>::type <anonymous> = {Extra ...}; type_ = Cell; options = {}]’
+       1645 |     class_ &def(const T &op, const Extra &...extra) {
+            |             ^~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1645:13: note:   template argument deduction/substitution failed:
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1644:95: error: ‘op_enable_if_hook’ is not a member of ‘char [4]’
+       1644 |     template <typename T, typename... Extra, detail::enable_if_t<T::op_enable_if_hook, int> = 0>
+            |                                                                                               ^
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1657:13: note: candidate: ‘template<class ... Args, class ... Extra> pybind11::class_<type_, options>& pybind11::class_<type_, options>::def(const pybind11::detail::initimpl::constructor<Args ...>&, const Extra& ...) [with Args = {Args ...}; Extra = {Extra ...}; type_ = Cell; options = {}]’
+       1657 |     class_ &def(const detail::initimpl::constructor<Args...> &init, const Extra &...extra) {
+            |             ^~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1657:13: note:   template argument deduction/substitution failed:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:27:13: note:   mismatched types ‘const pybind11::detail::initimpl::constructor<Args ...>’ and ‘const char [4]’
+         21 |     py::class_<Cell>(M, "Cell")
+            |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         22 |         .def(py::init<>())
+            |         ~~~~~~~~~~~~~~~~~~
+         23 |         .def("up", &Cell::up)
+            |         ~~~~~~~~~~~~~~~~~~~~~
+         24 |         .def("down", &Cell::down)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~
+         25 |         .def("left", &Cell::left)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~
+         26 |         .def("right", &Cell::right)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         27 |         .def("val", &Cell::val, "get a numeric value of this cells current state")
+            |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1664:13: note: candidate: ‘template<class ... Args, class ... Extra> pybind11::class_<type_, options>& pybind11::class_<type_, options>::def(const pybind11::detail::initimpl::alias_constructor<Args ...>&, const Extra& ...) [with Args = {Args ...}; Extra = {Extra ...}; type_ = Cell; options = {}]’
+       1664 |     class_ &def(const detail::initimpl::alias_constructor<Args...> &init, const Extra &...extra) {
+            |             ^~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1664:13: note:   template argument deduction/substitution failed:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:27:13: note:   mismatched types ‘const pybind11::detail::initimpl::alias_constructor<Args ...>’ and ‘const char [4]’
+         21 |     py::class_<Cell>(M, "Cell")
+            |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         22 |         .def(py::init<>())
+            |         ~~~~~~~~~~~~~~~~~~
+         23 |         .def("up", &Cell::up)
+            |         ~~~~~~~~~~~~~~~~~~~~~
+         24 |         .def("down", &Cell::down)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~
+         25 |         .def("left", &Cell::left)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~
+         26 |         .def("right", &Cell::right)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         27 |         .def("val", &Cell::val, "get a numeric value of this cells current state")
+            |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1671:13: note: candidate: ‘template<class ... Args, class ... Extra> pybind11::class_<type_, options>& pybind11::class_<type_, options>::def(pybind11::detail::initimpl::factory<Args ...>&&, const Extra& ...) [with Args = {Args ...}; Extra = {Extra ...}; type_ = Cell; options = {}]’
+       1671 |     class_ &def(detail::initimpl::factory<Args...> &&init, const Extra &...extra) {
+            |             ^~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1671:13: note:   template argument deduction/substitution failed:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:27:13: note:   mismatched types ‘pybind11::detail::initimpl::factory<Args ...>’ and ‘const char [4]’
+         21 |     py::class_<Cell>(M, "Cell")
+            |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         22 |         .def(py::init<>())
+            |         ~~~~~~~~~~~~~~~~~~
+         23 |         .def("up", &Cell::up)
+            |         ~~~~~~~~~~~~~~~~~~~~~
+         24 |         .def("down", &Cell::down)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~
+         25 |         .def("left", &Cell::left)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~
+         26 |         .def("right", &Cell::right)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         27 |         .def("val", &Cell::val, "get a numeric value of this cells current state")
+            |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1677:13: note: candidate: ‘template<class ... Args, class ... Extra> pybind11::class_<type_, options>& pybind11::class_<type_, options>::def(pybind11::detail::initimpl::pickle_factory<Args ...>&&, const Extra& ...) [with Args = {Args ...}; Extra = {Extra ...}; type_ = Cell; options = {}]’
+       1677 |     class_ &def(detail::initimpl::pickle_factory<Args...> &&pf, const Extra &...extra) {
+            |             ^~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1677:13: note:   template argument deduction/substitution failed:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:27:13: note:   mismatched types ‘pybind11::detail::initimpl::pickle_factory<Args ...>’ and ‘const char [4]’
+         21 |     py::class_<Cell>(M, "Cell")
+            |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         22 |         .def(py::init<>())
+            |         ~~~~~~~~~~~~~~~~~~
+         23 |         .def("up", &Cell::up)
+            |         ~~~~~~~~~~~~~~~~~~~~~
+         24 |         .def("down", &Cell::down)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~
+         25 |         .def("left", &Cell::left)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~
+         26 |         .def("right", &Cell::right)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         27 |         .def("val", &Cell::val, "get a numeric value of this cells current state")
+            |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      /git/Thesis/src/lib/Maze_Bindings.cpp:40:13: error: no matching function for call to ‘pybind11::class_<Maze<std::shared_ptr<Cell []> > >::def(const char [12], <unresolved overloaded function type>)’
+         33 |     py::class_<Maze<std::shared_ptr<Cell[]>>>(M, "Maze")
+            |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         34 |         .def(py::init<int, int>())
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+         35 |         .def_property_readonly("width", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::width))
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         36 |         .def("__eq__", &Maze<std::shared_ptr<Cell[]>>::operator==)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         37 |         .def("__ne__", &Maze<std::shared_ptr<Cell[]>>::operator!=)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         38 |         .def("size", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::size))
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         39 |         .def("length", &Maze<std::shared_ptr<Cell[]>>::length)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         40 |         .def("__getitem__", &Maze<std::shared_ptr<Cell[]>>::operator[])
+            |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1620:13: note: candidate: ‘template<class Func, class ... Extra> pybind11::class_<type_, options>& pybind11::class_<type_, options>::def(const char*, Func&&, const Extra& ...) [with Extra = Func; type_ = Maze<std::shared_ptr<Cell []> >; options = {}]’
+       1620 |     class_ &def(const char *name_, Func &&f, const Extra &...extra) {
+            |             ^~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1620:13: note:   template argument deduction/substitution failed:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:40:13: note:   couldn’t deduce template parameter ‘Func’
+         33 |     py::class_<Maze<std::shared_ptr<Cell[]>>>(M, "Maze")
+            |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         34 |         .def(py::init<int, int>())
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+         35 |         .def_property_readonly("width", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::width))
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         36 |         .def("__eq__", &Maze<std::shared_ptr<Cell[]>>::operator==)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         37 |         .def("__ne__", &Maze<std::shared_ptr<Cell[]>>::operator!=)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         38 |         .def("size", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::size))
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         39 |         .def("length", &Maze<std::shared_ptr<Cell[]>>::length)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         40 |         .def("__getitem__", &Maze<std::shared_ptr<Cell[]>>::operator[])
+            |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1645:13: note: candidate: ‘template<class T, class ... Extra, typename std::enable_if<T::op_enable_if_hook, int>::type <anonymous> > pybind11::class_<type_, options>& pybind11::class_<type_, options>::def(const T&, const Extra& ...) [with Extra = T; typename std::enable_if<T::op_enable_if_hook, int>::type <anonymous> = {Extra ...}; type_ = Maze<std::shared_ptr<Cell []> >; options = {}]’
+       1645 |     class_ &def(const T &op, const Extra &...extra) {
+            |             ^~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1645:13: note:   template argument deduction/substitution failed:
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1644:95: error: ‘op_enable_if_hook’ is not a member of ‘char [12]’
+       1644 |     template <typename T, typename... Extra, detail::enable_if_t<T::op_enable_if_hook, int> = 0>
+            |                                                                                               ^
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1657:13: note: candidate: ‘template<class ... Args, class ... Extra> pybind11::class_<type_, options>& pybind11::class_<type_, options>::def(const pybind11::detail::initimpl::constructor<Args ...>&, const Extra& ...) [with Args = {Args ...}; Extra = {Extra ...}; type_ = Maze<std::shared_ptr<Cell []> >; options = {}]’
+       1657 |     class_ &def(const detail::initimpl::constructor<Args...> &init, const Extra &...extra) {
+            |             ^~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1657:13: note:   template argument deduction/substitution failed:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:40:13: note:   mismatched types ‘const pybind11::detail::initimpl::constructor<Args ...>’ and ‘const char [12]’
+         33 |     py::class_<Maze<std::shared_ptr<Cell[]>>>(M, "Maze")
+            |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         34 |         .def(py::init<int, int>())
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+         35 |         .def_property_readonly("width", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::width))
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         36 |         .def("__eq__", &Maze<std::shared_ptr<Cell[]>>::operator==)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         37 |         .def("__ne__", &Maze<std::shared_ptr<Cell[]>>::operator!=)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         38 |         .def("size", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::size))
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         39 |         .def("length", &Maze<std::shared_ptr<Cell[]>>::length)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         40 |         .def("__getitem__", &Maze<std::shared_ptr<Cell[]>>::operator[])
+            |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1664:13: note: candidate: ‘template<class ... Args, class ... Extra> pybind11::class_<type_, options>& pybind11::class_<type_, options>::def(const pybind11::detail::initimpl::alias_constructor<Args ...>&, const Extra& ...) [with Args = {Args ...}; Extra = {Extra ...}; type_ = Maze<std::shared_ptr<Cell []> >; options = {}]’
+       1664 |     class_ &def(const detail::initimpl::alias_constructor<Args...> &init, const Extra &...extra) {
+            |             ^~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1664:13: note:   template argument deduction/substitution failed:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:40:13: note:   mismatched types ‘const pybind11::detail::initimpl::alias_constructor<Args ...>’ and ‘const char [12]’
+         33 |     py::class_<Maze<std::shared_ptr<Cell[]>>>(M, "Maze")
+            |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         34 |         .def(py::init<int, int>())
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+         35 |         .def_property_readonly("width", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::width))
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         36 |         .def("__eq__", &Maze<std::shared_ptr<Cell[]>>::operator==)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         37 |         .def("__ne__", &Maze<std::shared_ptr<Cell[]>>::operator!=)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         38 |         .def("size", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::size))
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         39 |         .def("length", &Maze<std::shared_ptr<Cell[]>>::length)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         40 |         .def("__getitem__", &Maze<std::shared_ptr<Cell[]>>::operator[])
+            |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1671:13: note: candidate: ‘template<class ... Args, class ... Extra> pybind11::class_<type_, options>& pybind11::class_<type_, options>::def(pybind11::detail::initimpl::factory<Args ...>&&, const Extra& ...) [with Args = {Args ...}; Extra = {Extra ...}; type_ = Maze<std::shared_ptr<Cell []> >; options = {}]’
+       1671 |     class_ &def(detail::initimpl::factory<Args...> &&init, const Extra &...extra) {
+            |             ^~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1671:13: note:   template argument deduction/substitution failed:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:40:13: note:   mismatched types ‘pybind11::detail::initimpl::factory<Args ...>’ and ‘const char [12]’
+         33 |     py::class_<Maze<std::shared_ptr<Cell[]>>>(M, "Maze")
+            |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         34 |         .def(py::init<int, int>())
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+         35 |         .def_property_readonly("width", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::width))
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         36 |         .def("__eq__", &Maze<std::shared_ptr<Cell[]>>::operator==)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         37 |         .def("__ne__", &Maze<std::shared_ptr<Cell[]>>::operator!=)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         38 |         .def("size", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::size))
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         39 |         .def("length", &Maze<std::shared_ptr<Cell[]>>::length)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         40 |         .def("__getitem__", &Maze<std::shared_ptr<Cell[]>>::operator[])
+            |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1677:13: note: candidate: ‘template<class ... Args, class ... Extra> pybind11::class_<type_, options>& pybind11::class_<type_, options>::def(pybind11::detail::initimpl::pickle_factory<Args ...>&&, const Extra& ...) [with Args = {Args ...}; Extra = {Extra ...}; type_ = Maze<std::shared_ptr<Cell []> >; options = {}]’
+       1677 |     class_ &def(detail::initimpl::pickle_factory<Args...> &&pf, const Extra &...extra) {
+            |             ^~~
+      /tmp/pip-build-env-tlzfm68c/overlay/lib/python3.12/site-packages/pybind11/include/pybind11/pybind11.h:1677:13: note:   template argument deduction/substitution failed:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:40:13: note:   mismatched types ‘pybind11::detail::initimpl::pickle_factory<Args ...>’ and ‘const char [12]’
+         33 |     py::class_<Maze<std::shared_ptr<Cell[]>>>(M, "Maze")
+            |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         34 |         .def(py::init<int, int>())
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+         35 |         .def_property_readonly("width", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::width))
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         36 |         .def("__eq__", &Maze<std::shared_ptr<Cell[]>>::operator==)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         37 |         .def("__ne__", &Maze<std::shared_ptr<Cell[]>>::operator!=)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         38 |         .def("size", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::size))
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         39 |         .def("length", &Maze<std::shared_ptr<Cell[]>>::length)
+            |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         40 |         .def("__getitem__", &Maze<std::shared_ptr<Cell[]>>::operator[])
+            |         ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      In file included from /git/Thesis/src/lib/Maze_Bindings.cpp:6:
+      /git/Thesis/src/lib/../include/Maze.hpp: In instantiation of ‘void Maze<Mazeable>::set(int, int, const Cell&) [with Mazeable = std::shared_ptr<Cell []>]’:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:41:61:   required from here
+         41 |         .def("__setitem__", &Maze<std::shared_ptr<Cell[]>>::set)
+            |                                                             ^~~
+      /git/Thesis/src/lib/../include/Maze.hpp:128:75: error: no match for ‘operator=’ (operand types are ‘Maze<std::shared_ptr<Cell []> >’ and ‘const Cell’)
+        128 |     void set (int row, int col, const Cell& cell) { this[row * wid + col] = cell; }
+            |                                                     ~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+      /git/Thesis/src/lib/../include/Maze.hpp:24:7: note: candidate: ‘Maze<std::shared_ptr<Cell []> >& Maze<std::shared_ptr<Cell []> >::operator=(const Maze<std::shared_ptr<Cell []> >&)’
+         24 | class Maze
+            |       ^~~~
+      /git/Thesis/src/lib/../include/Maze.hpp:24:7: note:   no known conversion for argument 1 from ‘const Cell’ to ‘const Maze<std::shared_ptr<Cell []> >&’
+      /git/Thesis/src/lib/../include/Maze.hpp:24:7: note: candidate: ‘Maze<std::shared_ptr<Cell []> >& Maze<std::shared_ptr<Cell []> >::operator=(Maze<std::shared_ptr<Cell []> >&&)’
+      /git/Thesis/src/lib/../include/Maze.hpp:24:7: note:   no known conversion for argument 1 from ‘const Cell’ to ‘Maze<std::shared_ptr<Cell []> >&&’
+      /git/Thesis/src/lib/../include/Maze.hpp: In instantiation of ‘void Maze<Mazeable>::connect(int, int) [with Mazeable = std::shared_ptr<Cell []>]’:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:42:57:   required from here
+         42 |         .def("connect", &Maze<std::shared_ptr<Cell[]>>::connect)
+            |                                                         ^~~~~~~
+      /git/Thesis/src/lib/../include/Maze.hpp:143:28: error: ‘class Maze<std::shared_ptr<Cell []> >’ has no member named ‘setDirection’; did you mean ‘getDirection’?
+        143 |                 this[idx1].setDirection(src_side, UP);
+            |                 ~~~~~~~~~~~^~~~~~~~~~~~
+            |                 getDirection
+      /git/Thesis/src/lib/../include/Maze.hpp: In instantiation of ‘bool Maze<Mazeable>::inMaze(int) [with Mazeable = std::shared_ptr<Cell []>]’:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:46:56:   required from here
+         46 |         .def("inMaze", &Maze<std::shared_ptr<Cell[]>>::inMaze)
+            |                                                        ^~~~~~
+      /git/Thesis/src/lib/../include/Maze.hpp:267:62: error: ‘class Maze<std::shared_ptr<Cell []> >’ has no member named ‘val’
+        267 |     bool inMaze (int idx) { return hasIndex(idx) ? this[idx].val(getSide(idx)) != 0 : false; }
+            |                                                    ~~~~~~~~~~^~~
+      In file included from /git/Thesis/src/lib/Maze_Bindings.cpp:8:
+      /git/Thesis/src/lib/../include/Wilsons.hpp: In instantiation of ‘void Wilsons<Mazeable>::run(bool) [with Mazeable = std::shared_ptr<Cell []>]’:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:52:56:   required from here
+         52 |         .def("run", &Wilsons<std::shared_ptr<Cell[]>>::run);
+            |                                                        ^~~
+      /git/Thesis/src/lib/../include/Wilsons.hpp:45:31: error: invalid use of member function ‘bool Cell::left(Side)’ (did you forget the ‘()’ ?)
+         45 |       if (!open_ends) { mz[0].left = 0; }
+            |                         ~~~~~~^~~~
+      /git/Thesis/src/lib/../include/Wilsons.hpp: In instantiation of ‘void Wilsons<Mazeable>::run(bool) [with Mazeable = std::span<Cell>]’:
+      /git/Thesis/src/lib/Maze_Bindings.cpp:60:48:   required from here
+         60 |         .def("run", &Wilsons<std::span<Cell>>::run);
+            |                                                ^~~
+      /git/Thesis/src/lib/../include/Wilsons.hpp:45:31: error: invalid use of member function ‘bool Cell::left(Side)’ (did you forget the ‘()’ ?)
+         45 |       if (!open_ends) { mz[0].left = 0; }
+            |                         ~~~~~~^~~~
+      /git/Thesis/src/lib/../include/Maze.hpp: In instantiation of ‘bool Maze<Mazeable>::inMaze(int) [with Mazeable = std::span<Cell>]’:
+      /git/Thesis/src/lib/../include/Wilsons.hpp:66:24:   required from ‘int Wilsons<Mazeable>::pickStartIdx() [with Mazeable = std::span<Cell>]’
+         66 |          if (!mz.inMaze(i)) { return i; }
+            |               ~~~~~~~~~^~~
+      /git/Thesis/src/lib/../include/Wilsons.hpp:36:22:   required from ‘void Wilsons<Mazeable>::run(bool) [with Mazeable = std::span<Cell>]’
+         36 |       int startIdx = pickStartIdx();
+            |                      ^~~~~~~~~~~~
+      /git/Thesis/src/lib/Maze_Bindings.cpp:60:48:   required from here
+         60 |         .def("run", &Wilsons<std::span<Cell>>::run);
+            |                                                ^~~
+      /git/Thesis/src/lib/../include/Maze.hpp:267:62: error: ‘class Maze<std::span<Cell> >’ has no member named ‘val’
+        267 |     bool inMaze (int idx) { return hasIndex(idx) ? this[idx].val(getSide(idx)) != 0 : false; }
+            |                                                    ~~~~~~~~~~^~~
+      /git/Thesis/src/lib/../include/Maze.hpp: In instantiation of ‘void Maze<Mazeable>::connect(int, int) [with Mazeable = std::span<Cell>]’:
+      /git/Thesis/src/lib/../include/Wilsons.hpp:130:20:   required from ‘void Wilsons<Mazeable>::updateMaze(int) [with Mazeable = std::span<Cell>]’
+        130 |          mz.connect(curIdx, nextIdx);
+            |          ~~~~~~~~~~^~~~~~~~~~~~~~~~~
+      /git/Thesis/src/lib/../include/Wilsons.hpp:41:10:   required from ‘void Wilsons<Mazeable>::run(bool) [with Mazeable = std::span<Cell>]’
+         41 |          updateMaze(startIdx);
+            |          ^~~~~~~~~~
+      /git/Thesis/src/lib/Maze_Bindings.cpp:60:48:   required from here
+         60 |         .def("run", &Wilsons<std::span<Cell>>::run);
+            |                                                ^~~
+      /git/Thesis/src/lib/../include/Maze.hpp:143:28: error: ‘class Maze<std::span<Cell> >’ has no member named ‘setDirection’; did you mean ‘getDirection’?
+        143 |                 this[idx1].setDirection(src_side, UP);
+            |                 ~~~~~~~~~~~^~~~~~~~~~~~
+            |                 getDirection
+      ninja: build stopped: subcommand failed.
+      
+      *** CMake build failed
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building editable for maze
+Failed to build maze
+ERROR: ERROR: Failed to build installable wheels for some pyproject.toml based projects (maze)
