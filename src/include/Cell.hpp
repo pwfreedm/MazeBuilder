@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 #include <sstream>
 
@@ -17,7 +18,8 @@ typedef int Side;
 
 struct Cell
 {
-    bool walls: 8;
+    std::uint8_t walls : 8;
+
     public: 
     
     //default ctor
@@ -44,7 +46,7 @@ struct Cell
     inline bool right(Side l_or_r) { return check_direction(l_or_r, RIGHT); }
 
     /** Read Only Accessor for either the left or right side, returns option supplied */
-    inline bool get_side(Side l_or_r) { return walls >> l_or_r & 0b1111; }
+    inline bool get_side(Side l_or_r) { return (walls >> l_or_r) & 0b1111; }
 
     /** Accessor for a pair of cells. Returns them as a single bool, where the
         lower 4 bits are the right side and the upper 4 bits are the left side 

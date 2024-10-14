@@ -34,6 +34,7 @@ PYBIND11_MODULE(maze, M)
     py::class_<Maze<std::shared_ptr<Cell[]>>>(M, "Maze")
         .def(py::init<int, int>())
         .def_property_readonly("width", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::width))
+        .def("getSide", &Maze<std::shared_ptr<Cell[]>>::getSide)
         .def("__eq__", &Maze<std::shared_ptr<Cell[]>>::operator==)
         .def("__ne__", &Maze<std::shared_ptr<Cell[]>>::operator!=)
         .def("size", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::size))
@@ -55,12 +56,4 @@ PYBIND11_MODULE(maze, M)
     py::class_<HK<std::shared_ptr<Cell[]>>>(M, "HK")
         .def(py::init<Maze<std::shared_ptr<Cell[]>>, int>())
         .def("run", &HK<std::shared_ptr<Cell[]>>::run);
-
-    py::class_<Wilsons<std::span<Cell>>>(M, "Wilsons")
-        .def(py::init<Maze<std::span<Cell>>, int>())
-        .def("run", &Wilsons<std::span<Cell>>::run);
-
-    py::class_<HK<std::span<Cell>>>(M, "HK")
-        .def(py::init<Maze<std::span<Cell>>, int>())
-        .def("run", &HK<std::span<Cell>>::run);
 }

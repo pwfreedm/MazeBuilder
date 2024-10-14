@@ -26,14 +26,6 @@ class Maze
     Mazeable mz; 
     int len;
     int wid;
-    int cell_len;
-    int cell_wid;
-
-    /** decides if idx is the left or right side of a cell.
-        0 = R_SIDE and 4 = L_SIDE, for some reason the compiler
-        gets mad if I use the actual macros
-     */
-    inline Side getSide(int idx) { return idx & 0b1 ?  R_SIDE : L_SIDE;  }
 
 public:
 
@@ -42,23 +34,22 @@ public:
 
     //dimension ctor, creates a numRows x numCols maze
     Maze (int numRows, int numCols)
-    :mz(std::make_unique<Cell[]>(numRows * numCols)), len(numRows), wid(numCols),
-        cell_len(numRows / 2 + (numRows & 0b1)), cell_wid(numCols / 2 + (numCols & 0b1))
+    :mz(Mazeable(numRows * numCols)), len(numRows), wid(numCols)
     {}
 
 
     //move ctor - takes ownership of underlying data
     Maze (Mazeable maze, int numRows, int numCols)
-    :mz(std::move(maze)), len(numRows), wid(numCols),
-        cell_len(numRows / 2 + (numRows & 0b1)), cell_wid(numCols / 2 + (numCols & 0b1))
+    :mz(std::move(maze)), len(numRows), wid(numCols)
     {}
     
+
+    
+    /** decides if idx is the left or right side of a cell. */
+    inline Side getSide(int idx) { return idx & 0b1 ?  R_SIDE : L_SIDE;  }
+
     //Gets the cell pair at index idx in the maze. Does not check bounds.
-    //Cell const& operator[] (size_t idx) const { return mz[idx / 2 + (idx & 0b1)]; }
-
     Cell& operator[] (size_t idx) { return mz[idx / 2 + (idx & 0b1)]; }
-
-    Cell& getCell (int idx) const { return mz[idx / 2 + (idx & 0b1)]; }
 
     //print a maze
     friend std::ostream& operator<< (std::ostream& os, const Maze<>& mz);
@@ -141,11 +132,11 @@ public:
         {
             case UP:
                 (*this)[idx1].setDirection(src_side, UP);
-                (*this)[idx2].setDirection(src_side, DOWN);
+                (*this)[idx2].setDirection(dst_side, DOWN);
                 break; 
             case DOWN: 
                 (*this)[idx1].setDirection(src_side, DOWN);
-                (*this)[idx2].setDirection(src_side, UP);
+                (*this)[idx2].setDirection(dst_side, UP);
                 break; 
             case LEFT:
                 (*this)[idx1].setDirection(src_side, LEFT);

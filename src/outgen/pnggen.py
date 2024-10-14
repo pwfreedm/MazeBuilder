@@ -45,10 +45,11 @@ def boundary_row(md: metadata, mz: Maze, row_num: int, top_row: bool = True) -> 
     out = []
 
     for idx in range(mz.width):
+        side = mz.getSide(idx)
         cell = mz[(mz.width * row_num) + idx]
-        if top_row and not cell.up: 
+        if top_row and not cell.up(side): 
             out += close_top_face(md)
-        elif not top_row and not cell.down: 
+        elif not top_row and not cell.down(side): 
             out += close_bottom_face(md)
         else:
             out += close_lr_face(md)
@@ -59,12 +60,13 @@ def middle_row(md: metadata, mz: Maze, row_num: int) -> list[int]:
     out = []
 
     for idx in range(mz.width):
+        side = mz.getSide(idx)
         cell = mz[(mz.width * row_num) + idx]
-        if not cell.right and not cell.left: 
+        if not cell.right(side) and not cell.left(side): 
             out += close_lr_face(md)
-        elif not cell.right and cell.left:
+        elif not cell.right(side) and cell.left(side):
             out += close_right_face(md)
-        elif cell.right and not cell.left: 
+        elif cell.right(side) and not cell.left(side): 
             out += close_left_face(md)
         else:
             out += open_face(md)
