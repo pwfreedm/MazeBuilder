@@ -54,7 +54,7 @@ public:
     {}
     
     //Gets the cell pair at index idx in the maze. Does not check bounds.
-    Cell const& operator[] (size_t idx) const { return mz[idx / 2 + (idx & 0b1)]; }
+    //Cell const& operator[] (size_t idx) const { return mz[idx / 2 + (idx & 0b1)]; }
 
     Cell& operator[] (size_t idx) { return mz[idx / 2 + (idx & 0b1)]; }
 
@@ -125,7 +125,7 @@ public:
     @param col - the column of the maze in which to inser @p cell
     @param cell - the cell to be inserted into the maze
     */
-    void set (int row, int col, const Cell& cell) { this[row * wid + col] = cell; }
+    void set (int row, int col, const Cell& cell) { (*this)[row * wid + col] = cell; }
 
 
 
@@ -140,20 +140,20 @@ public:
         switch(dir)
         {
             case UP:
-                this[idx1].setDirection(src_side, UP);
-                getCell(idx2).setDirection(src_side, DOWN);
+                (*this)[idx1].setDirection(src_side, UP);
+                (*this)[idx2].setDirection(src_side, DOWN);
                 break; 
             case DOWN: 
-                getCell(idx1).setDirection(src_side, DOWN);
-                getCell(idx2).setDirection(src_side, UP);
+                (*this)[idx1].setDirection(src_side, DOWN);
+                (*this)[idx2].setDirection(src_side, UP);
                 break; 
             case LEFT:
-                getCell(idx1).setDirection(src_side, LEFT);
-                getCell(idx2).setDirection(dst_side, RIGHT);
+                (*this)[idx1].setDirection(src_side, LEFT);
+                (*this)[idx2].setDirection(dst_side, RIGHT);
                 break; 
             case RIGHT:
-                getCell(idx1).setDirection(src_side, RIGHT);
-                getCell(idx2).setDirection(dst_side, LEFT);
+                (*this)[idx1].setDirection(src_side, RIGHT);
+                (*this)[idx2].setDirection(dst_side, LEFT);
             default:
                 break;
         };
@@ -264,7 +264,7 @@ public:
     }
 
     //Returns true if the cell at location idx is connected to the maze. Bounds checked.
-    bool inMaze (int idx) { return hasIndex(idx) ? this[idx].val(getSide(idx)) != 0 : false; }
+    bool inMaze (int idx) { return hasIndex(idx) ? (*this)[idx].val(getSide(idx)) != 0 : false; }
 
     //Returns true if idx is a valid index into this maze
     bool hasIndex (int idx) { return idx < size(); }

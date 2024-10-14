@@ -1,4 +1,4 @@
-from maze import Maze, Cell
+from mazebuilder import Maze, Cell
 
 def cell_error(idx: int, problem: str, idx2: int = -1):
     if idx2 == -1: 

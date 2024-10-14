@@ -42,7 +42,7 @@ public:
          startIdx = pickStartIdx();
       }
       
-      if (!open_ends) { mz[0].left = 0; }
+      if (!open_ends) { mz[0].updateDirection(L_SIDE, LEFT); }
       else { mz.openEnd(); }
    }
    

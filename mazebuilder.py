@@ -2,11 +2,10 @@ import argparse
 import os
 from multiprocessing import cpu_count
 from os import urandom
-from pathlib import Path
-from time import time, strftime, time_ns
+from time import strftime, time_ns
 
 
-from maze import Maze, Wilsons, HK, parallelize
+import maze
 from src.tests.verification import check_connections
 from src.outgen.pnggen import convert_to_png
 
@@ -167,19 +166,19 @@ def main():
       #generate blank maze
       wid = args.width + (run * args.widstep)
       len = args.length + (run * args.lenstep)
-      mz = Maze(len, wid)
+      mz = maze.Maze(len, wid)
 
       #pick and run the algorithm
       if not args.p:
          if args.algo == 'wilsons':
             start = time_ns()
-            Wilsons(mz, args.s)
+            maze.Wilsons(mz, args.s)
          else:
             start = time_ns()
-            HK(mz, args.s)
+            maze.HK(mz, args.s)
       else:
          start = time_ns()
-         mz = parallelize(args.algo, args.length, args.width, args.s, args.num_cores)
+         mz = maze.parallelize(args.algo, args.length, args.width, args.s, args.num_cores)
       
       #calculate time for csv later
       runtime = time_ns() - start

@@ -1,6 +1,4 @@
-from png import Writer, Image
-import os
-import time
+from png import Writer
 
 from maze import Maze
 
