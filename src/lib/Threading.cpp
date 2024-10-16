@@ -92,3 +92,6 @@ run_algorithm (std::string algorithm, std::span<Cell> maze, int length, int widt
         HK(m, seed, false);
     }
 }
+
+//width % 7 - 3 maybe? then take the max of that and 1? 
+//should work well enough on smaller mazes 
