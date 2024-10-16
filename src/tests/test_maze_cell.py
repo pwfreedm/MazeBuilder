@@ -1,4 +1,4 @@
-from Maze import Maze, Cell
+from maze import Maze, Cell
 
 def test_maze_ctor():
     m = Maze(5,5)

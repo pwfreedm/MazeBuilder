@@ -11,5 +11,6 @@ settings.json
 
 #don't upload python environment garbage
 __pycache__
+.venv
 venv
 pyvenv.cfg
