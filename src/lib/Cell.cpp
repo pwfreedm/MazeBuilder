@@ -103,6 +103,12 @@ Cell::updateDirection(Direction dir)
     }
 }
 
+int
+Cell::openFaces()
+{
+    return up + down + left + right;
+}
+
 std::string
 Cell::str()
 {

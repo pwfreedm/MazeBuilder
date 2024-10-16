@@ -141,6 +141,12 @@ parser.add_argument('-ws', '--widstep',
                     default=0,
                     help='define the amount to grow the width of the maze by between repetitions. Ignored if repetitions = 0 (default 0)')
 
+parser.add_argument('-rn', '--repeatnum',
+                    action='store',
+                    type=int,
+                    default=1,
+                    help='define the number of times to repeat generation before stepping the length and width')
+
 def main():
    args = parser.parse_args()
    start = 0
@@ -149,52 +155,51 @@ def main():
       #generate blank maze
       wid = args.width + (run * args.widstep)
       len = args.length + (run * args.lenstep)
-      mz = Maze(len, wid)
 
-      #pick and run the algorithm
-      if not args.p:
-         if args.algo == 'wilsons':
-            start = time_ns()
-            Wilsons(mz, args.s)
+      for trial in range(args.repeatnum):
+         mz = Maze(len, wid)
+
+         #pick and run the algorithm
+         if not args.p:
+            if args.algo == 'wilsons':
+               start = time_ns()
+               Wilsons(mz, args.s)
+            else:
+               start = time_ns()
+               HK(mz, args.s)
          else:
             start = time_ns()
-            HK(mz, args.s)
-      else:
-         start = time_ns()
-         mz = parallelize(args.algo, args.length, args.width, args.s, args.num_cores)
-      
-      #calculate time for csv later
-      runtime = time_ns() - start
+            mz = parallelize(args.algo, args.length, args.width, args.s, args.num_cores)
+         
+         #calculate time for csv later
+         runtime = time_ns() - start
 
-      #optionally verify connections
-      if args.test and not args.verbose:
-         check_connections(mz, args.s)
-      if args.verbose: 
-         check_connections(mz, args.s, silent=False)
-      
-      #update seed before next run if needed
-      if not args.keepseed:
-         args.s = int.from_bytes(urandom(4), signed=True)
+         #optionally verify connections
+         if args.test and not args.verbose:
+            check_connections(mz, args.s)
+         if args.verbose: 
+            check_connections(mz, args.s, silent=False)
+         
+         #update seed before next run if needed
+         if not args.keepseed:
+            args.s = int.from_bytes(urandom(4), signed=True)
 
-      #generate the output png - skip pngs if writing CSV to save time
-      if not args.nopng and not args.csv:
-         file = create_file(args.output)
-         convert_to_png(mz, file, args.edgewidth, args.foreground, args.background)
-         file.close()
-      
-      if args.csv: 
-         if run == 0:
-            filename = str(args.algo).title() + '-' + strftime("%d-%H:%M:%S")
-            csv = create_file(filename, extension='.csv', options='w+')
-            csv.write('Seed,Length,Width,Time(ns),Passed Verification\n')
-         csv.write(str(str(args.s) + ',' + str(len) + ',' + str(wid) + ',' + str(runtime) + ',' + str(check_connections(mz, args.s)) + '\n'))
+         #generate the output png - skip pngs if writing CSV to save time
+         if not args.nopng and not args.csv:
+            file = create_file(args.output)
+            convert_to_png(mz, file, args.edgewidth, args.foreground, args.background)
+            file.close()
+         
+         if args.csv: 
+            if run == 0:
+               filename = str(args.algo).title() + '-' + strftime("%d-%H:%M:%S")
+               csv = create_file(filename, extension='.csv', options='w+')
+               csv.write('Seed,Length,Width,Time(ns),Passed Verification\n')
+            csv.write(str(str(args.s) + ',' + str(len) + ',' + str(wid) + ',' + str(runtime) + ',' + str(check_connections(mz, args.s)) + '\n'))
    #if a csv was created, close it after mazes are tested
    if csv:
       csv.close()
             
          
-         
-
-
 if __name__ == '__main__':
    main()

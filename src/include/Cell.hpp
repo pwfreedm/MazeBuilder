@@ -54,5 +54,7 @@ struct Cell
     //Flips the state of the bit corresponding to dir
     void updateDirection (Direction dir);
 
+    int openFaces ();
+
     std::string str();
 };
