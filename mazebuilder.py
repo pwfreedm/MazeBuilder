@@ -21,25 +21,7 @@ def create_file (filename, filepath = default_path, extension = '.png', options 
     fullpath = os.path.join(filepath, filename + extension)
     return open(fullpath, options)
 
-'''supportable options: 
-        [-h, help]; displays all commands
-        [-a, --algo] N; selects an algorithm to use (default Wilsons)
-        [-s, --seed] N; allows the selection of a seed (default random)
-        [-w, --width] N; defines the width of the maze to generate
-        [-l, --length] N; defines the length of the maze to generate
-        [-n, --no-pdf]; disables pdf generation (default False)
-        [-c, --csv]; exports timing data as a csv (also enables timing) (default True)
-        [-r, --repeat]; defines the number of times to repeat the process
-        [-ls, --len-step] N; defines the step size for the length between trials
-        [-ws, --wid-step] N; defines the step size for the width between trials
-        [-o, --output] N; defines a filepath to write data to
-        [-t, --test]; runs mazes through the connection verification algorithm
-        [-v, --verbose]; runs mazes through the connection verification algorithm and prints verbose output
-        [-d, --debug] N; defines an output destination for debug information
-        (default stdout)
-        [-rs, --regenseed]; regenerates the seed between repeated runs
 
-'''
 parser = argparse.ArgumentParser(prog="MazeBuilder",
                                  description="CLI Parser for Maze Generation")
 
@@ -158,6 +140,12 @@ parser.add_argument('-ws', '--widstep',
                     default=0,
                     help='define the amount to grow the width of the maze by between repetitions. Ignored if repetitions = 0 (default 0)')
 
+parser.add_argument('-rn', '--repeatnum',
+                    action='store',
+                    type=int,
+                    default=1,
+                    help='define the number of times to repeat trials before stepping width and length')
+
 def main():
    args = parser.parse_args()
    start = 0
@@ -166,45 +154,47 @@ def main():
       #generate blank maze
       wid = args.width + (run * args.widstep)
       len = args.length + (run * args.lenstep)
-      mz = maze.Maze(len, wid)
+      for run in range(args.repeatnum):
 
-      #pick and run the algorithm
-      if not args.p:
-         if args.algo == 'wilsons':
-            start = time_ns()
-            maze.Wilsons(mz, args.s)
+         mz = maze.Maze(len, wid)
+
+         #pick and run the algorithm
+         if not args.p:
+            if args.algo == 'wilsons':
+               start = time_ns()
+               maze.Wilsons(mz, args.s)
+            else:
+               start = time_ns()
+               maze.HK(mz, args.s)
          else:
             start = time_ns()
-            maze.HK(mz, args.s)
-      else:
-         start = time_ns()
-         mz = maze.parallelize(args.algo, args.length, args.width, args.s, args.num_cores)
-      
-      #calculate time for csv later
-      runtime = time_ns() - start
+            mz = maze.parallelize(args.algo, args.length, args.width, args.s, args.num_cores)
+         
+         #calculate time for csv later
+         runtime = time_ns() - start
 
-      #optionally verify connections
-      if args.test and not args.verbose:
-         check_connections(mz, args.s)
-      if args.verbose: 
-         check_connections(mz, args.s, silent=False)
-      
-      #update seed before next run if needed
-      if not args.keepseed:
-         args.s = int.from_bytes(urandom(4), signed=True)
+         #optionally verify connections
+         if args.test and not args.verbose:
+            check_connections(mz, args.s)
+         if args.verbose: 
+            check_connections(mz, args.s, silent=False)
+         
+         #update seed before next run if needed
+         if not args.keepseed:
+            args.s = int.from_bytes(urandom(4), signed=True)
 
-      #generate the output png - skip pngs if writing CSV to save time
-      if not args.nopng and not args.csv:
-         file = create_file(args.output)
-         convert_to_png(mz, file, args.edgewidth, args.foreground, args.background)
-         file.close()
-      
-      if args.csv: 
-         if run == 0:
-            filename = str(args.algo).title() + '-' + strftime("%d-%H:%M:%S")
-            csv = create_file(filename, extension='.csv', options='w+')
-            csv.write('Seed,Length,Width,Time(ns),Passed Verification\n')
-         csv.write(str(str(args.s) + ',' + str(len) + ',' + str(wid) + ',' + str(runtime) + ',' + str(check_connections(mz, args.s)) + '\n'))
+         #generate the output png - skip pngs if writing CSV to save time
+         if not args.nopng and not args.csv:
+            file = create_file(args.output)
+            convert_to_png(mz, file, args.edgewidth, args.foreground, args.background)
+            file.close()
+         
+         if args.csv: 
+            if run == 0:
+               filename = str(args.algo).title() + '-' + strftime("%d-%H:%M:%S")
+               csv = create_file(filename, extension='.csv', options='w+')
+               csv.write('Seed,Length,Width,Time(ns),Passed Verification\n')
+            csv.write(str(str(args.s) + ',' + str(len) + ',' + str(wid) + ',' + str(runtime) + ',' + str(check_connections(mz, args.s)) + '\n'))
    #if a csv was created, close it after mazes are tested
    if csv:
       csv.close()
