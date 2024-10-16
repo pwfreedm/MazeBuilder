@@ -294,6 +294,7 @@ public:
         }
         return ss.str();
     }
+
 };
 /** Overloaded output operator. Allows mazes to be manipulated with <<
     
