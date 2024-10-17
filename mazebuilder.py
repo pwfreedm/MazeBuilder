@@ -150,10 +150,15 @@ def main():
    args = parser.parse_args()
    start = 0
    csv = None
+
    for run in range(args.repeat):
       #generate blank maze
       wid = args.width + (run * args.widstep)
       len = args.length + (run * args.lenstep)
+<<<<<<< HEAD
+=======
+      
+>>>>>>> 9c44d14 (finishing touches)
       for trial in range(args.repeatnum):
 
          mz = maze.Maze(len, wid)
