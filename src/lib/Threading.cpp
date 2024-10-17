@@ -112,10 +112,10 @@ smooth_edges (Maze<Mazeable>& mz, std::vector<int> blocks, int seed)
         {
             Cell prev = mz[idx - 1];
 
-            if (!prev.up && (r() % 7) > anti_consecutive_bias) 
+            if (!prev.up && (r() % 11) > anti_consecutive_bias) 
             { 
                 mz.connect(idx, mz.getNeighbor(idx, UP)); 
-                anti_consecutive_bias += 2;
+                anti_consecutive_bias += 3;
             }
             else if (anti_consecutive_bias > 0) { --anti_consecutive_bias; }
         }

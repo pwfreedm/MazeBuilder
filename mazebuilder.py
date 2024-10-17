@@ -151,11 +151,12 @@ def main():
    args = parser.parse_args()
    start = 0
    csv = None
+
    for run in range(args.repeat):
       #generate blank maze
       wid = args.width + (run * args.widstep)
       len = args.length + (run * args.lenstep)
-
+      
       for trial in range(args.repeatnum):
          mz = Maze(len, wid)
 
@@ -191,7 +192,7 @@ def main():
             file.close()
          
          if args.csv: 
-            if run == 0:
+            if run == 0 and trial == 0:
                filename = str(args.algo).title() + '-' + strftime("%d-%H:%M:%S")
                csv = create_file(filename, extension='.csv', options='w+')
                csv.write('Seed,Length,Width,Time(ns),Passed Verification\n')
