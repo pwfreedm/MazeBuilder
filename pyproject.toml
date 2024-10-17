@@ -1,12 +1,3 @@
-[tool.scikit.dependencies]
-python = "^3.10"
-pypng = "*"
-numpy = "^2"
-
-[tool.scikit.dev-dependencies]
-pytest = "^8"
-mypy = "*"
-
 [build-system]
 requires = ["scikit-build-core", "pybind11", "pypng"]
 build-backend = "scikit_build_core.build"
@@ -14,3 +5,10 @@ build-backend = "scikit_build_core.build"
 [project]
 name = "maze"
 version = "0.1.0"
+dependencies = [
+    "pypng",
+    "pytest>=8"
+]
+
+[tool.scikit.dependencies]
+python = "^3.10"
