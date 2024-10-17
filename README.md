@@ -52,7 +52,6 @@ This section will be split into two sections: basic usage and profiling. This is
 ``-p, --parallel`` - parallelize maze generation (default false) <br>
 ``-nc, --num-cores N`` - override to select the number of cores used for parallelization (default is the result of multiprocessing::cpu_count()) <br>
 ``-t, --test`` - test each maze after generation to insure it can be solved. This flag is automatically enabled if a csv is being generated. This flag prints every error found with a given maze to stdout (default false) <br>
-``
 
 # Learn about the algorithms
 
