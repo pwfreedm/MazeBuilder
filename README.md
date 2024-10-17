@@ -1,6 +1,6 @@
 # Maze Builder
 This program is designed to allow you to build (reasonably) memory and time efficient mazes. 
-It is a CLI tool that can produce images of mazes with arbitrary greyscale foreground and 
+It is a CLI tool that can produce pngs of mazes with arbitrary greyscale foreground and 
 background colors. The cli is built in python but uses a maze package written in C++, for efficiency. 
 There are two algorithms, Wilson's Algorithm and the Hunt and Kill algorithm; the former tends to make 
 mazes with shorter corridors and more turns where the latter tends to favor longer straight segments.
@@ -61,7 +61,7 @@ This section will be split into two sections: basic usage and profiling. This is
 
 # Acknowledgements
 
-Thank you to Dr. Zoppetti, my advisor, for all his help (and occasionally telling me to get it together). I probably would have abandoned this a while ago if it weren't for him. <br>
+Thank you to Dr. Zoppetti, my advisor, for all his help (and occasionally telling me to get it together). His encouragement made the worst hills on this journey easier to climb. <br>
 
 Thank you to Jamis Buck. He has no clue who I am, but his website has very well decomposed explanations of how different maze generation algorithms work. His explanations of these are more clear than mine could be, so his links are above. <br>
 
