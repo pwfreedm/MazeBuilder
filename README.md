@@ -31,39 +31,39 @@ This section will be split into two sections: basic usage and profiling. This is
 
 
 ## Basic Usage Commands
-`` -h, --help `` - displays a help menu that lists all of this information
-`` -a, --algo [wilsons, hk] `` - allows manual selection of the algorithm used for maze generation (default is wilsons)
-`` -s, --seed N `` - allows seeding the random number generator. The same seed will guarantee the same maze on successive invocations given that the algorithm used is the same as well.\ (default is a random signed 4 byte int generated with urandom)
-`` -w, --width N`` - allows definition of the width of the generated maze (default 50)
-`` -l, --length N`` - allows definition of the length of the generated maze (default 50)
-`` -o, --output `` - allows renaming of the output pdf (default is the date and time of generation)
-`` -n, --nopng `` - skips png generation (default false)
-`` -fg, --foreground`` - allows definition of the color of the maze walls. Some helpful starting values: black = 0, dark grey = 65, light grey = 135, white = 255 (default 0)
-`` -bg, --background`` - allows definition of the color of the background of the image. Some helpful starting values: 0 = transparent, 65 = light grey, 135 = dark grey, 255 = black (default 0)
-``-e, --edgewidth`` - defines the number of pixels on each edge of each cell in the maze. This means that the generated png will be width * edgewidth x length * edgewidth. BE CAREFUL CHANGING THIS - values too small will result in a solid image and values too large will make the walls hard to see, as they do not grow in thickness proportionally to the edge width (default 12)
+`` -h, --help `` - displays a help menu that lists all of this information <br>
+`` -a, --algo [wilsons, hk] `` - allows manual selection of the algorithm used for maze generation (default is wilsons) <br>
+`` -s, --seed N `` - allows seeding the random number generator. The same seed will guarantee the same maze on successive invocations given that the algorithm used is the same as well.\ (default is a random signed 4 byte int generated with urandom) <br>
+`` -w, --width N`` - allows definition of the width of the generated maze (default 50) <br>
+`` -l, --length N`` - allows definition of the length of the generated maze (default 50) <br>
+`` -o, --output `` - allows renaming of the output pdf (default is the date and time of generation) <br>
+`` -n, --nopng `` - skips png generation (default false) <br>
+`` -fg, --foreground`` - allows definition of the color of the maze walls. Some helpful starting values: black = 0, dark grey = 65, light grey = 135, white = 255 (default 0) <br>
+`` -bg, --background`` - allows definition of the color of the background of the image. Some helpful starting values: 0 = transparent, 65 = light grey, 135 = dark grey, 255 = black (default 0) <br>
+``-e, --edgewidth`` - defines the number of pixels on each edge of each cell in the maze. This means that the generated png will be width * edgewidth x length * edgewidth. BE CAREFUL CHANGING THIS - values too small will result in a solid image and values too large will make the walls hard to see, as they do not grow in thickness proportionally to the edge width (default 12) <br>
 
 
 ## Profiling Commands
-`` -r, --repeat N`` - generate a maze N times (default 1)
-`` -ls, --lenstep N`` - amount to increase the length of the maze by between repetitions (default 0)
-`` -ws, --widstep N`` - amount to increase the width of the maze by between repetitions (default 0)
-`` -rn, --repeatnum N`` -  number of mazes to generate before stepping up length and width (default 1)
-``-c, --csv filename`` - export maze data (seed, size, time, valid generation) to csv file filename. This option automatically disables png generation (default filename is algorithm-time.csv)
-``-p, --parallel`` - parallelize maze generation (default false)
-``-nc, --num-cores N`` - override to select the number of cores used for parallelization (default is the result of multiprocessing::cpu_count())
-``-t, --test`` - test each maze after generation to insure it can be solved. This flag is automatically enabled if a csv is being generated. This flag prints every error found with a given maze to stdout (default false)
+`` -r, --repeat N`` - generate a maze N times (default 1) <br>
+`` -ls, --lenstep N`` - amount to increase the length of the maze by between repetitions (default 0) <br>
+`` -ws, --widstep N`` - amount to increase the width of the maze by between repetitions (default 0) <br>
+`` -rn, --repeatnum N`` -  number of mazes to generate before stepping up length and width (default 1) <br>
+``-c, --csv filename`` - export maze data (seed, size, time, valid generation) to csv file filename. This option automatically disables png generation (default filename is algorithm-time.csv) <br>
+``-p, --parallel`` - parallelize maze generation (default false) <br>
+``-nc, --num-cores N`` - override to select the number of cores used for parallelization (default is the result of multiprocessing::cpu_count()) <br>
+``-t, --test`` - test each maze after generation to insure it can be solved. This flag is automatically enabled if a csv is being generated. This flag prints every error found with a given maze to stdout (default false) <br>
 ``
 
 # Learn about the algorithms
 
-[Original Wilsons Paper](https://www.cs.cmu.edu/~15859n/RelatedWork/RandomTrees-Wilson.pdf)
-[Jamis Buck's blog post about Wilsons](https://weblog.jamisbuck.org/2011/1/20/maze-generation-wilson-s-algorithm)
-[Jamis Buck's blog post about Hunt and Kill](https://weblog.jamisbuck.org/2011/1/24/maze-generation-hunt-and-kill-algorithm)
+[Original Wilsons Paper](https://www.cs.cmu.edu/~15859n/RelatedWork/RandomTrees-Wilson.pdf) <br>
+[Jamis Buck's blog post about Wilsons](https://weblog.jamisbuck.org/2011/1/20/maze-generation-wilson-s-algorithm) <br>
+[Jamis Buck's blog post about Hunt and Kill](https://weblog.jamisbuck.org/2011/1/24/maze-generation-hunt-and-kill-algorithm) <br>
 
 # Acknowledgements
 
-Thank you to Dr. Zoppetti, my advisor, for all his help (and occasionally telling me to get it together). I probably would have abandoned this a while ago if it weren't for him. 
+Thank you to Dr. Zoppetti, my advisor, for all his help (and occasionally telling me to get it together). I probably would have abandoned this a while ago if it weren't for him. <br>
 
-Thank you to Jamis Buck. He has no clue who I am, but his website has very well decomposed explanations of how different maze generation algorithms work. His explanations of these are more clear than mine could be, so his links are above. 
+Thank you to Jamis Buck. He has no clue who I am, but his website has very well decomposed explanations of how different maze generation algorithms work. His explanations of these are more clear than mine could be, so his links are above. <br>
 
-Thank you to Will Killian. He has sat in on a number of my Thesis progress meetings and always had incredibly helpful and insightful additions. His contributions pushed me down paths I wouldn't have walked otherwise, and I learned a lot in the process of implementing those suggestions. 
+Thank you to Will Killian. He has sat in on a number of my Thesis progress meetings and always had incredibly helpful and insightful additions. His contributions pushed me down paths I wouldn't have walked otherwise, and I learned a lot in the process of implementing those suggestions. <br>
