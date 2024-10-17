@@ -99,7 +99,7 @@ parser.add_argument('-c', '--csv',
 parser.add_argument('-t', '--test',
                     action='store_true',
                     default=False,
-                    help='tests each maze after its generation to ensure all connections are valid. if used in conjunction with --csv, adds that data to the csv (default false)')
+                    help='tests each maze after its generation to ensure all connections are valid. prints any errors found to stdout (default false)')
 
 parser.add_argument('-p', '-parallel',
                     action='store_true',
@@ -111,16 +111,6 @@ parser.add_argument('-nc', '--num-cores',
                     type=int, 
                     default=cpu_count(),
                     help='limit the number of cores used for parallelization to the provided amount. The default is the return of multiprocessing.cpu_count.')
-
-parser.add_argument('-v', '--verbose',
-                    action='store_true',
-                    default=False,
-                    help='tests each maze after its generation, returning all connections in the maze that are invalid. If used with --csv, adds this data to the csv (default false)')
-
-parser.add_argument('-d', '--debug',
-                    action='store_true',
-                    default=False,
-                    help='print debug information (this may be nothing, who knows.) (default false)')
 
 parser.add_argument('-r', '--repeat',
                     action='store',
@@ -179,9 +169,7 @@ def main():
          runtime = time_ns() - start
 
          #optionally verify connections
-         if args.test and not args.verbose:
-            check_connections(mz, args.s)
-         if args.verbose: 
+         if args.test: 
             check_connections(mz, args.s, silent=False)
          
          #update seed before next run if needed
