@@ -134,7 +134,8 @@ parser.add_argument('-rn', '--repeatnum',
                     action='store',
                     type=int,
                     default=1,
-                    help='define the number of times to repeat trials before stepping width and length')
+                    help='define the number of times to repeat generation before stepping the length and width')
+
 
 def main():
    args = parser.parse_args()
@@ -145,14 +146,11 @@ def main():
       #generate blank maze
       wid = args.width + (run * args.widstep)
       len = args.length + (run * args.lenstep)
-<<<<<<< HEAD
-=======
-      
->>>>>>> 9c44d14 (finishing touches)
+
       for trial in range(args.repeatnum):
 
          mz = maze.Maze(len, wid)
-
+      
          #pick and run the algorithm
          if not args.p:
             if args.algo == 'wilsons':
@@ -164,6 +162,7 @@ def main():
          else:
             start = time_ns()
             mz = maze.parallelize(args.algo, args.length, args.width, args.s, args.num_cores)
+
          
          #calculate time for csv later
          runtime = time_ns() - start
@@ -193,8 +192,5 @@ def main():
       csv.close()
             
          
-         
-
-
 if __name__ == '__main__':
    main()
