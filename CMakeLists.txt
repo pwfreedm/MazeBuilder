@@ -2,6 +2,7 @@
 cmake_minimum_required(VERSION 3.29.2)
 project($(SKBUILD_PROJECT_NAME) LANGUAGES CXX)
 
+
 #extra work to insure clangd finds compile-commands
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 if(CMAKE_EXPORT_COMPILE_COMMANDS)

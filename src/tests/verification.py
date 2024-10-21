@@ -27,28 +27,29 @@ def check_connections(mz: Maze, seed: int, silent: bool = True) -> bool:
     cur: Cell
     for idx in range(mz.size()):
         cur = mz[idx]
+        side = mz.getSide(idx)
 
         #make sure top row has no upwards facing connections
-        if idx - mz.width < 0 and cur.up:
+        if idx - mz.width < 0 and cur.up(side):
             if silent: return False
             good = False
             cell_error(idx, "open upwards while on the top row")
         
         #make sure bottom row has no downwards facing connections
-        elif idx + mz.width > mz.size() and cur.down:
+        elif idx + mz.width > mz.size() and cur.down(side):
             if silent: return False
             good = False
             cell_error(idx, "open downwards while on the bottom row")
         
         #make sure left column has no left facing connections
-        elif idx % mz.width == 0 and cur.left:
+        elif idx % mz.width == 0 and cur.left(side):
             if idx != 0:    #exception if we are checking where the maze entrance is
                 if silent: return False
                 good = False
                 cell_error(idx, "open on the left while on the left side")
         
         #make sure right column has no right facing connections
-        elif (idx + 1) % mz.width == 0 and cur.right:
+        elif (idx + 1) % mz.width == 0 and cur.right(side):
             if idx != mz.size() - 1:    #exception if we are checking where maze exit is
                 if silent: return False
                 good = False

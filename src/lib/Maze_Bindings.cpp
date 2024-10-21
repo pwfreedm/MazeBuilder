@@ -2,8 +2,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "../include/Cell.hpp"
-#include "Cell.cpp"
 
 #include "../include/Maze.hpp"
 #include "../include/Cell.hpp"
@@ -20,12 +18,17 @@ PYBIND11_MODULE(maze, M)
     
     M.def("parallelize", &parallelize<std::shared_ptr<Cell[]>>);
 
+    py::enum_<Side>(M, "Side")
+        .value("L_SIDE", L_SIDE, "left side of a cell (note that cells are actually packed pairs)")
+        .value("R_SIDE", R_SIDE, "right side of a cell (note that cells are actually packed pairs)");
+
     py::class_<Cell>(M, "Cell")
-        .def(py::init<bool, bool, bool, bool>())
-        .def_property_readonly("up", &Cell::getUp)
-        .def_property_readonly("down", &Cell::getDown)
-        .def_property_readonly("left", &Cell::getLeft)
-        .def_property_readonly("right", &Cell::getRight)
+        .def(py::init<>())
+        .def("check_direction", &Cell::check_direction)
+        .def("up", &Cell::up)
+        .def("down", &Cell::down)
+        .def("left", &Cell::left)
+        .def("right", &Cell::right)
         .def("val", &Cell::val, "get a numeric value of this cells current state")
         .def("compare", &Cell::compare, "compare this cell to another. Returns 1 if this cell has a greater value, -1 if other has a greater value, and 0 if they are equal.")
         .def("setDirection", &Cell::setDirection, "sets the given direction to true")
@@ -35,10 +38,11 @@ PYBIND11_MODULE(maze, M)
     py::class_<Maze<std::shared_ptr<Cell[]>>>(M, "Maze")
         .def(py::init<int, int>())
         .def_property_readonly("width", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::width))
+        .def_property_readonly("length", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::length))
+        .def("getSide", &Maze<std::shared_ptr<Cell[]>>::getSide)
         .def("__eq__", &Maze<std::shared_ptr<Cell[]>>::operator==)
         .def("__ne__", &Maze<std::shared_ptr<Cell[]>>::operator!=)
         .def("size", py::overload_cast<>(&Maze<std::shared_ptr<Cell[]>>::size))
-        .def("length", &Maze<std::shared_ptr<Cell[]>>::length)
         .def("__getitem__", &Maze<std::shared_ptr<Cell[]>>::operator[])
         .def("__setitem__", &Maze<std::shared_ptr<Cell[]>>::set)
         .def("connect", &Maze<std::shared_ptr<Cell[]>>::connect)
