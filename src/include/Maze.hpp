@@ -8,6 +8,7 @@
 
 #include <iostream> 
 #include <sstream>
+#include <type_traits>
 #include <vector>
 #include <memory>
 #include <concepts>
@@ -34,22 +35,33 @@ public:
 
     //dimension ctor, creates a numRows x numCols maze
     Maze (int numRows, int numCols)
-    :mz(Mazeable(numRows * numCols)), len(numRows), wid(numCols)
-    {}
-
+    :len(numRows), wid(numCols)
+    {
+        //because smart pointers don't use default ctors
+        if constexpr (std::is_same<Mazeable, std::unique_ptr<Cell[]>>())
+        {
+            mz = std::make_unique<Cell[]>((numRows * numCols) / 2);
+        }
+        else if constexpr (std::is_same<Mazeable, std::shared_ptr<Cell[]>>())
+        {
+            mz = std::make_shared<Cell[]>((numRows * numCols) / 2);
+        }
+        else 
+        {
+            mz = Mazeable((numRows * numCols) / 2);
+        }
+    }
 
     //move ctor - takes ownership of underlying data
     Maze (Mazeable maze, int numRows, int numCols)
     :mz(std::move(maze)), len(numRows), wid(numCols)
     {}
     
-
-    
     /** decides if idx is the left or right side of a cell. */
     inline Side getSide(int idx) { return idx & 0b1 ?  R_SIDE : L_SIDE;  }
 
     //Gets the cell pair at index idx in the maze. Does not check bounds.
-    Cell& operator[] (size_t idx) { return mz[idx / 2 + (idx & 0b1)]; }
+    Cell& operator[] (size_t idx) { return mz[int(idx / 2)]; }
 
     //print a maze
     friend std::ostream& operator<< (std::ostream& os, const Maze<>& mz);
@@ -94,7 +106,7 @@ public:
     */
     Cell& getElem (int row, int col) { 
         int idx = (row * wid + col) / 2; 
-        return mz[idx + (idx & 0b1)]; 
+        return mz[idx]; 
     }
 
     /** Element access operator for a maze. Returns a reference to the element
@@ -107,7 +119,7 @@ public:
     */
     const Cell& getElem (int row, int col) const { 
             int idx = (row * wid + col) / 2; 
-            return mz[idx + (idx & 0b1)]; 
+            return mz[idx]; 
     }
 
     /** Puts a cell into the maze at maze[row][col]
@@ -255,7 +267,7 @@ public:
     }
 
     //Returns true if the cell at location idx is connected to the maze. Bounds checked.
-    bool inMaze (int idx) { return hasIndex(idx) ? (*this)[idx].val(getSide(idx)) != 0 : false; }
+    bool inMaze (int idx) { return hasIndex(idx) && (*this)[idx].side_val(getSide(idx)); }
 
     //Returns true if idx is a valid index into this maze
     bool hasIndex (int idx) { return idx < size(); }
@@ -264,7 +276,7 @@ public:
     void openStart() { mz[0].setDirection(L_SIDE, LEFT); }
 
     //Opens the right wall of the bottom left cell of the maze to create an exit
-    void openEnd() { mz[size() - 1].setDirection(R_SIDE, RIGHT); }
+    void openEnd() { mz[(len * wid / 2) - 1].setDirection(R_SIDE, RIGHT); }
 
     //returns a string representation of this maze
     std::string toString () const

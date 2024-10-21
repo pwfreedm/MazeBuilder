@@ -95,7 +95,7 @@ def convert_to_png (mz: Maze, file, edgewid: int = 12, fg: int = 255, bg: int = 
     
     md = metadata(edgewid, fg, bg)
 
-    numrows = md.edgewid * mz.length()
+    numrows = md.edgewid * mz.length
     numcols = md.edgewid * mz.width
 
     image = Writer(width=numcols, height=numrows,
