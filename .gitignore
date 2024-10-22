@@ -16,4 +16,4 @@ venv
 pyvenv.cfg
 
 #don't upload my nix environment config
-py_cpp_dev.nix
+shell.nix
