@@ -1,4 +1,4 @@
-from maze import Maze, Cell
+from maze import Maze, Cell, Side
 
 def cell_error(idx: int, problem: str, idx2: int = -1):
     if idx2 == -1: 
@@ -13,25 +13,25 @@ def check_connections(mz: Maze, seed: int, silent: bool = True) -> bool:
     good: bool = True
 
     #make sure beginning is present
-    if not mz[0].left:
+    if not mz[0].left(Side.L_SIDE):
         if silent: return False
         good = False
         cell_error(0, "expected left face to be open (beginning of maze)")
 
     #make sure end is present
-    if not mz[mz.size() - 1].right:
+    if not mz[mz.size() - 1].right(Side.R_SIDE):
         if silent: return False
         good = False
         cell_error(mz.size() - 1, "expected right face to be open (exit of maze)")
     
     #make sure bottom left corner's left face isn't open
-    if mz[mz.size() - mz.width() - 1].left:
+    if mz[mz.size() - mz.width].left(Side.L_SIDE):
         if silent: return False
         good = False
-        cell_error(mz.size() - mz.width() - 1, "bottom left corner's left face open")
+        cell_error(mz.size() - mz.width - 1, "bottom left corner's left face open")
 
     #make sure top right corner's right face isn't open
-    if mz[mz.width() - 1].right:
+    if mz[mz.width - 1].right(Side.R_SIDE):
         if silent: return False
         good = False
         cell_error(mz.width() - 1, "top right corner's right face open")
