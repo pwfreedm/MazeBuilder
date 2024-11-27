@@ -9,8 +9,12 @@ import maze
 from src.tests.verification import check_connections
 from src.outgen.pnggen import convert_to_png
 
+#FOR DEBUGGING 
+import faulthandler
+faulthandler.enable()
+
 #default file stuff
-default_path = os.path.join(os.path.dirname(__file__), './', 'output')
+default_path = os.path.join(os.path.dirname(__file__), 'output')
 
 def create_file (filename, filepath = default_path, extension = '.png', options = 'ab'):
     ''' creates a file given a filepath and a file name
@@ -19,6 +23,8 @@ def create_file (filename, filepath = default_path, extension = '.png', options 
         os.makedirs(filepath)
     
     fullpath = os.path.join(filepath, filename + extension)
+    print(f'fullpath: ', fullpath)
+    print(f'options: ', options)
     return open(fullpath, options)
 
 
@@ -92,9 +98,9 @@ parser.add_argument('-e', '--edgewidth',
                     )
 
 parser.add_argument('-c', '--csv',
-                    action='store',
-                    type=str,
-                    help='output a csv with maze generation data to the filename provided. This option disables png generation')
+                    action='store_true',
+                    default=False,
+                    help='output a csv with maze generation data. This flag uses the filename provided by --output.')
 
 parser.add_argument('-t', '--test',
                     action='store_true',
@@ -142,6 +148,7 @@ def main():
    start = 0
    csv = None
 
+   print (f'csv arg: ', args.csv)
    for run in range(args.repeat):
       #generate blank maze
       wid = args.width + (run * args.widstep)
@@ -163,17 +170,12 @@ def main():
             start = time_ns()
             mz = maze.parallelize(args.algo, len, wid, args.s, args.num_cores)
 
-         print(str(mz))
-         #calculate time for csv later
+        #calculate time for csv later
          runtime = time_ns() - start
 
          #optionally verify connections
          if args.test: 
             check_connections(mz, args.s, silent=False)
-         
-         #update seed before next run if needed
-         if not args.keepseed:
-            args.s = int.from_bytes(urandom(4), signed=True)
 
          #generate the output png - skip pngs if writing CSV to save time
          if not args.nopng and not args.csv:
@@ -183,10 +185,14 @@ def main():
          
          if args.csv: 
             if run == 0 and trial == 0:
-               filename = args.csv
-               csv = create_file(filename, extension='.csv', options='w+')
+               csv = create_file(args.output, extension='.csv', options='w+')
                csv.write('Seed,Length,Width,Time(ns),Passed Verification\n')
             csv.write(str(str(args.s) + ',' + str(len) + ',' + str(wid) + ',' + str(runtime) + ',' + str(check_connections(mz, args.s)) + '\n'))
+
+         #update seed before next run if needed
+         if not args.keepseed:
+            args.s = int.from_bytes(urandom(4), signed=True)
+
    #if a csv was created, close it after mazes are tested
    if csv:
       csv.close()
