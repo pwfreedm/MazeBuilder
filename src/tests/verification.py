@@ -23,6 +23,18 @@ def check_connections(mz: Maze, seed: int, silent: bool = True) -> bool:
         if silent: return False
         good = False
         cell_error(mz.size() - 1, "expected right face to be open (exit of maze)")
+    
+    #make sure bottom left corner's left face isn't open
+    if mz[mz.size() - mz.width() - 1].left:
+        if silent: return False
+        good = False
+        cell_error(mz.size() - mz.width() - 1, "bottom left corner's left face open")
+
+    #make sure top right corner's right face isn't open
+    if mz[mz.width() - 1].right:
+        if silent: return False
+        good = False
+        cell_error(mz.width() - 1, "top right corner's right face open")
 
     cur: Cell
     for idx in range(mz.size()):

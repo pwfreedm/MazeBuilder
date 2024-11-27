@@ -11,7 +11,7 @@ template<CanMaze Mazeable = std::unique_ptr<Cell[]>>
 class Wilsons
 {
 
-   Maze<Mazeable> &mz; 
+   Maze<Mazeable> mz; 
    std::minstd_rand0 r;
    // TODO: probably make this an int to int map where key is start and val is
    // dst
@@ -44,6 +44,11 @@ public:
       
       if (!open_ends) { mz[0].updateDirection(L_SIDE, LEFT); }
       else { mz.openEnd(); }
+   }
+
+   Maze<Mazeable> release () &&
+   {
+      return std::move(mz);
    }
    
    //ostream operator. Prints the underlying maze

@@ -161,7 +161,7 @@ def main():
                maze.HK(mz, args.s)
          else:
             start = time_ns()
-            mz = maze.parallelize(args.algo, args.length, args.width, args.s, args.num_cores)
+            mz = maze.parallelize(args.algo, len, wid, args.s, args.num_cores)
 
          
          #calculate time for csv later
@@ -183,7 +183,7 @@ def main():
          
          if args.csv: 
             if run == 0 and trial == 0:
-               filename = str(args.algo).title() + '-' + strftime("%d-%H:%M:%S")
+               filename = args.csv
                csv = create_file(filename, extension='.csv', options='w+')
                csv.write('Seed,Length,Width,Time(ns),Passed Verification\n')
             csv.write(str(str(args.s) + ',' + str(len) + ',' + str(wid) + ',' + str(runtime) + ',' + str(check_connections(mz, args.s)) + '\n'))
