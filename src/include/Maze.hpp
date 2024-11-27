@@ -136,7 +136,10 @@ public:
     */
     void set (int row, int col, const Cell& cell) { (*this)[row * wid + col] = cell; }
 
-
+    /** Returns a reference to the first element in the maze. 
+        This method will function differently depending on the type of Mazeable.
+    */
+    Mazeable getMaze () { return &mz[0]; }
 
     //Connects cells at idx1 and idx2. Bounds checked
     void connect (int idx1, int idx2)
