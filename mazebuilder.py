@@ -193,7 +193,6 @@ def main():
          if not args.keepseed:
             args.s = int.from_bytes(urandom(4), signed=True)
 
-         del(mz)
 
    #if a csv was created, close it after mazes are tested
    if csv:
