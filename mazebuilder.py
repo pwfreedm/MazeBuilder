@@ -163,7 +163,7 @@ def main():
             start = time_ns()
             mz = maze.parallelize(args.algo, len, wid, args.s, args.num_cores)
 
-         
+         print(str(mz))
          #calculate time for csv later
          runtime = time_ns() - start
 

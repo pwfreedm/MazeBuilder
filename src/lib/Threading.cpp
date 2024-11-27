@@ -39,7 +39,7 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
     std::vector<int> blocks = block_dimensions(length, numcores);
     
     auto mz = std::make_unique_for_overwrite<Cell[]>( (length * width) / 2);
-    std::span maze{mz.get(), static_cast<size_t>(length) * width};
+    std::span maze{mz.get(), static_cast<size_t>(length) * width / 2};
 
     //scope forces all jthreads to rejoin before smoothing etc
     {
@@ -55,7 +55,8 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
         }
     }
     
-    Maze<Mazeable> full_mz(std::move(mz), length, width);
+    std::shared_ptr<Cell[]> sh (std::move(mz));
+    Maze<Mazeable> full_mz(sh, length, width);
     smooth_edges(full_mz, blocks, seed);
     full_mz.openStart();
     full_mz.openEnd();
