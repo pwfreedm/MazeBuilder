@@ -7,7 +7,7 @@
 template <CanMaze Mazeable = std::unique_ptr<Cell[]>>
 class HK
 {
-    Maze<Mazeable> &mz;
+    Maze<Mazeable> mz;
     std::minstd_rand r;
 
 public: 
@@ -36,6 +36,11 @@ public:
             mz.openStart();
             mz.openEnd();
         }
+    }
+
+    Maze<Mazeable> release () &&
+    {
+        return std::move(mz);
     }
 
     //output stream operator. Prints the underlying maze
@@ -96,6 +101,8 @@ private:
         }
         return mz.size();
     }
+
+
 };
 
 template <CanMaze Mazeable>

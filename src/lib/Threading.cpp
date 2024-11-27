@@ -1,11 +1,9 @@
 
 #include <memory>
 #include <string>
-#include <omp.h>
 #include <thread>
 #include <span>
 #include <random>
-#include <format>
 
 #include "../include/Maze.hpp"
 #include "../include/Wilsons.hpp"
@@ -28,10 +26,10 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
     {
        Maze<Mazeable> mz = Maze<Mazeable>(length, width); 
        if (algo == "wilsons") { 
-        Wilsons(std::move(mz), seed);
+        mz = Wilsons(mz, seed).release();
        }
        else {
-        HK(std::move(mz), seed);
+        mz = HK(mz, seed).release();
        }
       return mz; 
     }
@@ -40,20 +38,24 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
     //enforce width multiple of 64, pass spans. Cuts allocation in half
     std::vector<int> blocks = block_dimensions(length, numcores);
     
-    auto mz = std::make_unique_for_overwrite<Cell[]>( length * width);
-    auto start = &(mz.get()[0]);
+    auto mz = std::make_unique_for_overwrite<Cell[]>( (length * width) / 2);
+    std::span maze{mz.get(), static_cast<size_t>(length) * width};
 
-    for (int th = 0; th < numcores; ++th)
+    //scope forces all jthreads to rejoin before smoothing etc
     {
-        auto end = start + (width * blocks[th]);
-        jthread thread(run_algorithm, algo, std::span<Cell>(start, end), blocks[th], width,  r());
-        start = end;
-        //this is in preparation for smoothing the maze
-        if (th > 0) { blocks[th] += blocks[th - 1]; }
+        std::vector<jthread> threads (numcores);
+        for (int th = 0; th < numcores; ++th)
+        {
+            //const values mean each thread gets its own copy 
+            int const curr_len = blocks[th];
+            size_t const count = width * curr_len;
+            std::span curr = maze.subspan(0, count);
+            maze = maze.subspan(count);
+            threads.emplace_back(run_algorithm, algo, curr, curr_len, width, r());
+        }
     }
-
-    std::shared_ptr<Cell[]> sh(std::move(mz));
-    Maze full_mz(sh, length, width);
+    
+    Maze<Mazeable> full_mz(std::move(mz), length, width);
     smooth_edges(full_mz, blocks, seed);
     full_mz.openStart();
     full_mz.openEnd();
@@ -64,20 +66,13 @@ parallelize (std::string algo, int length, int width, int seed, int numcores)
 std::vector<int>
 block_dimensions (int length, int numcores)
 {
-    //figuring out the sizes of individual blocks
-    int blen, lenr;
-    if ((lenr = length % numcores) == 0) { blen = length / numcores; }
-    else { blen = (length - lenr) / numcores; }
-
-    //returning length width pairs for each block
-    std::vector<int> blocks (numcores);
-    for (int i = 0; i < numcores; ++i)
-    {
-        if (lenr > 0) { 
-            blocks[i] = blen + 1; 
-            --lenr;
-        }
-        else { blocks[i] = blen; }
+    std::vector<int> blocks;
+    blocks.reserve(numcores);
+    int curr = 0;
+    for (int i = 0; i < numcores; ++i) {
+        int next = static_cast<size_t>(length) * (i + 1) / numcores;
+        blocks.emplace_back(next - curr);
+        curr = next;
     }
     return blocks;
 }
@@ -111,7 +106,7 @@ smooth_edges (Maze<Mazeable>& mz, std::vector<int> blocks, int seed)
         for (int idx = low_bound; idx < low_bound + mz.width(); ++idx)
         {
             Cell prev = mz[idx - 1];
-            Side prev_side = mz.get_side(idx - 1);
+            Side prev_side = mz.getSide(idx - 1);
 
             if (!prev.up(prev_side) && (r() % 11) > anti_consecutive_bias) 
             { 

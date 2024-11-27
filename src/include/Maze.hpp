@@ -69,10 +69,13 @@ public:
     //Equality op - Compares fields from smallest to largest
     bool operator== (Maze<Mazeable> const &o) const
     {
-        return 
-        wid != o.wid ? false :
-        len != o.len ? false :
-        mz != o.mz ? false : true;
+        if (width() != o.width()) { return false; }
+        if (length() != o.length()) { return false; }
+        for (int i = 0; i < size(); ++i)
+        {
+            if (mz[i].val() != o.mz[i].val()) { return false; }
+        }
+        return true; 
     }
 
     //Inequality op - Compares fields from smallest to largest
@@ -95,6 +98,9 @@ public:
 
     //Accessor for number of rows of cells in the maze (length)
     int length () { return len; }
+    
+    //Const accessor for the number of rows of cells in the maze (length)
+    int length () const { return len; }
 
     /** Element access operator for a maze. Returns a reference to the element
     at position row * maze width + col
@@ -136,6 +142,7 @@ public:
     void connect (int idx1, int idx2)
     {
         if (!hasIndex(idx1) || !hasIndex(idx2)) { return; }
+
         Side src_side = getSide(idx1);
         Side dst_side = getSide(idx2);
         Direction dir = getDirection(idx1, idx2);
@@ -165,6 +172,8 @@ public:
     //Returns true if going in dir from startIdx would remain in maze bounds
     bool validMove (int startIdx, Direction dir)
     {
+        if (!hasIndex(startIdx)) { return false; }
+
         switch(dir)
         {
             case UP:
@@ -172,9 +181,9 @@ public:
             case DOWN:
                 return startIdx + wid < size();
             case LEFT: 
-                return ((startIdx % wid > 0) && hasIndex(startIdx));
+                return startIdx % wid > 0;
             case RIGHT:
-                return (startIdx % wid + 1) < wid;
+                return startIdx % wid + 1 < wid;
             default:
                 break;
         }
