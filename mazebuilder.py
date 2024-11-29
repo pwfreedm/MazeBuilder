@@ -177,17 +177,27 @@ def main():
             convert_to_png(mz, file, args.edgewidth, args.foreground, args.background)
             file.close()
          
-         if args.csv: 
+         if args.csv and args.test: 
             verified = str(check_connections(mz, args.s))
 
             if run == 0 and trial == 0:
                csv = create_file(args.output, extension='.csv', options='w+')
                csv.write('Seed,Length,Width,Time(ns),Passed Verification\n')
             csv.write(f'{args.s},{len},{wid},{runtime},{verified}\n')
+         elif args.csv: 
+            if run == 0 and trial == 0:
+               csv = create_file(args.output, extension='.csv', options='w+')
+               csv.write('Seed,Length,Width,Time(ns)\n')
+            csv.write(f'{args.s},{len},{wid},{runtime}\n')
+
 
          #update seed before next run if needed
          if not args.keepseed:
             args.s = int.from_bytes(urandom(4), signed=True)
+      
+      #when a trial at a certain size is completed, write it to the file
+      if csv:
+         csv.flush()
 
 
    #if a csv was created, close it after mazes are tested
